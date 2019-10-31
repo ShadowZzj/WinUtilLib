@@ -4,7 +4,7 @@ void* Allocator::Alloc(Allocator* allocator, size_t size){
 	if (!allocator) {
 		void* res = malloc(size);
 		if (!res)
-			return nullptr;
+			return nullptr;   
 		memset(res, 0, size);
 		return res;
 	}
