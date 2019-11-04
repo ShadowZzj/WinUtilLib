@@ -1,4 +1,5 @@
 #include "BaseUtil.h"
+#include <comdef.h>
 namespace str {
 	size_t Len(const wchar_t* str) {
 		if (str == nullptr)
@@ -58,6 +59,20 @@ namespace str {
 				src++;
 			}
 		}
+		return ret;
+	}
+	char* Wstr2Str(const wchar_t* wstr){
+		const WCHAR* wc = wstr;
+		_bstr_t b(wc);
+		const char* c = b;
+		char* ret = str::Dup(c);
+		return ret;
+	}
+	wchar_t* Str2Wstr(const char* str){
+		const CHAR* wc = str;
+		_bstr_t b(wc);
+		const WCHAR* c = b;
+		WCHAR* ret = str::Dup(c);
 		return ret;
 	}
 	char* FmtV(const char* fmt, va_list args) {
