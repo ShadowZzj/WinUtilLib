@@ -20,18 +20,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h" />
+    <ClInclude Include="COMHelper.h" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="WinDynCalls.h" />
     <ClInclude Include="WinUtil.h" />
+    <ClInclude Include="WMIHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseUtil.cpp" />
+    <ClCompile Include="COMHelper.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
     <ClCompile Include="WinUtil.cpp" />
+    <ClCompile Include="WMIHelper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

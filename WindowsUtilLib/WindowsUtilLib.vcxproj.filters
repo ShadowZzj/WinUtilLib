@@ -33,6 +33,12 @@
     <ClInclude Include="WinUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="COMHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WMIHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinDynCalls.cpp">
@@ -48,6 +54,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WinUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="COMHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WMIHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
