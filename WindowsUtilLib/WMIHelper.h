@@ -18,24 +18,23 @@ namespace WMIHelper {
 		static WMIWrapper* GetInstance();
 		static void DestroyInstance();
 
-	protected:
+	private:
+		WMIWrapper();
+		~WMIWrapper();
+		WMIWrapper(const WMIWrapper&) = delete;
+		WMIWrapper operator=(const WMIWrapper&) = delete;
 		HRESULT Initialize();
 		int UnInitialize();
-	private:
+
 		bool isIWbemLocatorReleaseNeeded = false;
 		bool isIWbemServicesReleaseNeeded = false;
 		bool isIEnumWbemClassObjectReleaseNeeded = false;
 		IWbemLocator* pLoc = nullptr;
 		IWbemServices* pSvc = nullptr;
 		IEnumWbemClassObject* pEnumerator = nullptr;
-
-		WMIWrapper();
-		~WMIWrapper();
-		WMIWrapper(const WMIWrapper&) = delete;
-		WMIWrapper operator=(const WMIWrapper&) = delete;
+		COMHelper::COMWrapper* comWrapper;
 
 		static WMIWrapper* wmiWrapper;
-		COMHelper::COMWrapper* comWrapper;
 	};
 
 }

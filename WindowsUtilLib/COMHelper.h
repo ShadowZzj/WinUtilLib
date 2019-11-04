@@ -13,17 +13,17 @@ namespace COMHelper {
 
 		static COMWrapper* GetInstance();
 		static void DestroyInstance();
-
-	protected:
-		HRESULT Initialize();
-		int UnInitialize();
-		bool isCoUninitializeNeeded = false;
+	private:
 		COMWrapper();
 		~COMWrapper();
 		COMWrapper(const COMWrapper&) = delete;
 		COMWrapper operator=(const COMWrapper&) = delete;
-	private:
-		
+
+		HRESULT Initialize();
+		int UnInitialize();
+
+		bool isCoUninitializeNeeded = false;
+
 		static COMWrapper* comWrapper;
 	};
 
