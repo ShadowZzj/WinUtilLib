@@ -1,7 +1,6 @@
 #include <iostream>
 #include "WMIHelper.h"
 #include "BaseUtil.h"
-
 #pragma comment(lib,"wbemuuid.lib")
 namespace WMIHelper {
 	using namespace std;
@@ -116,6 +115,53 @@ namespace WMIHelper {
 			pEnumerator = nullptr;
 		}
 		return S_OK;
+	}
+	std::vector<VARIANT> WMIWrapper::GetProperty(const char* className, const wchar_t* property, const char* filterProperty, const char* filterValue, bool& success)
+	{
+		using namespace std;
+
+		success = true;
+		HRESULT hres;
+		char buf[1024]{};
+
+		if(!filterProperty||!filterValue)
+			sprintf_s(buf, "SELECT * FROM %s", className);
+		else
+			sprintf_s(buf, "SELECT * FROM %s WHERE %s=\"%s\"", className, filterProperty, filterValue);
+		
+		char* sentence = str::BackSlashDup(buf);
+
+		if (!sentence)
+			sentence = buf;
+
+		hres = wmiWrapper->WMIExecQuery("WQL", sentence);
+		if (FAILED(hres)) {
+			success = false;
+			return std::vector<VARIANT>();
+		}
+
+		IWbemClassObject* clsObj=nullptr;
+		VARIANT vtProp;
+		std::vector<VARIANT> ret;
+
+		while (!FAILED((hres = wmiWrapper->WMIGetNextObject(&clsObj)))) {
+			hres = clsObj->Get(property, 0, &vtProp, 0, 0);
+			if (FAILED(hres)) {
+				clsObj->Release();
+				success = false;
+				wmiWrapper->WMIEnumUnInitialize();
+				if (sentence != buf)
+					Allocator::Free(NULL, sentence);
+				return std::vector<VARIANT>();
+			}
+			ret.push_back(vtProp);
+			clsObj->Release();
+		}
+
+		wmiWrapper->WMIEnumUnInitialize();
+		if (sentence != buf)
+			Allocator::Free(NULL, sentence);
+		return ret;
 	}
 	WMIWrapper* WMIWrapper::GetInstance() {
 		if (!wmiWrapper) {

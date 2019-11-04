@@ -4,6 +4,7 @@
 namespace COMHelper {
 	using namespace std;
 	COMWrapper* COMWrapper::comWrapper = NULL;
+
 	HRESULT COMWrapper::CreateComInstance(const IID& rclsid, LPUNKNOWN pUnkOuter, DWORD dwClsContext, const IID& riid, OUT LPVOID** ppv) {
 		HRESULT hres = CoCreateInstance(rclsid, pUnkOuter, dwClsContext, riid, (LPVOID*)ppv);
 		if (FAILED(hres)) {

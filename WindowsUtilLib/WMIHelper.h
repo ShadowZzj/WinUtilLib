@@ -2,6 +2,7 @@
 #pragma once
 #pragma once
 #include "COMHelper.h"
+#include <vector>
 class Test;
 namespace WMIHelper {
 	//Not support multi-thread, caller must synchronize.
@@ -14,7 +15,7 @@ namespace WMIHelper {
 		HRESULT WMIExecQuery(const char* sentenceType, const char* sentence);
 		HRESULT WMIGetNextObject(IWbemClassObject** pclsObj);
 		HRESULT WMIEnumUnInitialize();
-
+	    std::vector<VARIANT> GetProperty(const char* className, const wchar_t* property, const char* filterProperty, const char* filterValue, bool& success);
 		static WMIWrapper* GetInstance();
 		static void DestroyInstance();
 
