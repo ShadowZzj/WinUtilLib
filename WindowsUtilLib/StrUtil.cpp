@@ -28,6 +28,38 @@ namespace str {
 		}
 		return dstStr;
 	}
+	char* BackSlashDup(const char* str){
+		if (!str)
+			return nullptr;
+
+		const char* src = str;
+		size_t len = Len(str);
+		size_t backSlashNum = 0;
+		while (*src) {
+			if (*src == '\\')
+				backSlashNum++;
+			src++;
+		}
+		if (backSlashNum == 0)
+			return nullptr;
+		char* ret = (char*)Allocator::Alloc(NULL, len + backSlashNum + 1);
+		char* dst = ret;
+		src = str;
+		while (*src) {
+			if (*src == '\\') {
+				*dst = '\\';
+				*(dst + 1) = '\\';
+				dst += 2;
+				src++;
+			}
+			else {
+				*dst = *src;
+				dst++;
+				src++;
+			}
+		}
+		return ret;
+	}
 	char* FmtV(const char* fmt, va_list args) {
 		char message[256];
 		size_t bufCchSize = dimof1(message);

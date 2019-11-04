@@ -44,5 +44,5 @@ namespace str {
 		return res;
 	}
 	std::wstring& ConcateWstring(std::wstring& dstStr, std::initializer_list<std::wstring> list);
-
+	char* BackSlashDup(const char* str);
 }
