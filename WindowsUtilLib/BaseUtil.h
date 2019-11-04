@@ -62,7 +62,7 @@ public:
 	template<typename T>
 	static T* Alloc(Allocator* allocator, int num) {
 		if (!allocator) {
-			return malloc(num * sizeof(T));
+			return (T*)Alloc(NULL, sizeof(T) * num);
 		}
 
 		return (T*)allocator->Alloc(num * sizeof(T));
