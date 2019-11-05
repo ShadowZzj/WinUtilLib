@@ -55,14 +55,23 @@ namespace WinPrintWrapper {
 
 	};
 
+	class PrinterBase {
+	public:
+		static wchar_t* PrinterStatusToWstr(DWORD status);
+		static std::vector<std::wstring> JobStatusToWstr(DWORD status);
+		static std::vector<std::wstring> PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len);
+		static std::wstring PrinterCapabilityToWstr(UINT32 capability);
+	};
 	class PrinterJobManager {
 	public:
-		PrinterJobManager(std::wstring printerName = L"") :printerName(printerName) {}
-		bool GetPrinterJobs();
-		bool GetPrinterJob(DWORD jobID);
+		PrinterJobManager(std::wstring printerName=L"") :printerName(printerName) {}
+		bool SetPrinter(std::wstring printerName);
+		bool GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus);
+		bool GetPrinterJob(DWORD jobID, JOB_INFO_2* pJobInfo);
 		bool ControlJob(DWORD jobID, DWORD commond);
 
 	private:
 		std::wstring printerName;
+		HANDLE hPrinter;
 	};
 }

@@ -11,48 +11,48 @@ namespace WinPrintWrapper {
 		res += L"\"";
 
 		//copy
-		ConcateWstring(res, { _tws(copy),L"x" ,_co });
+		ConcateWstring(res, _tws(copy),L"x" ,_co);
 		//pageRange
-		ConcateWstring(res, { _tws(pageFrom),L"-",_tws(pageTo),_co });
+		ConcateWstring(res, _tws(pageFrom),L"-",_tws(pageTo),_co);
 		//color
 		if (color)
-			ConcateWstring(res, { L"color",_co });
+			ConcateWstring(res,L"color",_co);
 		else
-			ConcateWstring(res, { L"monochrome",_co });
+			ConcateWstring(res, L"monochrome",_co );
 		//collate
 		if (collate)
-			ConcateWstring(res, { L"collate",_co });
+			ConcateWstring(res,  L"collate",_co );
 		else
-			ConcateWstring(res, { L"nocollate",_co });
+			ConcateWstring(res,  L"nocollate",_co );
 
 		switch (paperSize)
 		{
 		case WinPrintWrapper::PdfParam::letter:
-			ConcateWstring(res, { L"paper=",L"letter",_co });
+			ConcateWstring(res,  L"paper=",L"letter",_co );
 			break;
 		case WinPrintWrapper::PdfParam::legal:
-			ConcateWstring(res, { L"paper=",L"legal",_co });
+			ConcateWstring(res,  L"paper=",L"legal",_co );
 			break;
 		case WinPrintWrapper::PdfParam::tabloid:
-			ConcateWstring(res, { L"paper=",L"tabloid",_co });
+			ConcateWstring(res,  L"paper=",L"tabloid",_co );
 			break;
 		case WinPrintWrapper::PdfParam::statement:
-			ConcateWstring(res, { L"paper=",L"statement",_co });
+			ConcateWstring(res,  L"paper=",L"statement",_co );
 			break;
 		case WinPrintWrapper::PdfParam::A2:
-			ConcateWstring(res, { L"paper=",L"A2",_co });
+			ConcateWstring(res,  L"paper=",L"A2",_co );
 			break;
 		case WinPrintWrapper::PdfParam::A3:
-			ConcateWstring(res, { L"paper=",L"A3",_co });
+			ConcateWstring(res,  L"paper=",L"A3",_co );
 			break;
 		case WinPrintWrapper::PdfParam::A4:
-			ConcateWstring(res, { L"paper=",L"A4",_co });
+			ConcateWstring(res,  L"paper=",L"A4",_co );
 			break;
 		case WinPrintWrapper::PdfParam::A5:
-			ConcateWstring(res, { L"paper=",L"A5",_co });
+			ConcateWstring(res,  L"paper=",L"A5",_co );
 			break;
 		case WinPrintWrapper::PdfParam::A6:
-			ConcateWstring(res, { L"paper=",L"A6",_co });
+			ConcateWstring(res,  L"paper=",L"A6",_co );
 			break;
 		default:
 			break;
@@ -61,16 +61,16 @@ namespace WinPrintWrapper {
 		switch (savePaper)
 		{
 		case WinPrintWrapper::PdfParam::duplex:
-			ConcateWstring(res, { L"duplex",_co });
+			ConcateWstring(res,  L"duplex",_co );
 			break;
 		case WinPrintWrapper::PdfParam::duplexshort:
-			ConcateWstring(res, { L"duplexshort",_co });
+			ConcateWstring(res,  L"duplexshort",_co );
 			break;
 		case WinPrintWrapper::PdfParam::duplexlong:
-			ConcateWstring(res, { L"duplexlong",_co });
+			ConcateWstring(res,  L"duplexlong",_co );
 			break;
 		case WinPrintWrapper::PdfParam::simplex:
-			ConcateWstring(res, { L"simplex",_co });
+			ConcateWstring(res,  L"simplex",_co );
 			break;
 		default:
 			break;
@@ -81,10 +81,10 @@ namespace WinPrintWrapper {
 		case WinPrintWrapper::PdfParam::flat:
 			break;
 		case WinPrintWrapper::PdfParam::odd:
-			ConcateWstring(res, { L"odd",_co });
+			ConcateWstring(res,  L"odd",_co );
 			break;
 		case WinPrintWrapper::PdfParam::even:
-			ConcateWstring(res, { L"even",_co });
+			ConcateWstring(res,  L"even",_co );
 			break;
 		default:
 			break;
@@ -99,14 +99,184 @@ namespace WinPrintWrapper {
 #undef _co 
 #undef _ws
 	}
-	bool PrinterJobManager::GetPrinterJobs() {
+	bool PrinterJobManager::SetPrinter(std::wstring printerName){
+		this->printerName = printerName;
+		return true;
+	}
+	bool PrinterJobManager::GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus){
+		if (printerName.empty())
+			return false;
+
+		HANDLE hPrinter;
+		if (!OpenPrinter(const_cast<wchar_t*>(printerName.c_str()), &hPrinter, NULL))
+			return false;
+		//defer{ ClosePrinter(hPrinter); };
+
+		DWORD cByteNeeded,
+			  nReturned,
+			  cByteUsed;
+		JOB_INFO_2* pJobStorage = NULL;
+		PRINTER_INFO_2* pPrinterInfo = NULL;
+
+		/* Get the buffer size needed. */
+		if (!GetPrinter(hPrinter, 2, NULL, 0, &cByteNeeded))
+		{
+			if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
+				return FALSE;
+		}
+
+		pPrinterInfo = (PRINTER_INFO_2*)malloc(cByteNeeded);
+		if (!(pPrinterInfo))
+			/* Failure to allocate memory. */
+			return FALSE;
+
+		/* Get the printer information. */
+		if (!GetPrinter(hPrinter,
+			2,
+			(LPBYTE)pPrinterInfo,
+			cByteNeeded,
+			&cByteUsed))
+		{
+			/* Failure to access the printer. */
+			free(pPrinterInfo);
+			pPrinterInfo = NULL;
+			return FALSE;
+		}
+
+		/* Get job storage space. */
+		if (!EnumJobs(hPrinter,
+			0,
+			pPrinterInfo->cJobs,
+			2,
+			NULL,
+			0,
+			(LPDWORD)&cByteNeeded,
+			(LPDWORD)&nReturned))
+		{
+			if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
+			{
+				free(pPrinterInfo);
+				pPrinterInfo = NULL;
+				return FALSE;
+			}
+		}
+
+		pJobStorage = (JOB_INFO_2*)malloc(cByteNeeded);
+		if (!pJobStorage){
+			/* Failure to allocate Job storage space. */
+			free(pPrinterInfo);
+			pPrinterInfo = NULL;
+			return FALSE;
+		}
+
+		ZeroMemory(pJobStorage, cByteNeeded);
+
+		/* Get the list of jobs. */
+		if (!EnumJobs(hPrinter,
+			0,
+			pPrinterInfo->cJobs,
+			2,
+			(LPBYTE)pJobStorage,
+			cByteNeeded,
+			(LPDWORD)&cByteUsed,
+			(LPDWORD)&nReturned))
+		{
+			free(pPrinterInfo);
+			free(pJobStorage);
+			pJobStorage = NULL;
+			pPrinterInfo = NULL;
+			return FALSE;
+		}
+
+		/*
+		 *  Return the information.
+		 */
+		*pcJobs = nReturned;
+		*printerStatus = pPrinterInfo->Status;
+		*ppJobInfo = pJobStorage;
+		free(pPrinterInfo);
+		ClosePrinter(hPrinter);
+		return TRUE;
+	}
+	bool PrinterJobManager::GetPrinterJob(DWORD jobID, JOB_INFO_2* pJobInfo) {
 		return false;
 	}
-	bool PrinterJobManager::GetPrinterJob(DWORD jobID) {
-		return false;
+	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond){
+
+		HANDLE hPrinter;
+		if (!OpenPrinter(const_cast<wchar_t*>(printerName.c_str()), &hPrinter, NULL))
+			return false;
+		defer{ ClosePrinter(hPrinter); };
+
+		if (!SetJob(hPrinter, jobID, 0, NULL, commond))
+			return false;
+		return true;
 	}
-	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond)
+
+	wchar_t* PrinterBase::PrinterStatusToWstr(DWORD status){
+		enum Status :unsigned int {
+			_,
+			Other,
+			Unknown,
+			Idle,
+			Printing,
+			Warmup,
+			StoppedPrinting,
+			Offline
+		};
+		const wchar_t* statStr[] = { L"_",L"Other",L"Unkonwn",L"Idle",L"Printing",L"Warmup",L"StoppedPrinting",L"Offline" };
+
+		if (dimof1(statStr) <= status)
+			return nullptr;
+		wchar_t* res = str::Dup(statStr[status]);
+		return res;
+	}
+	std::vector<std::wstring> WinPrintWrapper::PrinterBase::JobStatusToWstr(DWORD status){
+#define str(a) L#a
+		const wchar_t* statusStr[]{
+			str(JOB_STATUS_PAUSED),
+			str(JOB_STATUS_ERROR),
+			str(JOB_STATUS_DELETING),
+			str(JOB_STATUS_SPOOLING),
+			str(JOB_STATUS_PRINTING),
+			str(JOB_STATUS_OFFLINE),
+			str(JOB_STATUS_PAPEROUT),
+			str(JOB_STATUS_PRINTED),
+			str(JOB_STATUS_DELETED),
+			str(JOB_STATUS_BLOCKED_DEVQ),
+			str(JOB_STATUS_USER_INTERVENTION),
+			str(JOB_STATUS_RESTART)
+		};
+
+		int len = dimof1(statusStr);
+		std::vector<std::wstring> ret;
+
+		for (int i = 0, init = 1; i < len; i++) {
+			if (status & init) {
+				ret.push_back(statusStr[i]);
+			}
+			init = init << 1;
+		}
+		return ret;
+
+#undef str
+	}
+	std::vector<std::wstring> WinPrintWrapper::PrinterBase::PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len){
+		using namespace std;
+		vector<wstring> ret;
+		for (UINT i = 0; i < len; i++) {
+			ret.push_back(PrinterCapabilityToWstr(capabilities[i]));
+		}
+		return ret;
+	}
+	std::wstring WinPrintWrapper::PrinterBase::PrinterCapabilityToWstr(UINT32 capability)
 	{
-		return false;
+		const wchar_t* capsStr[] = { L"Unknown",L"Other",L"Color Printing",L"Duplex Printing",L"Copies",L"Collation" };
+
+		if (dimof1(capsStr) <= capability)
+			return nullptr;
+
+		std::wstring wres(capsStr[capability]);
+		return wres;
 	}
 }

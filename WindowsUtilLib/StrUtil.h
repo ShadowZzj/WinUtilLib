@@ -43,7 +43,14 @@ namespace str {
 			res[lenCch] = 0;
 		return res;
 	}
-	std::wstring& ConcateWstring(std::wstring& dstStr, std::initializer_list<std::wstring> list);
+	template<typename T1, typename ...T2>
+	std::wstring& ConcateWstring(std::wstring& dstStr, T1 arg, T2 ...args) {
+		dstStr += arg;
+		if constexpr (sizeof...(args) > 0)
+			return ConcateWstring(dstStr, args...);
+		else
+			return dstStr;
+	}
 	char* BackSlashDup(const char* str);
 	char* Wstr2Str(const wchar_t* wstr);
 	wchar_t* Str2Wstr(const char* str);

@@ -23,12 +23,7 @@ namespace str {
 		memcpy(dst, s, size);
 		return dst;
 	}
-	std::wstring& ConcateWstring(std::wstring& dstStr, std::initializer_list<std::wstring> list) {
-		for (auto str : list) {
-			dstStr += str;
-		}
-		return dstStr;
-	}
+
 	char* BackSlashDup(const char* str){
 		if (!str)
 			return nullptr;
