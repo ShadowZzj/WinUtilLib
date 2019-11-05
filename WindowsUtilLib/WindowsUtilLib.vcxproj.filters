@@ -39,6 +39,9 @@
     <ClInclude Include="WMIHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="PrinterUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinDynCalls.cpp">
@@ -60,6 +63,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WMIHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PrinterUtil.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,6 +22,7 @@
     <ClInclude Include="BaseUtil.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="ParseCommondLine.h" />
+    <ClInclude Include="PrinterUtil.h" />
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="WinDynCalls.h" />
@@ -32,6 +33,7 @@
     <ClCompile Include="BaseUtil.cpp" />
     <ClCompile Include="COMHelper.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
+    <ClCompile Include="PrinterUtil.cpp" />
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
     <ClCompile Include="WinUtil.cpp" />

@@ -24,7 +24,7 @@ namespace str {
 		return dst;
 	}
 	std::wstring& ConcateWstring(std::wstring& dstStr, std::initializer_list<std::wstring> list) {
-		for (auto& str : list) {
+		for (auto str : list) {
 			dstStr += str;
 		}
 		return dstStr;
