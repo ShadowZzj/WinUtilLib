@@ -108,9 +108,16 @@ namespace WinPrintWrapper {
 			return false;
 
 		HANDLE hPrinter;
-		if (!OpenPrinter(const_cast<wchar_t*>(printerName.c_str()), &hPrinter, NULL))
+		PRINTER_DEFAULTS def{};
+
+		def.DesiredAccess = PRINTER_ALL_ACCESS;
+
+		wchar_t* buf = str::Dup(printerName.c_str());
+		defer{ Allocator::Free(NULL,buf); };
+
+		if (!OpenPrinter(buf, &hPrinter, &def))
 			return false;
-		//defer{ ClosePrinter(hPrinter); };
+		defer{ ClosePrinter(hPrinter); };
 
 		DWORD cByteNeeded,
 			  nReturned,
@@ -195,7 +202,6 @@ namespace WinPrintWrapper {
 		*printerStatus = pPrinterInfo->Status;
 		*ppJobInfo = pJobStorage;
 		free(pPrinterInfo);
-		ClosePrinter(hPrinter);
 		return TRUE;
 	}
 	bool PrinterJobManager::GetPrinterJob(DWORD jobID, JOB_INFO_2* pJobInfo) {
@@ -204,12 +210,23 @@ namespace WinPrintWrapper {
 	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond){
 
 		HANDLE hPrinter;
-		if (!OpenPrinter(const_cast<wchar_t*>(printerName.c_str()), &hPrinter, NULL))
+		PRINTER_DEFAULTS def{};
+
+		def.DesiredAccess = PRINTER_ALL_ACCESS;
+
+		wchar_t* buf = str::Dup(printerName.c_str());
+		defer{ Allocator::Free(NULL,buf); };
+
+		if (!OpenPrinter(buf, &hPrinter, &def))
 			return false;
 		defer{ ClosePrinter(hPrinter); };
 
-		if (!SetJob(hPrinter, jobID, 0, NULL, commond))
+		//jobInfo->Size = sizeof(JOB_INFO_2);
+
+		if (!SetJob(hPrinter, jobID, 0, NULL, commond)) {
+			DWORD error = GetLastError();
 			return false;
+		}
 		return true;
 	}
 

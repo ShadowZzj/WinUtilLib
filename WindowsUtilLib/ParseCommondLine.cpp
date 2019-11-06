@@ -1,3 +1,4 @@
+#include "CRTdbgHeader.h"
 #include "BaseUtil.h"
 Vec<wchar_t*> ParseCommondLine(int argc, wchar_t* argv[]) {
 	Vec<wchar_t*> args;

@@ -5,6 +5,7 @@
 //	els: pointer to the buffer
 //	buf: default buffer. If the needed size is larger, els points to the new buffer.
 //	cap: capacity
+#include "CRTdbgHeader.h"
 #include <stdio.h>
 template <class T>
 class Vec {

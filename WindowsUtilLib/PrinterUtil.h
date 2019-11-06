@@ -1,4 +1,6 @@
 #pragma once
+#define ZZJ_MEMORY_LEAK_CHECK
+#include "CRTdbgHeader.h"
 #include "BaseUtil.h"
 #include <initializer_list>
 
