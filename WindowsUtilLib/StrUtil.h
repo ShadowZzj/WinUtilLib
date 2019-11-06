@@ -51,7 +51,20 @@ namespace str {
 		else
 			return dstStr;
 	}
+	
 	char* BackSlashDup(const char* str);
 	char* Wstr2Str(const wchar_t* wstr);
 	wchar_t* Str2Wstr(const char* str);
+	template<class T1>
+	auto ReverseStrWstr(const T1* str) {
+		if (str == nullptr)
+			return (void*)nullptr;
+
+		if (typeid(T1) == typeid(char)) {
+			return (void*)Str2Wstr((const char*)str);
+		}
+		else {
+			return (void*)Wstr2Str((const wchar_t*)str);
+		}
+	}
 }

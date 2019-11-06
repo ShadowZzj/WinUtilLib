@@ -1,3 +1,4 @@
+#include "CRTdbgHeader.h"
 #include "COMHelper.h"
 #include <iostream>
 #pragma comment(lib,"wbemuuid.lib")

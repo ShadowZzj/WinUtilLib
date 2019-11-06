@@ -132,6 +132,7 @@ public:
 	void Append(const T& el) {
 		MakeSpaceAt(len, 1)[0] = el;
 	}
+
 	void Append(const T* src, size_t count) {
 		if (count == 0)
 			return;
@@ -273,6 +274,54 @@ namespace str {
 	public:
 		explicit Str(Allocator* allocator = NULL) :Vec<T>(allocator) {}
 
+		Str(const T* str, Allocator* allocator = NULL) :Vec<T>(allocator) {
+			Append(str, Len(str)+1);
+		}
+		Str& operator+=(const Str& other) {
+			const T* data = other.Get();
+			Append(data, Len(data));
+			return *this;
+		}
+		Str& operator+=(int number) {
+			Str str = Str(number);
+			return operator+=(str);
+		}
+		template<class T2>
+		Str& operator+=(const T2* other) {
+			Str<T2> str = Str<T2>(other);
+			const T2* data = str.Get();
+			T* res = (T*)ReverseStrWstr(data);
+			Append(res, Len(res));
+			if(res)
+				Allocator::Free(NULL, res);
+			return *this;
+		}
+
+		Str& operator+=(const T* other) {
+			Str str = Str(other);
+			return operator+=(str);
+		}
+		Str(int number, Allocator* allocator = NULL) :Vec<T>(allocator){
+			int count = 0;
+			int tmpNum = number;
+			while (tmpNum = tmpNum / 10) {
+				count++;
+			}
+			count++;
+
+			void* buf = Allocator::Alloc<T>(NULL,count+1);
+			defer{ Allocator::Free(NULL,buf); };
+			if (typeid(T) == typeid(char)) {
+				sprintf_s((char* const)buf,count+1, "%d", number);
+			}
+			else if(typeid(T)==typeid(wchar_t)){
+				swprintf_s((wchar_t* const)buf,count + 1,L"%d",number);
+			}
+			else
+				CrashMe();
+			Append((T*)buf,Len((T*)buf));
+
+		}
 		void Append(T t) {
 			Vec<T>::Append(t);
 		}
@@ -317,7 +366,7 @@ namespace str {
 			Append(s);
 		}
 		//notice it's dangerous!
-		T* Get() {
+		const T* Get() const {
 			return this->els;
 		}
 		T LastChar() const {

@@ -1,3 +1,4 @@
+#include "CRTdbgHeader.h"
 #include "PrinterUtil.h"
 
 namespace WinPrintWrapper {
@@ -9,9 +10,12 @@ namespace WinPrintWrapper {
 		std::wstring res;
 		using str::ConcateWstring;
 		res += L"\"";
-
+		str::Str<wchar_t> res2;
 		//copy
 		ConcateWstring(res, _tws(copy),L"x" ,_co);
+		res2 += copy;
+		res2 += "x";
+		res2 += _co;
 		//pageRange
 		ConcateWstring(res, _tws(pageFrom),L"-",_tws(pageTo),_co);
 		//color
@@ -99,6 +103,7 @@ namespace WinPrintWrapper {
 #undef _co 
 #undef _ws
 	}
+
 	bool PrinterJobManager::SetPrinter(std::wstring printerName){
 		this->printerName = printerName;
 		return true;
