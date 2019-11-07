@@ -282,7 +282,8 @@ namespace str {
 			Append(data, Len(data));
 			return *this;
 		}
-		Str& operator+=(int number) {
+		template <class T2>
+		Str& operator+=(T2 number) {
 			Str str = Str(number);
 			return operator+=(str);
 		}

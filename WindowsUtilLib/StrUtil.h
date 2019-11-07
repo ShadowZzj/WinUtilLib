@@ -52,6 +52,14 @@ namespace str {
 			return dstStr;
 	}
 	
+	template<typename T,typename T1,typename ...T2>
+	Str<T>& ConcateStr(Str<T>& src, T1 arg, T2 ...args) {
+		src += arg;
+		if constexpr (sizeof...(args) > 0)
+			return ConcateStr(src, args...);
+		else
+			return src;
+	}
 	char* BackSlashDup(const char* str);
 	char* Wstr2Str(const wchar_t* wstr);
 	wchar_t* Str2Wstr(const char* str);

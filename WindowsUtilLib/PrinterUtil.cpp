@@ -12,9 +12,9 @@ namespace WinPrintWrapper {
 		str::Str<wchar_t> res2;
 		//copy
 		ConcateWstring(res, _tws(copy),L"x" ,_co);
-		res2 += copy;
-		res2 += "x";
-		res2 += _co;
+
+		str::ConcateStr(res2, copy, L"x", _co);
+
 		//pageRange
 		ConcateWstring(res, _tws(pageFrom),L"-",_tws(pageTo),_co);
 		//color
@@ -136,7 +136,7 @@ namespace WinPrintWrapper {
 				return FALSE;
 		}
 
-		pPrinterInfo = (PRINTER_INFO_2*)malloc(cByteNeeded);
+		pPrinterInfo = (PRINTER_INFO_2*)Allocator::Alloc(NULL,cByteNeeded);
 		if (!(pPrinterInfo))
 			/* Failure to allocate memory. */
 			return FALSE;
@@ -172,7 +172,7 @@ namespace WinPrintWrapper {
 			}
 		}
 
-		pJobStorage = (JOB_INFO_2*)malloc(cByteNeeded);
+		pJobStorage = (JOB_INFO_2*)Allocator::Alloc(NULL,cByteNeeded);
 		if (!pJobStorage){
 			/* Failure to allocate Job storage space. */
 			free(pPrinterInfo);

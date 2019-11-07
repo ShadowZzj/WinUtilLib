@@ -3,7 +3,7 @@
 WCHAR* GetDefaultPrinterName() {
 	DWORD bufSize;
 	GetDefaultPrinter(NULL, &bufSize);
-	WCHAR* buf = (WCHAR*)malloc(bufSize+2);
+	WCHAR* buf = (WCHAR*)Allocator::Alloc(NULL,bufSize+2);
 	memset(buf, 0, bufSize+2);
 
 	buf[0] = L'\"';
