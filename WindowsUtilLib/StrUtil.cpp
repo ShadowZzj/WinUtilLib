@@ -1,4 +1,3 @@
-#include "CRTdbgHeader.h"
 #include "BaseUtil.h"
 #include <comdef.h>
 namespace str {

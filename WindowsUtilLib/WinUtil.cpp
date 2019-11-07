@@ -1,4 +1,3 @@
-#include "CRTdbgHeader.h"
 #include "WinUtil.h"
 #include "BaseUtil.h"
 WCHAR* GetDefaultPrinterName() {

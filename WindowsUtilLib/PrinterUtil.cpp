@@ -1,4 +1,3 @@
-#include "CRTdbgHeader.h"
 #include "PrinterUtil.h"
 
 namespace WinPrintWrapper {

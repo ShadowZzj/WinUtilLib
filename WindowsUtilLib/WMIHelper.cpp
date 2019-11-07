@@ -1,4 +1,3 @@
-#include "CRTdbgHeader.h"
 #include <iostream>
 #include "WMIHelper.h"
 #include "BaseUtil.h"

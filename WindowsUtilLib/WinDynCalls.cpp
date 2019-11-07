@@ -1,4 +1,3 @@
-#include "CRTdbgHeader.h"
 #include <stdio.h>
 #include "WinDynCalls.h"
 KERNEL32_API_LIST(API_DLR)
