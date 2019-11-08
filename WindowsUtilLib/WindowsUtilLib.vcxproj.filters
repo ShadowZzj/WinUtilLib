@@ -13,63 +13,81 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Base">
+      <UniqueIdentifier>{81f87f70-17c1-45c8-afbb-642f796a01be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Base">
+      <UniqueIdentifier>{60b90623-9b54-4841-b731-acc372a0f3f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Windows">
+      <UniqueIdentifier>{ab163dba-469c-4c70-bf59-a90af7d48e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Windows">
+      <UniqueIdentifier>{e3dd57fd-d8df-4fb3-9738-ed1ba6140176}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WinDynCalls.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="BaseUtil.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Vec.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Base</Filter>
     </ClInclude>
     <ClInclude Include="StrUtil.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec.h">
+      <Filter>头文件\Base</Filter>
     </ClInclude>
     <ClInclude Include="ParseCommondLine.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="WinDynCalls.h">
+      <Filter>头文件\Windows</Filter>
     </ClInclude>
     <ClInclude Include="WinUtil.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Windows</Filter>
     </ClInclude>
     <ClInclude Include="COMHelper.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Windows</Filter>
     </ClInclude>
     <ClInclude Include="WMIHelper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PrinterUtil.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Windows</Filter>
     </ClInclude>
     <ClInclude Include="CRTdbgHeader.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="PrinterUtil.h">
+      <Filter>头文件\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="IPC.h">
+      <Filter>头文件\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinDynCalls.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="BaseUtil.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Base</Filter>
     </ClCompile>
     <ClCompile Include="StrUtil.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Base</Filter>
     </ClCompile>
     <ClCompile Include="ParseCommondLine.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="WinUtil.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Base</Filter>
     </ClCompile>
     <ClCompile Include="COMHelper.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="WMIHelper.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Windows</Filter>
     </ClCompile>
     <ClCompile Include="PrinterUtil.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WinDynCalls.cpp">
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WinUtil.cpp">
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WMIHelper.cpp">
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="IPC.cpp">
+      <Filter>源文件\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

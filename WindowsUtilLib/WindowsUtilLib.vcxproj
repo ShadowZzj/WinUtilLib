@@ -22,6 +22,7 @@
     <ClInclude Include="BaseUtil.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
+    <ClInclude Include="IPC.h" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PrinterUtil.h" />
     <ClInclude Include="StrUtil.h" />
@@ -33,6 +34,7 @@
   <ItemGroup>
     <ClCompile Include="BaseUtil.cpp" />
     <ClCompile Include="COMHelper.cpp" />
+    <ClCompile Include="IPC.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
     <ClCompile Include="StrUtil.cpp" />
