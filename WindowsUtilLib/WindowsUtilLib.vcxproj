@@ -23,12 +23,13 @@
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
     <ClInclude Include="IPC.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PrinterUtil.h" />
+    <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="WinDynCalls.h" />
-    <ClInclude Include="WinUtil.h" />
     <ClInclude Include="WMIHelper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -37,9 +38,9 @@
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
-    <ClCompile Include="WinUtil.cpp" />
     <ClCompile Include="WMIHelper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

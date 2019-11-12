@@ -15,7 +15,7 @@ namespace WMIHelper {
 			NULL,                    // User name
 			NULL,                    // User password
 			0,                       // Locale
-			NULL,                    // Security flags                 
+			WBEM_FLAG_CONNECT_USE_MAX_WAIT,                    // Security flags                 
 			0,                       // Authority       
 			0,                       // Context object
 			&pSvc                    // IWbemServices proxy

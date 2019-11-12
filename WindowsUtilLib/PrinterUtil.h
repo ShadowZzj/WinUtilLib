@@ -63,6 +63,7 @@ namespace WinPrintWrapper {
 		static std::vector<std::wstring> JobStatusToWstr(DWORD status);
 		static std::vector<std::wstring> PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len);
 		static std::wstring PrinterCapabilityToWstr(UINT32 capability);
+		static WCHAR* GetDefaultPrinterName();
 	};
 	class PrinterJobManager {
 	public:

@@ -11,51 +11,51 @@ namespace WinPrintWrapper {
 		res += L"\"";
 		str::Str<wchar_t> res2;
 		//copy
-		ConcateWstring(res, _tws(copy),L"x" ,_co);
+		ConcateWstring(res, _tws(copy), L"x", _co);
 
 		str::ConcateStr(res2, copy, L"x", _co);
 
 		//pageRange
-		ConcateWstring(res, _tws(pageFrom),L"-",_tws(pageTo),_co);
+		ConcateWstring(res, _tws(pageFrom), L"-", _tws(pageTo), _co);
 		//color
 		if (color)
-			ConcateWstring(res,L"color",_co);
+			ConcateWstring(res, L"color", _co);
 		else
-			ConcateWstring(res, L"monochrome",_co );
+			ConcateWstring(res, L"monochrome", _co);
 		//collate
 		if (collate)
-			ConcateWstring(res,  L"collate",_co );
+			ConcateWstring(res, L"collate", _co);
 		else
-			ConcateWstring(res,  L"nocollate",_co );
+			ConcateWstring(res, L"nocollate", _co);
 
 		switch (paperSize)
 		{
 		case WinPrintWrapper::PdfParam::letter:
-			ConcateWstring(res,  L"paper=",L"letter",_co );
+			ConcateWstring(res, L"paper=", L"letter", _co);
 			break;
 		case WinPrintWrapper::PdfParam::legal:
-			ConcateWstring(res,  L"paper=",L"legal",_co );
+			ConcateWstring(res, L"paper=", L"legal", _co);
 			break;
 		case WinPrintWrapper::PdfParam::tabloid:
-			ConcateWstring(res,  L"paper=",L"tabloid",_co );
+			ConcateWstring(res, L"paper=", L"tabloid", _co);
 			break;
 		case WinPrintWrapper::PdfParam::statement:
-			ConcateWstring(res,  L"paper=",L"statement",_co );
+			ConcateWstring(res, L"paper=", L"statement", _co);
 			break;
 		case WinPrintWrapper::PdfParam::A2:
-			ConcateWstring(res,  L"paper=",L"A2",_co );
+			ConcateWstring(res, L"paper=", L"A2", _co);
 			break;
 		case WinPrintWrapper::PdfParam::A3:
-			ConcateWstring(res,  L"paper=",L"A3",_co );
+			ConcateWstring(res, L"paper=", L"A3", _co);
 			break;
 		case WinPrintWrapper::PdfParam::A4:
-			ConcateWstring(res,  L"paper=",L"A4",_co );
+			ConcateWstring(res, L"paper=", L"A4", _co);
 			break;
 		case WinPrintWrapper::PdfParam::A5:
-			ConcateWstring(res,  L"paper=",L"A5",_co );
+			ConcateWstring(res, L"paper=", L"A5", _co);
 			break;
 		case WinPrintWrapper::PdfParam::A6:
-			ConcateWstring(res,  L"paper=",L"A6",_co );
+			ConcateWstring(res, L"paper=", L"A6", _co);
 			break;
 		default:
 			break;
@@ -64,16 +64,16 @@ namespace WinPrintWrapper {
 		switch (savePaper)
 		{
 		case WinPrintWrapper::PdfParam::duplex:
-			ConcateWstring(res,  L"duplex",_co );
+			ConcateWstring(res, L"duplex", _co);
 			break;
 		case WinPrintWrapper::PdfParam::duplexshort:
-			ConcateWstring(res,  L"duplexshort",_co );
+			ConcateWstring(res, L"duplexshort", _co);
 			break;
 		case WinPrintWrapper::PdfParam::duplexlong:
-			ConcateWstring(res,  L"duplexlong",_co );
+			ConcateWstring(res, L"duplexlong", _co);
 			break;
 		case WinPrintWrapper::PdfParam::simplex:
-			ConcateWstring(res,  L"simplex",_co );
+			ConcateWstring(res, L"simplex", _co);
 			break;
 		default:
 			break;
@@ -84,10 +84,10 @@ namespace WinPrintWrapper {
 		case WinPrintWrapper::PdfParam::flat:
 			break;
 		case WinPrintWrapper::PdfParam::odd:
-			ConcateWstring(res,  L"odd",_co );
+			ConcateWstring(res, L"odd", _co);
 			break;
 		case WinPrintWrapper::PdfParam::even:
-			ConcateWstring(res,  L"even",_co );
+			ConcateWstring(res, L"even", _co);
 			break;
 		default:
 			break;
@@ -103,11 +103,11 @@ namespace WinPrintWrapper {
 #undef _ws
 	}
 
-	bool PrinterJobManager::SetPrinter(std::wstring printerName){
+	bool PrinterJobManager::SetPrinter(std::wstring printerName) {
 		this->printerName = printerName;
 		return true;
 	}
-	bool PrinterJobManager::GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus){
+	bool PrinterJobManager::GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus) {
 		if (printerName.empty())
 			return false;
 
@@ -124,8 +124,8 @@ namespace WinPrintWrapper {
 		defer{ ClosePrinter(hPrinter); };
 
 		DWORD cByteNeeded,
-			  nReturned,
-			  cByteUsed;
+			nReturned,
+			cByteUsed;
 		JOB_INFO_2* pJobStorage = NULL;
 		PRINTER_INFO_2* pPrinterInfo = NULL;
 
@@ -136,7 +136,7 @@ namespace WinPrintWrapper {
 				return FALSE;
 		}
 
-		pPrinterInfo = (PRINTER_INFO_2*)Allocator::Alloc(NULL,cByteNeeded);
+		pPrinterInfo = (PRINTER_INFO_2*)Allocator::Alloc(NULL, cByteNeeded);
 		if (!(pPrinterInfo))
 			/* Failure to allocate memory. */
 			return FALSE;
@@ -172,8 +172,8 @@ namespace WinPrintWrapper {
 			}
 		}
 
-		pJobStorage = (JOB_INFO_2*)Allocator::Alloc(NULL,cByteNeeded);
-		if (!pJobStorage){
+		pJobStorage = (JOB_INFO_2*)Allocator::Alloc(NULL, cByteNeeded);
+		if (!pJobStorage) {
 			/* Failure to allocate Job storage space. */
 			free(pPrinterInfo);
 			pPrinterInfo = NULL;
@@ -211,7 +211,7 @@ namespace WinPrintWrapper {
 	bool PrinterJobManager::GetPrinterJob(DWORD jobID, JOB_INFO_2* pJobInfo) {
 		return false;
 	}
-	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond){
+	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond) {
 
 		HANDLE hPrinter;
 		PRINTER_DEFAULTS def{};
@@ -234,7 +234,7 @@ namespace WinPrintWrapper {
 		return true;
 	}
 
-	wchar_t* PrinterBase::PrinterStatusToWstr(DWORD status){
+	wchar_t* PrinterBase::PrinterStatusToWstr(DWORD status) {
 		enum Status :unsigned int {
 			_,
 			Other,
@@ -252,7 +252,7 @@ namespace WinPrintWrapper {
 		wchar_t* res = str::Dup(statStr[status]);
 		return res;
 	}
-	std::vector<std::wstring> WinPrintWrapper::PrinterBase::JobStatusToWstr(DWORD status){
+	std::vector<std::wstring> WinPrintWrapper::PrinterBase::JobStatusToWstr(DWORD status) {
 #define str(a) L#a
 		const wchar_t* statusStr[]{
 			str(JOB_STATUS_PAUSED),
@@ -282,7 +282,7 @@ namespace WinPrintWrapper {
 
 #undef str
 	}
-	std::vector<std::wstring> WinPrintWrapper::PrinterBase::PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len){
+	std::vector<std::wstring> WinPrintWrapper::PrinterBase::PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len) {
 		using namespace std;
 		vector<wstring> ret;
 		for (UINT i = 0; i < len; i++) {
@@ -299,5 +299,23 @@ namespace WinPrintWrapper {
 
 		std::wstring wres(capsStr[capability]);
 		return wres;
+	}
+	WCHAR* WinPrintWrapper::PrinterBase::GetDefaultPrinterName()
+	{
+		DWORD bufSize;
+		GetDefaultPrinter(NULL, &bufSize);
+		WCHAR* buf = (WCHAR*)Allocator::Alloc(NULL, bufSize + 2);
+		memset(buf, 0, bufSize + 2);
+
+		buf[0] = L'\"';
+		if (GetDefaultPrinter(buf + 1, &bufSize)) {
+			buf[bufSize] = L'\"';
+			buf[bufSize + 1] = L'\0';
+			return buf;
+		}
+		else
+			return nullptr;
+
+
 	}
 }

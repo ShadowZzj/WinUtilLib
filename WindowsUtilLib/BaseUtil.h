@@ -127,4 +127,3 @@ void* memdup(const void* data, size_t len);
 #include "StrUtil.h"
 #include "Vec.h"
 #include "ParseCommondLine.h"
-#include "WinUtil.h"
