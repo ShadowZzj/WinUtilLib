@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h" />
+    <ClInclude Include="call_json.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
     <ClInclude Include="IPC.h" />
@@ -34,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseUtil.cpp" />
+    <ClCompile Include="call_json.cpp" />
     <ClCompile Include="COMHelper.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />

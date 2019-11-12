@@ -27,6 +27,12 @@
     <Filter Include="src\Windows\Win32">
       <UniqueIdentifier>{4f921fb0-957d-4318-9f97-e10e44cedb42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\Communicate">
+      <UniqueIdentifier>{b5fa9add-5f10-4d78-8d6b-cb262dc9f739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\Dll">
+      <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -56,14 +62,17 @@
     <ClInclude Include="CRTdbgHeader.h">
       <Filter>src\Windows\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="IPC.h">
-      <Filter>src\Windows\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="WinDynCalls.h">
-      <Filter>src\Windows\Win32</Filter>
-    </ClInclude>
     <ClInclude Include="StackWalker.h">
       <Filter>src\Windows\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="IPC.h">
+      <Filter>src\Windows\Win32\Communicate</Filter>
+    </ClInclude>
+    <ClInclude Include="call_json.h">
+      <Filter>src\Windows\Win32\Communicate</Filter>
+    </ClInclude>
+    <ClInclude Include="WinDynCalls.h">
+      <Filter>src\Windows\Win32\Dll</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -85,14 +94,17 @@
     <ClCompile Include="PrinterUtil.cpp">
       <Filter>src\Windows\Print</Filter>
     </ClCompile>
-    <ClCompile Include="IPC.cpp">
-      <Filter>src\Windows\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="WinDynCalls.cpp">
-      <Filter>src\Windows\Win32</Filter>
-    </ClCompile>
     <ClCompile Include="StackWalker.cpp">
       <Filter>src\Windows\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="IPC.cpp">
+      <Filter>src\Windows\Win32\Communicate</Filter>
+    </ClCompile>
+    <ClCompile Include="call_json.cpp">
+      <Filter>src\Windows\Win32\Communicate</Filter>
+    </ClCompile>
+    <ClCompile Include="WinDynCalls.cpp">
+      <Filter>src\Windows\Win32\Dll</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
