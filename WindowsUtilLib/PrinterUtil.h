@@ -29,12 +29,12 @@ namespace WinPrintWrapper {
 		unsigned int pageTo;
 		bool collate;
 		bool color;
-		enum {
+		enum PageSet{
 			flat,
 			odd,
 			even
 		} foe;
-		enum {
+		enum Duplex{
 			duplex,
 			duplexshort,
 			duplexlong,
