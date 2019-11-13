@@ -40,7 +40,7 @@ namespace WinPrintWrapper {
 			duplexlong,
 			simplex
 		} savePaper;
-		enum {
+		enum Paper{
 			letter,
 			legal,
 			tabloid,
@@ -51,7 +51,6 @@ namespace WinPrintWrapper {
 			A5,
 			A6
 		} paperSize;
-
 		//eg. "1-3,2x,collate,paper=A4,duplex,even"
 		std::wstring ToSumatraCmdStr();
 
@@ -61,8 +60,9 @@ namespace WinPrintWrapper {
 	public:
 		static wchar_t* PrinterStatusToWstr(DWORD status);
 		static std::vector<std::wstring> JobStatusToWstr(DWORD status);
-		static std::vector<std::wstring> PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len);
-		static std::wstring PrinterCapabilityToWstr(UINT32 capability);
+		static std::vector<std::string> PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len);
+		static std::string PrinterCapabilityToStr(UINT32 capability);
+		static std::string PrinterPaperSizeToStr(UINT32 size);
 		static WCHAR* GetDefaultPrinterName();
 	};
 	class PrinterJobManager {

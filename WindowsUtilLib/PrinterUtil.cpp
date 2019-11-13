@@ -282,23 +282,46 @@ namespace WinPrintWrapper {
 
 #undef str
 	}
-	std::vector<std::wstring> WinPrintWrapper::PrinterBase::PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len) {
+	std::vector<std::string> WinPrintWrapper::PrinterBase::PrinterCapabilitiesToWstrs(UINT32* capabilities, UINT len) {
 		using namespace std;
-		vector<wstring> ret;
+		vector<string> ret;
 		for (UINT i = 0; i < len; i++) {
-			ret.push_back(PrinterCapabilityToWstr(capabilities[i]));
+			ret.push_back(PrinterCapabilityToStr(capabilities[i]));
 		}
 		return ret;
 	}
-	std::wstring WinPrintWrapper::PrinterBase::PrinterCapabilityToWstr(UINT32 capability)
+	std::string WinPrintWrapper::PrinterBase::PrinterCapabilityToStr(UINT32 capability)
 	{
-		const wchar_t* capsStr[] = { L"Unknown",L"Other",L"Color Printing",L"Duplex Printing",L"Copies",L"Collation" };
+		const char* capsStr[] = { "unknown","other","color","duplex","copy","collate" };
 
 		if (dimof1(capsStr) <= capability)
 			return nullptr;
 
-		std::wstring wres(capsStr[capability]);
-		return wres;
+		std::string res(capsStr[capability]);
+		return res;
+	}
+	std::string WinPrintWrapper::PrinterBase::PrinterPaperSizeToStr(UINT32 size)
+	{
+		std::string res;
+		switch (size)
+		{
+		case 7:
+			res = "Letter";
+			break;
+		case 21:
+			res = "A3";
+			break;
+		case 22:
+			res = "A4";
+			break;
+		case 23:
+			res = "A5";
+			break;
+		default:
+			res = "";
+			break;
+		}
+		return res;
 	}
 	WCHAR* WinPrintWrapper::PrinterBase::GetDefaultPrinterName()
 	{

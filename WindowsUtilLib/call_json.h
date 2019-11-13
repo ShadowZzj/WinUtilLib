@@ -11,26 +11,26 @@ in param
 out param
 {
 	"Status":1
-	"ReturnMsg":{...}
+	"Data":{...}
+	"ReturnMsg":""
 }
-
-Status:
-1---exec success
-2---exec fail
-3---not supported method
-4---Method Index and Param not compatible
 */
+
 #include "json.hpp"
 using json = nlohmann::json;
 
 class CallJ
 {
 public:
-	enum ErrorCode {
+	enum Status {
+		Success,
+		UnHandledException,
+		HandledException,
+		IndexError,
 
 	};
 
-	typedef int (*method_template)(nlohmann::json::iterator& jparam, std::string& retj);
+	typedef std::tuple<int, std::string> (*method_template)(nlohmann::json::iterator& jparam, std::string& retj);
 	typedef std::pair<std::string, method_template> MethodInfo;
 
 	//if name or method has been in methods, return false 
@@ -41,15 +41,16 @@ public:
 	bool DeleteMethod(std::string name);
 	bool ExecCall(char *injson, int injsonlen, char **outjson, int *outjsonlen);
 	
-	void SetRetJson(int iStatus, json& jmsg, std::string& retj);
+	void SetRetJson(int iStatus, json& jmsg, std::string& retj,std::string errorMsg);
 private:
 	const char* METHODINDEX_STR = "MethodIndex";
 	const char* METHODPARAM_STR = "MethodParam";
 	const char* STATUS_STR = "Status";
 	const char* RETURNMSG_STR = "ReturnMsg";
-
+	const char* DATA = "Data";
 	std::vector<MethodInfo> methods;
 	bool isIndexParamValid(nlohmann::json::iterator &indexIterator, nlohmann::json::iterator &paramIterator, json& inj);
 
 };
-
+char* GetStrValueByKey(nlohmann::json::iterator& jparam, std::string key);
+wchar_t* GetWstrValueByKey(nlohmann::json::iterator& jparam, std::string key);
