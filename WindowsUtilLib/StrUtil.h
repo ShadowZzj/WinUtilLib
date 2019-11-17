@@ -62,7 +62,9 @@ namespace str {
 	}
 	char* BackSlashDup(const char* str);
 	char* Wstr2Str(const wchar_t* wstr);
+	std::string Wstr2Str(std::wstring wstr);
 	wchar_t* Str2Wstr(const char* str);
+	std::wstring Str2Wstr(std::string str);
 	template<class T1>
 	auto ReverseStrWstr(const T1* str) {
 		if (str == nullptr)
@@ -75,4 +77,5 @@ namespace str {
 			return (void*)Wstr2Str((const wchar_t*)str);
 		}
 	}
+	
 }

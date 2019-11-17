@@ -1,7 +1,7 @@
 #include "PrinterUtil.h"
 
 namespace WinPrintWrapper {
-	std::wstring PdfParam::ToSumatraCmdStr()
+	std::wstring PdfParam::ToSumatraCmdStr() const
 	{
 #define _tws(val) std::to_wstring(val)
 #define _co L","
@@ -203,12 +203,46 @@ namespace WinPrintWrapper {
 		 *  Return the information.
 		 */
 		*pcJobs = nReturned;
-		*printerStatus = pPrinterInfo->Status;
+		if(printerStatus)
+			*printerStatus = pPrinterInfo->Status;
 		*ppJobInfo = pJobStorage;
 		free(pPrinterInfo);
 		return TRUE;
 	}
-	bool PrinterJobManager::GetPrinterJob(DWORD jobID, JOB_INFO_2* pJobInfo) {
+	bool PrinterJobManager::GetPrinterJob(DWORD jobID, JOB_INFO_2** pJobInfo) {
+		if (printerName.empty())
+			return false;
+
+		HANDLE hPrinter;
+		PRINTER_DEFAULTS def{};
+
+		def.DesiredAccess = PRINTER_ALL_ACCESS;
+
+		wchar_t* buf = str::Dup(printerName.c_str());
+		defer{ Allocator::Free(NULL,buf); };
+
+		if (!OpenPrinter(buf, &hPrinter, &def))
+			return false;
+		defer{ ClosePrinter(hPrinter); };
+
+		JOB_INFO_2* job;
+
+		DWORD needed = 0;
+		if (!GetJob(hPrinter, jobID, 2, nullptr, 0, &needed))
+			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
+				job = (JOB_INFO_2*)Allocator::Alloc(nullptr, needed);
+				if (GetJob(hPrinter, jobID, 2, (LPBYTE)job, needed, &needed)) {
+					*pJobInfo = job;
+					return true;
+				}
+				else {
+					Allocator::Free(nullptr, job);
+					return false;
+				}
+			}
+			else
+				return false;
+
 		return false;
 	}
 	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond) {

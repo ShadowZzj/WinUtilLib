@@ -87,7 +87,7 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 
 		std::string outStr;
 		outStr.clear();
-
+		std::cout << "In print.dll "<<methodParam_iter->get<json>()<<"\n";
 		std::tuple<int, std::string> stat;
 		try {
 			stat = mt.second(methodParam_iter, outStr);
@@ -100,8 +100,9 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		std::string ret;
 		ret.clear();
 		{
-			json tmp = json::parse(outStr);
-
+			json tmp;
+			if (!outStr.empty())
+				tmp = json::parse(outStr);
 			SetRetJson(std::get<0>(stat), tmp, ret, std::get<1>(stat));
 		}
 

@@ -52,7 +52,7 @@ namespace WinPrintWrapper {
 			A6
 		} paperSize;
 		//eg. "1-3,2x,collate,paper=A4,duplex,even"
-		std::wstring ToSumatraCmdStr();
+		std::wstring ToSumatraCmdStr() const;
 
 	};
 
@@ -70,7 +70,7 @@ namespace WinPrintWrapper {
 		PrinterJobManager(std::wstring printerName=L"") :printerName(printerName) {}
 		bool SetPrinter(std::wstring printerName);
 		bool GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus);
-		bool GetPrinterJob(DWORD jobID, JOB_INFO_2* pJobInfo);
+		bool GetPrinterJob(DWORD jobID, JOB_INFO_2** pJobInfo);
 		bool ControlJob(DWORD jobID, DWORD commond);
 
 	private:

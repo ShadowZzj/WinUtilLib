@@ -63,6 +63,21 @@ namespace str {
 		char* ret = str::Dup(c);
 		return ret;
 	}
+	std::string Wstr2Str(std::wstring wstr)
+	{
+		const wchar_t* tmp = wstr.c_str();
+		char* str = Wstr2Str(tmp);
+		defer{ Allocator::Free(nullptr,str); };
+		std::string ret(str);
+		return ret;
+	}
+	std::wstring Str2Wstr(std::string str) {
+		const char* tmp = str.c_str();
+		wchar_t* wstr = Str2Wstr(tmp);
+		defer{ Allocator::Free(nullptr,wstr); };
+		std::wstring ret(wstr);
+		return ret;
+	}
 	wchar_t* Str2Wstr(const char* str){
 		const CHAR* wc = str;
 		_bstr_t b(wc);
