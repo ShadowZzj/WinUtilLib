@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "call_json.h"
 #include "BaseUtil.h"
+#include "log.h"
 using json = nlohmann::json;
 
 bool CallJ::AddMethod(method_template method)
@@ -68,6 +69,7 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		}
 		catch (...)
 		{
+			file_logger->error("Parse json fails in ExecCall");
 			return false;
 		}
 
@@ -81,29 +83,39 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		bool success;
 
 		CallJ::MethodInfo mt = GetMethod(iMethodIndex, success);
-
 		if (!success)
 			return false;
+		file_logger->info("Accept IPC call method index:{0}", iMethodIndex);
 
 		std::string outStr;
 		outStr.clear();
-		std::cout << "In print.dll "<<methodParam_iter->get<json>()<<"\n";
+
+		json iter= methodParam_iter->get<json>();
+
+		file_logger->info("MethodParameters: {0}",iter.dump());
+
 		std::tuple<int, std::string> stat;
 		try {
 			stat = mt.second(methodParam_iter, outStr);
 		}
 		catch (...) {
+			file_logger->error("Method unhandled exception");
 			std::get<0>(stat) = UnHandledException;
 			std::get<1>(stat) = "UnHandledException, need to fix code";
 		}
 
 		std::string ret;
 		ret.clear();
-		{
+
+		try{
 			json tmp;
 			if (!outStr.empty())
 				tmp = json::parse(outStr);
 			SetRetJson(std::get<0>(stat), tmp, ret, std::get<1>(stat));
+		}
+		catch (...) {
+			file_logger->error("Parse outStr json fails");
+			return false;
 		}
 
 		char* temp = str::Dup(ret.data());
@@ -113,15 +125,18 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 
 		*outjson = temp;
 		*outjsonlen = ret.size();
+		file_logger->info("Return json: {0}", temp);
 		return true;
 	}
 	catch (const nlohmann::detail::exception & nde)
 	{
-		throw;
+		file_logger->error("Undandled exception in Execall");
+		return false;
 	}
 	catch (const std::exception & stde)
 	{
-		throw;
+		file_logger->error("Undandled exception in Execall");
+		return false;
 	}
 
 

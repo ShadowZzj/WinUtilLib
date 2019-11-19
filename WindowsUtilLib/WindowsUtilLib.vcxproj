@@ -25,6 +25,7 @@
     <ClInclude Include="CRTdbgHeader.h" />
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PrinterUtil.h" />
     <ClInclude Include="StackWalker.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="call_json.cpp" />
     <ClCompile Include="COMHelper.cpp" />
     <ClCompile Include="IPC.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
     <ClCompile Include="StackWalker.cpp" />
@@ -161,7 +163,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
