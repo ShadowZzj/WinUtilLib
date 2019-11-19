@@ -245,7 +245,7 @@ namespace WinPrintWrapper {
 
 		return false;
 	}
-	bool PrinterJobManager::ControlJob(DWORD jobID, DWORD commond) {
+	bool PrinterJobManager::ControlJob(std::wstring printerName, const wchar_t* document, DWORD commond) {
 
 		HANDLE hPrinter;
 		PRINTER_DEFAULTS def{};
@@ -259,13 +259,27 @@ namespace WinPrintWrapper {
 			return false;
 		defer{ ClosePrinter(hPrinter); };
 
-		//jobInfo->Size = sizeof(JOB_INFO_2);
-
-		if (!SetJob(hPrinter, jobID, 0, NULL, commond)) {
-			DWORD error = GetLastError();
+		JOB_INFO_2* jobs;
+		int count;
+		if (!GetPrinterJobs(&jobs, &count, nullptr))
 			return false;
+
+		Allocator::Free(nullptr, jobs);
+
+		std::wstring wdocu = document;
+		for (int i = 0; i < count; i++) {
+			std::wstring jobDocu = jobs[i].pDocument;
+			if(jobDocu.find(wdocu)!=-1)
+				if (!SetJob(hPrinter, jobs[i].JobId, 0, NULL, commond)) {
+					DWORD error = GetLastError();
+
+					return false;
+				}
+				else
+					return true;
 		}
-		return true;
+
+		return false;
 	}
 
 	wchar_t* PrinterBase::PrinterStatusToWstr(DWORD status) {

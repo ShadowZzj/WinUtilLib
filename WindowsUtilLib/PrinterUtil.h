@@ -71,7 +71,7 @@ namespace WinPrintWrapper {
 		bool SetPrinter(std::wstring printerName);
 		bool GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus);
 		bool GetPrinterJob(DWORD jobID, JOB_INFO_2** pJobInfo);
-		bool ControlJob(DWORD jobID, DWORD commond);
+		bool ControlJob(std::wstring printerName,const wchar_t* document, DWORD commond);
 
 	private:
 		std::wstring printerName;
