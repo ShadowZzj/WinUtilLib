@@ -6,7 +6,6 @@
 #include <functional>
 #include <vector>
 
-
 #pragma warning(push)
 #pragma warning(disable:6011)
 inline void CrashMe() {

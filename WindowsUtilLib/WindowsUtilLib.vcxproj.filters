@@ -33,6 +33,9 @@
     <Filter Include="src\Windows\Win32\Dll">
       <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\Process">
+      <UniqueIdentifier>{7059bc64-161b-457b-9528-ab8b939772dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -77,6 +80,15 @@
     <ClInclude Include="log.h">
       <Filter>src\Windows\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadHelper.h">
+      <Filter>src\Windows\Win32\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessHelper.h">
+      <Filter>src\Windows\Win32\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="loguru.hpp">
+      <Filter>src\Windows\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -110,6 +122,15 @@
       <Filter>src\Windows\Win32\Dll</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
+      <Filter>src\Windows\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadHelper.cpp">
+      <Filter>src\Windows\Win32\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessHelper.cpp">
+      <Filter>src\Windows\Win32\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="loguru.cpp">
       <Filter>src\Windows\Debug</Filter>
     </ClCompile>
   </ItemGroup>

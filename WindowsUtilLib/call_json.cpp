@@ -85,14 +85,14 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		CallJ::MethodInfo mt = GetMethod(iMethodIndex, success);
 		if (!success)
 			return false;
-		file_logger->info("Accept IPC call method index:{0}", iMethodIndex);
+		file_logger->info("Accept IPC call method index:%d", iMethodIndex);
 
 		std::string outStr;
 		outStr.clear();
 
 		json iter= methodParam_iter->get<json>();
 
-		file_logger->info("MethodParameters: {0}",iter.dump());
+		file_logger->info("MethodParameters: %s",iter.dump());
 
 		std::tuple<int, std::string> stat;
 		try {
@@ -125,12 +125,12 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 
 		*outjson = temp;
 		*outjsonlen = ret.size();
-		file_logger->info("Return json: {0}", temp);
+		file_logger->info("Return json: %s", temp);
 		return true;
 	}
 	catch (const nlohmann::detail::exception & nde)
 	{
-		file_logger->error("Undandled exception in Execall");
+		file_logger->error("nlohmann::json exception");
 		return false;
 	}
 	catch (const std::exception & stde)

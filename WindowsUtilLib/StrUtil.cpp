@@ -24,6 +24,7 @@ namespace str {
 		return dst;
 	}
 
+
 	char* BackSlashDup(const char* str){
 		if (!str)
 			return nullptr;
@@ -116,5 +117,8 @@ namespace str {
 	}
 	bool IsEmpty(const wchar_t* s){
 		return !s || *s == 0;
+	}
+	bool IsTextUnicode(const void* buf, size_t cb, int* res) {
+		return ::IsTextUnicode(buf, cb, res);
 	}
 }

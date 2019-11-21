@@ -4,16 +4,11 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <io.h>
-
-#include "../WindowsUtilLib/WinDynCalls.h"
-#include "../WindowsUtilLib//Vec.h"
+#include "BaseUtil.h"
 int main()
 {
-	char* str = new char[20]{ "niihaosioaoiasdd" };
-	size_t len = strlen(str);
-	size_t cap = 20;
-	Vec<char> vec(str,len,cap);
-	Vec<char> vec2(vec);
+
+
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

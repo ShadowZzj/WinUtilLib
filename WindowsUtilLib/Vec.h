@@ -1,5 +1,5 @@
 //include BaseUtil.h instead of including directly.
-
+#pragma once
 
 //Property:
 //	els: pointer to the buffer

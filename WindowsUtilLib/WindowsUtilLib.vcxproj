@@ -26,10 +26,13 @@
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="loguru.hpp" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PrinterUtil.h" />
+    <ClInclude Include="ProcessHelper.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StrUtil.h" />
+    <ClInclude Include="ThreadHelper.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="WinDynCalls.h" />
     <ClInclude Include="WMIHelper.h" />
@@ -40,10 +43,13 @@
     <ClCompile Include="COMHelper.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="log.cpp" />
+    <ClCompile Include="loguru.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
+    <ClCompile Include="ProcessHelper.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="StrUtil.cpp" />
+    <ClCompile Include="ThreadHelper.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
     <ClCompile Include="WMIHelper.cpp" />
   </ItemGroup>
@@ -121,6 +127,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,6 +179,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

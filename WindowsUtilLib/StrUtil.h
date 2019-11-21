@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+
 namespace str {
 	template<class T>
 	class Str;
@@ -51,7 +52,22 @@ namespace str {
 		else
 			return dstStr;
 	}
-	
+	template<class T>
+	bool Equal(const T* src, const T* dst) {
+		if (typeid(T) != typeid(char) && typeid(T) != typeid(wchar_t))
+			return false;
+
+		size_t srcCount = Len(src);
+		size_t dstCount = Len(dst);
+		if (srcCount != dstCount)
+			return false;
+
+		for (size_t i = 0; i < dstCount; i++) {
+			if (src[i] != dst[i])
+				return false;
+		}
+		return true;
+	}
 	template<typename T,typename T1,typename ...T2>
 	Str<T>& ConcateStr(Str<T>& src, T1 arg, T2 ...args) {
 		src += arg;
@@ -77,5 +93,6 @@ namespace str {
 			return (void*)Wstr2Str((const wchar_t*)str);
 		}
 	}
-	
+	//Statistical method to judge whether it is unicode text.
+	bool IsTextUnicode(const void* buf, size_t cb, int* res);
 }
