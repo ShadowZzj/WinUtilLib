@@ -1,5 +1,7 @@
 #pragma once
 #include <Windows.h>
+#include "BaseUtil.h"
+#include "StrUtil.h"
 namespace IPC {
 	class SharedMemory {
 	public:
@@ -27,12 +29,24 @@ namespace IPC {
 
 	class ReadEndPipe {
 	public:
-		ReadEndPipe() {};
-		ReadEndPipe(HANDLE _readHandle) { SetHandle(_readHandle); }
-
-		void SetHandle(HANDLE _readHandle) { readHandle = _readHandle; }
-		int Read(void* buf, size_t bufSize);
+		ReadEndPipe(HANDLE read) { SetHandle(read); };
+		~ReadEndPipe() {
+		}
+		int SyncRead(void* buf, size_t bufSize,size_t noReturnBytes=0) {
+			if (readHandle == INVALID_HANDLE_VALUE)
+				return -1;
+			DWORD readBytes;
+			bool success= ReadFile(readHandle, buf, bufSize, &readBytes, NULL);
+			if (!success || readBytes == 0)
+				return -1;
+			return readBytes;
+		}
+		bool SetHandle(HANDLE read) {
+			readHandle = read;
+			return true;
+		}
 	private:
-		HANDLE readHandle;
+		HANDLE readHandle=INVALID_HANDLE_VALUE;
+
 	};
 }

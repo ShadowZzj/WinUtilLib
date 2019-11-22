@@ -66,6 +66,8 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		try
 		{
 			inj = json::parse(std::move(inadapter));
+			std::string all = inj.dump();
+			file_logger->info("Accpect IPC: %s", all.c_str());
 		}
 		catch (...)
 		{
@@ -85,23 +87,24 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		CallJ::MethodInfo mt = GetMethod(iMethodIndex, success);
 		if (!success)
 			return false;
-		file_logger->info("Accept IPC call method index:%d", iMethodIndex);
+		file_logger->info("Method index:%d", iMethodIndex);
 
 		std::string outStr;
 		outStr.clear();
 
 		json iter= methodParam_iter->get<json>();
-
-		file_logger->info("MethodParameters: %s",iter.dump());
+		std::string paramString = iter.dump();
+		const char* params = paramString.c_str();
+		file_logger->info("MethodParameters: %s",params);
 
 		std::tuple<int, std::string> stat;
 		try {
 			stat = mt.second(methodParam_iter, outStr);
 		}
-		catch (...) {
+		catch (std::exception except) {
 			file_logger->error("Method unhandled exception");
 			std::get<0>(stat) = UnHandledException;
-			std::get<1>(stat) = "UnHandledException, need to fix code";
+			std::get<1>(stat) =except.what();
 		}
 
 		std::string ret;

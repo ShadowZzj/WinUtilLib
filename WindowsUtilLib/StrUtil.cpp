@@ -58,6 +58,8 @@ namespace str {
 		return ret;
 	}
 	char* Wstr2Str(const wchar_t* wstr){
+		if (IsEmpty(wstr))
+			return nullptr;
 		const WCHAR* wc = wstr;
 		_bstr_t b(wc);
 		const char* c = b;
@@ -66,6 +68,7 @@ namespace str {
 	}
 	std::string Wstr2Str(std::wstring wstr)
 	{
+
 		const wchar_t* tmp = wstr.c_str();
 		char* str = Wstr2Str(tmp);
 		defer{ Allocator::Free(nullptr,str); };
@@ -80,6 +83,8 @@ namespace str {
 		return ret;
 	}
 	wchar_t* Str2Wstr(const char* str){
+		if (IsEmpty(str))
+			return nullptr;
 		const CHAR* wc = str;
 		_bstr_t b(wc);
 		const WCHAR* c = b;
