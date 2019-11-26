@@ -39,6 +39,9 @@
     <Filter Include="src\Windows\Win32\Base">
       <UniqueIdentifier>{26717dc0-043f-49d3-97d8-551df44df545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\Service">
+      <UniqueIdentifier>{6babc9ee-a0c9-4d26-b826-8a25c775b4cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -92,6 +95,9 @@
     <ClInclude Include="HandleHelper.h">
       <Filter>src\Windows\Win32\Base</Filter>
     </ClInclude>
+    <ClInclude Include="WinService.h">
+      <Filter>src\Windows\Win32\Service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -135,6 +141,9 @@
     </ClCompile>
     <ClCompile Include="HandleHelper.cpp">
       <Filter>src\Windows\Win32\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="WinService.cpp">
+      <Filter>src\Windows\Win32\Service</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

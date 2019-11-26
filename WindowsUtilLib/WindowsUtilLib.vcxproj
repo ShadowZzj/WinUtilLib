@@ -35,6 +35,7 @@
     <ClInclude Include="ThreadHelper.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="WinDynCalls.h" />
+    <ClInclude Include="WinService.h" />
     <ClInclude Include="WMIHelper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +52,7 @@
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="ThreadHelper.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
+    <ClCompile Include="WinService.cpp" />
     <ClCompile Include="WMIHelper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

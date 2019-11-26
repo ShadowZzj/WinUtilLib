@@ -37,7 +37,7 @@ void* Allocator::MemDup(Allocator* a, const void* mem, size_t size, size_t paddi
 	if (!dstMem)
 		return nullptr;
 	memcpy(dstMem, mem, size);
-	memset((LPBYTE)dstMem + size, 0, 2);
+	memset((LPBYTE)dstMem + size, 0, padding);
 	return dstMem;
 }
 char* Allocator::StrDup(Allocator* a, const char* str){
