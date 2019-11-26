@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-
+#include <locale.h>
 namespace str {
 	template<class T>
 	class Str;
@@ -81,6 +81,8 @@ namespace str {
 	std::string Wstr2Str(std::wstring wstr);
 	wchar_t* Str2Wstr(const char* str);
 	std::wstring Str2Wstr(std::string str);
+	char* WideCharToUTF8(const wchar_t* wStr);
+	std::string StringToUTF8(const std::string& str);
 	template<class T1>
 	auto ReverseStrWstr(const T1* str) {
 		if (str == nullptr)
@@ -95,4 +97,5 @@ namespace str {
 	}
 	//Statistical method to judge whether it is unicode text.
 	bool IsTextUnicode(const void* buf, size_t cb, int* res);
+	std::string UTF8ToString(const std::string& str);
 }

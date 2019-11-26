@@ -18,7 +18,6 @@ void FileLoggerInit(const char* fileName) {
 std::shared_ptr<SimpleLogger> file_logger;
 bool isfile_loggerInit = false;
 
-
 void FileLoggerInit(const char* fileName) {
 	if (isfile_loggerInit) {
 		return;
