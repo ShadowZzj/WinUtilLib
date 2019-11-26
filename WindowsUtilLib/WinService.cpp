@@ -1,110 +1,65 @@
 #include "WinService.h"
 #include <functional>
-void WinServiceHelper::AddService(std::string name, ServiceProto service,HandlerProto handler)
-{
-	SERVICE_TABLE_ENTRYA* tmp;
-	if (serviceTable == nullptr) {
-		tmp = Allocator::Alloc<SERVICE_TABLE_ENTRYA>(nullptr, 2);
-	}
-	else
-		tmp = (SERVICE_TABLE_ENTRYA*)Allocator::MemDup(nullptr, serviceTable, sizeof(SERVICE_TABLE_ENTRYA) *(serviceCount+1), sizeof(SERVICE_TABLE_ENTRYA));
-	tmp[serviceCount].lpServiceName = (LPSTR)name.c_str();
-	tmp[serviceCount].lpServiceProc = (LPSERVICE_MAIN_FUNCTIONA)service;
+#include "BaseUtil.h"
+WinService* winService = nullptr;
 
-	tmp[serviceCount + 1].lpServiceName = NULL;
-	tmp[serviceCount + 1].lpServiceProc = NULL;
-	++serviceCount;
-
-	if (serviceTable != NULL)
-		Allocator::Free(nullptr, serviceTable);
-
-	serviceTable = tmp;
-
-	AddCtrlHandler(name, handler);
-}
-
-void WinServiceHelper::AddService(const WinService& ser)
-{
-	std::string name = ser.name;
-	auto service = std::bind(&WinService::ServiceMain, &ser, std::placeholders::_1);
-	auto handler = std::bind(&WinService::ServiceHandler, &ser, std::placeholders::_1);
-	AddService(name, (ServiceProto)&service, (HandlerProto)&handler);
-}
-
-void WinServiceHelper::StartServ()
-{
-	StartServiceCtrlDispatcherA(serviceTable);
-}
-
-void WinServiceHelper::AddCtrlHandler(std::string name, HandlerProto handler)
-{
-	HandlerProto* tmp;
-	tmp = (HandlerProto*)Allocator::MemDup(nullptr, handlers, sizeof(HandlerProto) * serviceCount, sizeof(HandlerProto));
-
-	tmp[serviceCount] = handler;
-	
-	if (handlers != NULL)
-		Allocator::Free(nullptr, handler);
-	handlers = tmp;
-}
-
-
-
-void __stdcall WinService::ServiceMain(DWORD dwNumServicesArgs, LPSTR* lpServiceArgVectors){
-	auto handler = std::bind(&WinService::ServiceHandler, this, std::placeholders::_1);
-	SERVICE_STATUS_HANDLE _statusHandle = ::RegisterServiceCtrlHandlerA(name.c_str(), (LPHANDLER_FUNCTION)&handler);
+void __stdcall WinService::ServiceMain(DWORD dwNumServicesArgs, LPSTR* lpServiceArgVectors) {
+	if (!winService)
+		return;
+	SERVICE_STATUS_HANDLE _statusHandle = ::RegisterServiceCtrlHandlerA(winService->name.c_str(), (LPHANDLER_FUNCTION)ServiceHandler);
 	if (NULL == _statusHandle) {
 		return;
 	}
 
-	statusHandle = _statusHandle;
-	ReportSvcStatus(SERVICE_START_PENDING, NO_ERROR, 0, 0, 3000);
+	winService->statusHandle = _statusHandle;
+	winService->ReportSvcStatus(SERVICE_START_PENDING, NO_ERROR, 0, 0, 3000);
 
-	auto stopCallback = std::bind(&WinService::SvcStopCallback, this, std::placeholders::_1);
-	eventStop = CreateEvent(NULL, FALSE, FALSE, NULL);
+	winService->eventStop = CreateEvent(NULL, FALSE, FALSE, NULL);
 
-	if (!::RegisterWaitForSingleObject(&registerWaitObj, eventStop, (WAITORTIMERCALLBACK)&stopCallback, NULL, INFINITE, WT_EXECUTEONLYONCE | WT_EXECUTELONGFUNCTION)) {
+	if (!::RegisterWaitForSingleObject(&winService->registerWaitObj, winService->eventStop, (WAITORTIMERCALLBACK)SvcStopCallback, NULL, INFINITE, WT_EXECUTEONLYONCE | WT_EXECUTELONGFUNCTION)) {
 		return;
 	}
-	if (!OnInit()) {
-		ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
+	if (!winService->OnInit()) {
+		winService->ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
 		return;
 	}
 
-	ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0, 0, 0);
-	// need to add something?
+	winService->ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0, 0, 0);
+	winService->Run();
 
 	return;
 }
 
-void __stdcall WinService::ServiceHandler(DWORD dwControl){
+void __stdcall WinService::ServiceHandler(DWORD dwControl) {
 	switch (dwControl)
 	{
 	case SERVICE_CONTROL_INTERROGATE:
-		return ;
+		return;
 	case SERVICE_CONTROL_STOP:
-		InternalOnStop();
+		winService->InternalOnStop();
 		return;
 	case SERVICE_CONTROL_SHUTDOWN:
-		InternalOnShutdown();
+		winService->InternalOnShutdown();
 		return;
 	case SERVICE_CONTROL_PRESHUTDOWN:
-		InternalOnPreShutdown();
-		return ;
+		winService->InternalOnPreShutdown();
+		return;
 	default:
 		return;
 	}
 
 }
 
+
+
 VOID WinService::SvcStopCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 {
-	if (NULL != registerWaitObj)
-		::UnregisterWait(registerWaitObj);
-	if (NULL != eventStop)
-		::CloseHandle(eventStop);
+	if (NULL != winService->registerWaitObj)
+		::UnregisterWait(winService->registerWaitObj);
+	if (NULL != winService->eventStop)
+		::CloseHandle(winService->eventStop);
 
-	ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
+	winService->ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
 }
 
 BOOL WinService::ReportSvcStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DWORD dwSvcExitCode, DWORD dwCheckPoint, DWORD dwWaitHint)
@@ -140,12 +95,19 @@ BOOL WinService::ReportSvcStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DW
 	return ::SetServiceStatus(statusHandle, &svcStatus);
 }
 
-WinService::WinService(std::string name)
-{
-	this->name = name;
-	eventStop = NULL;
-	registerWaitObj = NULL;
 
+
+void WinService::Start()
+{
+	winService = this;
+
+	entry[0].lpServiceName = (LPSTR)name.c_str();
+	entry[0].lpServiceProc = (LPSERVICE_MAIN_FUNCTIONA)ServiceMain;
+
+	entry[1].lpServiceName = NULL;
+	entry[1].lpServiceProc = NULL;
+
+	StartServiceCtrlDispatcherA(entry);
 }
 
 void WinService::InternalOnStop()
@@ -163,10 +125,89 @@ void WinService::InternalOnShutdown()
 }
 
 void WinService::InternalOnPreShutdown()
-{	
+{
 	OnPreShutDown();
 	ReportSvcStatus(SERVICE_STOP_PENDING, NO_ERROR, 0, 0, 5000);
 	::SetEvent(eventStop);
 }
 
+WinService::WinService(std::string name, std::string description,std::string displayName)
+{
+	this->name = name;
+	this->description = description;
+	this->displayName = displayName;
+	eventStop = NULL;
+	registerWaitObj = NULL;
+}
 
+bool WinService::InstallService()
+{
+	char DirBuf[1024] = { 0 };
+	GetCurrentDirectoryA(1024, DirBuf);
+	GetModuleFileNameA(NULL, DirBuf, sizeof(DirBuf));
+
+	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (!sch)
+	{
+		std::wcout << (L"OpenSCManager Failed");
+		return FALSE;
+	}
+	const char* serviceName = name.c_str();
+	const char* display = displayName.c_str();
+	SC_HANDLE schNewSrv = CreateServiceA(sch, serviceName, display, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
+		SERVICE_ERROR_NORMAL, DirBuf, NULL, NULL, NULL, NULL, NULL);
+
+	if (!schNewSrv)
+	{
+		std::wcout << (L"CreateService Failed");
+		return FALSE;
+	}
+
+	SERVICE_DESCRIPTIONA sd;
+	sd.lpDescription = (LPSTR)description.c_str();
+
+	ChangeServiceConfig2A(schNewSrv, SERVICE_CONFIG_DESCRIPTION, &sd);
+	CloseServiceHandle(schNewSrv);
+	CloseServiceHandle(sch);
+
+	printf("Install Service Success!");
+	return TRUE;
+}
+
+bool WinService::UninstallService()
+{
+	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (!scm)
+	{
+		std::wcout<<(L"OpenSCManager Failed");
+		return FALSE;
+	}
+	const char* serviceName = name.c_str();
+	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
+	if (!scml)
+	{
+		std::wcout << (L"OpenService Failed");
+		return FALSE;
+	}
+	SERVICE_STATUS ss;
+	if (!QueryServiceStatus(scml, &ss))
+	{
+		std::wcout << (L"QueryServiceStatus Failed");
+		return FALSE;
+	}
+	if (ss.dwCurrentState != SERVICE_STOPPED)
+	{
+		if (!ControlService(scml, SERVICE_CONTROL_STOP, &ss) && ss.dwCurrentState != SERVICE_CONTROL_STOP)
+		{
+			std::wcout << (L"ControlService Stop Failed");
+			return FALSE;
+		}
+	}
+	if (!DeleteService(scml))
+	{
+		std::wcout << (L"DeleteService Failed");
+		return FALSE;
+	}
+	printf("Delete Service Success!");
+	return TRUE;
+}

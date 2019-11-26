@@ -146,7 +146,7 @@ public:
 	void AppendStrPtr(const T src) {
 		CrashIf(src == nullptr);
 		T* dst=MakeSpaceAt(len, 1);
-		*dst = (wchar_t*)Allocator::MemDup(allocator, src, str::Len(src)*sizeof(wchar_t),2);
+		*dst = (T)Allocator::MemDup(allocator, src, str::Len(src)*sizeof(**dst),2);
 	}
 	T* AppendBlanks(size_t count) {
 		return MakeSpaceAt(len, count);
