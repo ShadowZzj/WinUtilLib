@@ -42,6 +42,9 @@
     <Filter Include="src\Windows\Win32\Service">
       <UniqueIdentifier>{6babc9ee-a0c9-4d26-b826-8a25c775b4cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{85ded42e-b20a-4b01-888b-318a3aee1e0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -98,6 +101,9 @@
     <ClInclude Include="WinService.h">
       <Filter>src\Windows\Win32\Service</Filter>
     </ClInclude>
+    <ClInclude Include="Reflection.h">
+      <Filter>src\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -144,6 +150,15 @@
     </ClCompile>
     <ClCompile Include="WinService.cpp">
       <Filter>src\Windows\Win32\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Reflection.cpp">
+      <Filter>src\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="service_test.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="reflect_test.cpp">
+      <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

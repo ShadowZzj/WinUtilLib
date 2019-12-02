@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include "Reflection.h"
 
 class ReflectClass :public Reflect {
@@ -24,11 +24,11 @@ protected:
 
 };
 
-ClassInfo* ReflectClass::classInfo = new ClassInfo( "ReflectClass",ReflectClass::CreateInstance );
+ClassInfo* ReflectClass::classInfo = new ClassInfo("ReflectClass", ReflectClass::CreateInstance);
 
 class ReflectClass2 :public Reflect {
 public:
-	ReflectClass2(){}
+	ReflectClass2() {}
 	void Print() {
 		printf("haha");
 	}
@@ -36,7 +36,7 @@ public:
 };
 IMP_REFLECT(ReflectClass2)
 
-int main(int argc,char* argv[])
+int main(int argc, char* argv[])
 {
 
 	ReflectClass2* ref = (ReflectClass2*)Reflect::CreateObject("ReflectClass2");

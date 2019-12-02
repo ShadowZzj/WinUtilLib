@@ -30,6 +30,7 @@
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PrinterUtil.h" />
     <ClInclude Include="ProcessHelper.h" />
+    <ClInclude Include="Reflection.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="ThreadHelper.h" />
@@ -48,6 +49,9 @@
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
     <ClCompile Include="ProcessHelper.cpp" />
+    <ClCompile Include="Reflection.cpp" />
+    <ClCompile Include="reflect_test.cpp" />
+    <ClCompile Include="service_test.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="ThreadHelper.cpp" />

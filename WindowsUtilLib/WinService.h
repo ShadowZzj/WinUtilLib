@@ -43,7 +43,7 @@ private:
 	static void WINAPI ServiceMain(DWORD   dwNumServicesArgs, LPSTR* lpServiceArgVectors);
 	static void WINAPI ServiceHandler(DWORD dwControl);
 };
-/*
+/*eg.
 class MyService :public WinService {
 public:
 	using WinService::WinService;
