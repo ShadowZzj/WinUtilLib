@@ -38,6 +38,7 @@
     <ClInclude Include="WinDynCalls.h" />
     <ClInclude Include="WinService.h" />
     <ClInclude Include="WMIHelper.h" />
+    <ClInclude Include="paint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseUtil.cpp" />
@@ -58,6 +59,7 @@
     <ClCompile Include="WinDynCalls.cpp" />
     <ClCompile Include="WinService.cpp" />
     <ClCompile Include="WMIHelper.cpp" />
+    <ClCompile Include="paint.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

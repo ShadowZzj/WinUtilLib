@@ -45,6 +45,9 @@
     <Filter Include="test">
       <UniqueIdentifier>{85ded42e-b20a-4b01-888b-318a3aee1e0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Paint">
+      <UniqueIdentifier>{ee6b1348-cd14-4d89-a4b1-11dcd12a3b1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -104,6 +107,9 @@
     <ClInclude Include="Reflection.h">
       <Filter>src\Base</Filter>
     </ClInclude>
+    <ClInclude Include="paint.h">
+      <Filter>src\Windows\Paint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -159,6 +165,9 @@
     </ClCompile>
     <ClCompile Include="reflect_test.cpp">
       <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="paint.cpp">
+      <Filter>src\Windows\Paint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
