@@ -23,7 +23,6 @@
     <ClInclude Include="call_json.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
-    <ClInclude Include="font.h" />
     <ClInclude Include="HandleHelper.h" />
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
@@ -37,6 +36,7 @@
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="ThreadHelper.h" />
     <ClInclude Include="Vec.h" />
+    <ClInclude Include="WindowHelper.h" />
     <ClInclude Include="WinDynCalls.h" />
     <ClInclude Include="WinService.h" />
     <ClInclude Include="WMIHelper.h" />
@@ -46,7 +46,6 @@
     <ClCompile Include="BaseUtil.cpp" />
     <ClCompile Include="call_json.cpp" />
     <ClCompile Include="COMHelper.cpp" />
-    <ClCompile Include="font.cpp" />
     <ClCompile Include="HandleHelper.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="log.cpp" />
@@ -60,6 +59,8 @@
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="ThreadHelper.cpp" />
+    <ClCompile Include="WindowHelper.cpp" />
+    <ClCompile Include="WindowsHelper.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
     <ClCompile Include="WinService.cpp" />
     <ClCompile Include="WMIHelper.cpp" />

@@ -6,6 +6,14 @@
 namespace zzj {
 	class ScopedHDC {
 	public:
+		ScopedHDC() {
+			hdc = NULL;
+		}
+		ScopedHDC(HWND window) {
+			ScopedHDC();
+			HDC hdc = ::GetDC(window);
+			Bind(hdc);
+		}
 		ScopedHDC(HDC hdc) :hdc(hdc) {}
 		ScopedHDC(ScopedHDC& other) {
 			other.StealDataTo(*this);
@@ -14,13 +22,19 @@ namespace zzj {
 
 		ScopedHDC& operator=(ScopedHDC& other) {
 			other.StealDataTo(*this);
+			return *this;
 		}
 		operator HDC() {
 			return hdc;
 		}
+		void Bind(HDC hdc) {
+			if (hdc) {
+				Release();
+			}
+			this->hdc = hdc;
+		}
 	private:
 		HDC hdc;
-		HWND hwnd;
 
 		void Release() {
 			ReleaseDC(WindowFromDC(hdc), hdc);
@@ -43,10 +57,13 @@ namespace zzj {
 		};
 		Device(ScopedHDC hdc) :hdc(hdc) {
 		}
+		Device(HWND _window):hdc(_window){
+		}
+		Device(){}
 		ComposedXY GetDpi();
 		ComposedXY DLUToPixel(ComposedXY dlu);
 		ComposedXY PTToPixel(ComposedXY pt);
-
+		void Bind(ScopedHDC _hdc);
 		static HDC GetScreenHDC();
 		static HDC GetHDC(HWND wndHandle);
 	private:

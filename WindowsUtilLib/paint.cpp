@@ -31,6 +31,11 @@ Device::ComposedXY Device::PTToPixel(ComposedXY pt)
 	return ret;
 }
 
+void zzj::Device::Bind(ScopedHDC _hdc)
+{
+	hdc = _hdc;
+}
+
 HDC Device::GetScreenHDC()
 {
 	return GetDC(0);

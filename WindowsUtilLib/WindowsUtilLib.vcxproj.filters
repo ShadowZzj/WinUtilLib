@@ -18,9 +18,6 @@
     <Filter Include="src\Windows\COM">
       <UniqueIdentifier>{74bea4bd-6b43-41a5-b1ef-4f81531383e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Print">
-      <UniqueIdentifier>{2410eb17-3191-4494-85a6-1e34f1fb5f9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Windows\Debug">
       <UniqueIdentifier>{b22cc24a-a172-4089-b58a-f7d04c80b017}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,9 @@
     <Filter Include="src\Windows\Win32\MFC">
       <UniqueIdentifier>{889d3331-904c-4343-b9a4-d43bc1a04de6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\Print">
+      <UniqueIdentifier>{2410eb17-3191-4494-85a6-1e34f1fb5f9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -75,7 +75,7 @@
       <Filter>src\Windows\COM</Filter>
     </ClInclude>
     <ClInclude Include="PrinterUtil.h">
-      <Filter>src\Windows\Print</Filter>
+      <Filter>src\Windows\Win32\Print</Filter>
     </ClInclude>
     <ClInclude Include="CRTdbgHeader.h">
       <Filter>src\Windows\Debug</Filter>
@@ -116,8 +116,8 @@
     <ClInclude Include="PEhelper.h">
       <Filter>src\Windows\Win32\PE</Filter>
     </ClInclude>
-    <ClInclude Include="font.h">
-      <Filter>src\Windows\Win32\MFC</Filter>
+    <ClInclude Include="WindowHelper.h">
+      <Filter>src\Windows\Win32\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,7 +137,7 @@
       <Filter>src\Windows\COM</Filter>
     </ClCompile>
     <ClCompile Include="PrinterUtil.cpp">
-      <Filter>src\Windows\Print</Filter>
+      <Filter>src\Windows\Win32\Print</Filter>
     </ClCompile>
     <ClCompile Include="StackWalker.cpp">
       <Filter>src\Windows\Debug</Filter>
@@ -181,8 +181,9 @@
     <ClCompile Include="PEhelper.cpp">
       <Filter>src\Windows\Win32\PE</Filter>
     </ClCompile>
-    <ClCompile Include="font.cpp">
-      <Filter>src\Windows\Win32\MFC</Filter>
+    <ClCompile Include="WindowsHelper.cpp">
+      <Filter>src\Windows\Win32\Base</Filter>
     </ClCompile>
+    <ClCompile Include="WindowHelper.cpp" />
   </ItemGroup>
 </Project>
