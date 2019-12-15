@@ -40,4 +40,4 @@ private:
 	char* GetLogTypeInfo(LogType type);
 	void ForwardStr(const char* info, LogType logType);
 };
-#endif // SPDLOG
+#endif 

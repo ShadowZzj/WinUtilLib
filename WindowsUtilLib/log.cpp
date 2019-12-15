@@ -1,5 +1,5 @@
 #include "log.h"
-//Any cpp include log.h and one need to call FileLoggerInit.
+//Any cpp include log.h and one needs to call FileLoggerInit.
 #ifdef SPDLOG
 std::shared_ptr<spdlog::logger> file_logger;
 bool isfile_loggerInit = false;

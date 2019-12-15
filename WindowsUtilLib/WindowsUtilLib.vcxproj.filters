@@ -30,9 +30,6 @@
     <Filter Include="src\Windows\Win32\Communicate">
       <UniqueIdentifier>{b5fa9add-5f10-4d78-8d6b-cb262dc9f739}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Win32\Dll">
-      <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Windows\Win32\Process">
       <UniqueIdentifier>{7059bc64-161b-457b-9528-ab8b939772dc}</UniqueIdentifier>
     </Filter>
@@ -45,8 +42,14 @@
     <Filter Include="test">
       <UniqueIdentifier>{85ded42e-b20a-4b01-888b-318a3aee1e0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Paint">
+    <Filter Include="src\Windows\Win32\PE">
+      <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\Paint">
       <UniqueIdentifier>{ee6b1348-cd14-4d89-a4b1-11dcd12a3b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\MFC">
+      <UniqueIdentifier>{889d3331-904c-4343-b9a4-d43bc1a04de6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,7 +90,7 @@
       <Filter>src\Windows\Win32\Communicate</Filter>
     </ClInclude>
     <ClInclude Include="WinDynCalls.h">
-      <Filter>src\Windows\Win32\Dll</Filter>
+      <Filter>src\Windows\Win32\PE</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
       <Filter>src\Windows\Debug</Filter>
@@ -108,7 +111,13 @@
       <Filter>src\Base</Filter>
     </ClInclude>
     <ClInclude Include="paint.h">
-      <Filter>src\Windows\Paint</Filter>
+      <Filter>src\Windows\Win32\Paint</Filter>
+    </ClInclude>
+    <ClInclude Include="PEhelper.h">
+      <Filter>src\Windows\Win32\PE</Filter>
+    </ClInclude>
+    <ClInclude Include="font.h">
+      <Filter>src\Windows\Win32\MFC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,7 +149,7 @@
       <Filter>src\Windows\Win32\Communicate</Filter>
     </ClCompile>
     <ClCompile Include="WinDynCalls.cpp">
-      <Filter>src\Windows\Win32\Dll</Filter>
+      <Filter>src\Windows\Win32\PE</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>src\Windows\Debug</Filter>
@@ -167,7 +176,13 @@
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="paint.cpp">
-      <Filter>src\Windows\Paint</Filter>
+      <Filter>src\Windows\Win32\Paint</Filter>
+    </ClCompile>
+    <ClCompile Include="PEhelper.cpp">
+      <Filter>src\Windows\Win32\PE</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
+      <Filter>src\Windows\Win32\MFC</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

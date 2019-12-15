@@ -23,11 +23,13 @@
     <ClInclude Include="call_json.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
+    <ClInclude Include="font.h" />
     <ClInclude Include="HandleHelper.h" />
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="log.h" />
     <ClInclude Include="ParseCommondLine.h" />
+    <ClInclude Include="PEhelper.h" />
     <ClInclude Include="PrinterUtil.h" />
     <ClInclude Include="ProcessHelper.h" />
     <ClInclude Include="Reflection.h" />
@@ -44,10 +46,12 @@
     <ClCompile Include="BaseUtil.cpp" />
     <ClCompile Include="call_json.cpp" />
     <ClCompile Include="COMHelper.cpp" />
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="HandleHelper.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
+    <ClCompile Include="PEhelper.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
     <ClCompile Include="ProcessHelper.cpp" />
     <ClCompile Include="Reflection.cpp" />
