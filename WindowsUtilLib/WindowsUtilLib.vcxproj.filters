@@ -119,6 +119,9 @@
     <ClInclude Include="WindowHelper.h">
       <Filter>src\Windows\Win32\Base</Filter>
     </ClInclude>
+    <ClInclude Include="zzjErrorEnum.h">
+      <Filter>src\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -181,9 +184,8 @@
     <ClCompile Include="PEhelper.cpp">
       <Filter>src\Windows\Win32\PE</Filter>
     </ClCompile>
-    <ClCompile Include="WindowsHelper.cpp">
+    <ClCompile Include="WindowHelper.cpp">
       <Filter>src\Windows\Win32\Base</Filter>
     </ClCompile>
-    <ClCompile Include="WindowHelper.cpp" />
   </ItemGroup>
 </Project>

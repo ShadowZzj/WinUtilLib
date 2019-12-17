@@ -41,6 +41,7 @@
     <ClInclude Include="WinService.h" />
     <ClInclude Include="WMIHelper.h" />
     <ClInclude Include="paint.h" />
+    <ClInclude Include="zzjErrorEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseUtil.cpp" />
@@ -60,7 +61,6 @@
     <ClCompile Include="StrUtil.cpp" />
     <ClCompile Include="ThreadHelper.cpp" />
     <ClCompile Include="WindowHelper.cpp" />
-    <ClCompile Include="WindowsHelper.cpp" />
     <ClCompile Include="WinDynCalls.cpp" />
     <ClCompile Include="WinService.cpp" />
     <ClCompile Include="WMIHelper.cpp" />
@@ -173,6 +173,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

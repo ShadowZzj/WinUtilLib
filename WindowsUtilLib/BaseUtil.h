@@ -27,6 +27,10 @@ if(cond)\
 
 #define dimof2(array)  GetDim(array)
 
+#define BAN_COPY(class) \
+class(const class&) = delete;\
+class& operator=(const class&) = delete;
+
 //simulate Golang defer keyword£¬wrap ExitScope with lambda function£¬when exits its scope, the deconstruct function is called.
 #define defer const auto& CONCAT(defer__, __LINE__) = ExitScopeHelp() + [&]()
 

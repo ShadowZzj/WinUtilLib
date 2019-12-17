@@ -1,11 +1,38 @@
 #include <Windows.h>
 #include "ThreadHelper.h"
-void ThreadHelper::SetLastError(DWORD err)
+#include "ProcessHelper.h"
+using namespace zzj;
+
+void Thread::SetCurrentLastError(DWORD err)
 {
 	return ::SetLastError(err);
 }
 
-LCID ThreadHelper::GetThreadLocale()
+LCID Thread::GetCurrentThreadLocale()
 {
 	return ::GetThreadLocale();
 }
+
+HANDLE zzj::Thread::GetCurrentThreadHandle()
+{
+	return GetCurrentThread();
+}
+
+DWORD zzj::Thread::GetCurrentThreadId()
+{
+	return ::GetCurrentThreadId();
+}
+
+
+DWORD zzj::Thread::GetThreadID(HANDLE handle)
+{
+	return GetThreadId(handle);
+}
+
+DWORD zzj::Thread::GetOwnerProcessId(HANDLE threadHandle)
+{
+	DWORD processID=GetProcessIdOfThread(threadHandle);
+	return processID;
+}
+
+
