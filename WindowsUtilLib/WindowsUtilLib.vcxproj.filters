@@ -42,14 +42,20 @@
     <Filter Include="src\Windows\Win32\PE">
       <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Win32\Paint">
-      <UniqueIdentifier>{ee6b1348-cd14-4d89-a4b1-11dcd12a3b1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Windows\Win32\MFC">
-      <UniqueIdentifier>{889d3331-904c-4343-b9a4-d43bc1a04de6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Windows\Win32\Print">
       <UniqueIdentifier>{2410eb17-3191-4494-85a6-1e34f1fb5f9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\GUI">
+      <UniqueIdentifier>{ee255089-b863-476b-b273-99bbc0fc6e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\GUI\Paint">
+      <UniqueIdentifier>{ee6b1348-cd14-4d89-a4b1-11dcd12a3b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\GUI\Resource">
+      <UniqueIdentifier>{3c554ec2-3878-437d-b1bc-9396bddfd43b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\GUI\Font">
+      <UniqueIdentifier>{e5ba7b8f-e487-4d6c-aa07-7fd191a3cf57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,7 +117,7 @@
       <Filter>src\Base</Filter>
     </ClInclude>
     <ClInclude Include="paint.h">
-      <Filter>src\Windows\Win32\Paint</Filter>
+      <Filter>src\Windows\Win32\GUI\Paint</Filter>
     </ClInclude>
     <ClInclude Include="PEhelper.h">
       <Filter>src\Windows\Win32\PE</Filter>
@@ -121,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="zzjErrorEnum.h">
       <Filter>src\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceHelper.h">
+      <Filter>src\Windows\Win32\GUI\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="FontHelper.h">
+      <Filter>src\Windows\Win32\GUI\Font</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,13 +191,19 @@
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="paint.cpp">
-      <Filter>src\Windows\Win32\Paint</Filter>
+      <Filter>src\Windows\Win32\GUI\Paint</Filter>
     </ClCompile>
     <ClCompile Include="PEhelper.cpp">
       <Filter>src\Windows\Win32\PE</Filter>
     </ClCompile>
     <ClCompile Include="WindowHelper.cpp">
       <Filter>src\Windows\Win32\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceHelper.cpp">
+      <Filter>src\Windows\Win32\GUI\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="FontHelper.cpp">
+      <Filter>src\Windows\Win32\GUI\Font</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

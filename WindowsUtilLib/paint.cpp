@@ -58,21 +58,3 @@ Device::ComposedXY Device::GetBase()
 	
 	return ret;
 }
-
-BOOL CALLBACK EnumFamCallBack(LPLOGFONT lplf, LPNEWTEXTMETRIC lpntm, DWORD FontType, LPVOID aFontCount);
-void zzj::Font::EnumFontFamilies(HDC hdc)
-{
-	::EnumFontFamilies(hdc, (LPCWSTR)NULL,
-		(FONTENUMPROC)EnumFamCallBack, (LPARAM)NULL);
-}
-BOOL CALLBACK EnumFamCallBack(LPLOGFONT lplf, LPNEWTEXTMETRIC lpntm, DWORD FontType, LPVOID aFontCount)
-{
-	std::wstring str = lplf->lfFaceName;
-	std::wcout << str << std::endl;
-	return true;
-
-	
-}
-void zzj::Font::EnumFonts(HDC hdc) {
-	::EnumFonts(hdc, NULL, (FONTENUMPROC)EnumFamCallBack, NULL);
-}

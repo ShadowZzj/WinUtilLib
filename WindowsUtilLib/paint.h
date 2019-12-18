@@ -71,10 +71,5 @@ namespace zzj {
 		ScopedHDC hdc;
 	};
 
-	class Font {
-	public:
-		void EnumFontFamilies(HDC hdc);
-		void EnumFonts(HDC hdc);
-	};
 };
 

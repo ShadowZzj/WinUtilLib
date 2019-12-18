@@ -23,6 +23,7 @@
     <ClInclude Include="call_json.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
+    <ClInclude Include="FontHelper.h" />
     <ClInclude Include="HandleHelper.h" />
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="PrinterUtil.h" />
     <ClInclude Include="ProcessHelper.h" />
     <ClInclude Include="Reflection.h" />
+    <ClInclude Include="ResourceHelper.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="ThreadHelper.h" />
@@ -47,6 +49,7 @@
     <ClCompile Include="BaseUtil.cpp" />
     <ClCompile Include="call_json.cpp" />
     <ClCompile Include="COMHelper.cpp" />
+    <ClCompile Include="FontHelper.cpp" />
     <ClCompile Include="HandleHelper.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="log.cpp" />
@@ -56,6 +59,7 @@
     <ClCompile Include="ProcessHelper.cpp" />
     <ClCompile Include="Reflection.cpp" />
     <ClCompile Include="reflect_test.cpp" />
+    <ClCompile Include="ResourceHelper.cpp" />
     <ClCompile Include="service_test.cpp" />
     <ClCompile Include="StackWalker.cpp" />
     <ClCompile Include="StrUtil.cpp" />
@@ -141,6 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,6 +179,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

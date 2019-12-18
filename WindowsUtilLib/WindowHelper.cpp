@@ -40,7 +40,7 @@ BOOL zzj::Window::MoveWindowPT(HWND window, int x, int y, int cx, int cy)
 	location = device.PTToPixel({ x,y });
 	size = device.PTToPixel({ cx,cy });
 	::MoveWindow(window, location.x, location.y, size.x, size.y, 1);
-	return 0;
+	return true;
 }
 
 BOOL zzj::Window::MoveWindowPT(HWND father,int controlId, int x, int y, int cx, int cy)
