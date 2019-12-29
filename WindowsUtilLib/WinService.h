@@ -24,6 +24,7 @@ public:
 	virtual void OnShutdown() = 0;
 	virtual void OnPreShutDown() = 0;
 
+	static bool InstallKernelService(const char* binaryPath, const char* serviceName, const char* displayName,const char* description);
 protected:
 	std::string name;
 	std::string description;

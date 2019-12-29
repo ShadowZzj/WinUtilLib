@@ -15,7 +15,7 @@ namespace str {
 	}
 	template<class T>
 	T* Replace(const T* s, const T* toReplace, const T* replaceWith) {
-		if (!s || str::IsEmpty(toReplace) || !replaceWith)
+		if (!s || IsEmpty(toReplace) || !replaceWith)
 			return nullptr;
 
 		Str<T> res;

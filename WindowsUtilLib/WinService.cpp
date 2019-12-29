@@ -211,3 +211,32 @@ bool WinService::UninstallService()
 	printf("Delete Service Success!");
 	return TRUE;
 }
+
+bool WinService::InstallKernelService(const char* binaryPath, const char* serviceName, const char* display,const char* description)
+{
+
+	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (!sch)
+	{
+		std::wcout << (L"OpenSCManager Failed");
+		return FALSE;
+	}
+	SC_HANDLE schNewSrv = CreateServiceA(sch, serviceName, display, SERVICE_ALL_ACCESS, SERVICE_KERNEL_DRIVER, SERVICE_BOOT_START,
+		SERVICE_ERROR_NORMAL, binaryPath, NULL, NULL, NULL, NULL, NULL);
+
+	if (!schNewSrv)
+	{
+		std::wcout << (L"CreateService Failed");
+		return FALSE;
+	}
+
+	SERVICE_DESCRIPTIONA sd;
+	sd.lpDescription = (LPSTR)description;
+
+	ChangeServiceConfig2A(schNewSrv, SERVICE_CONFIG_DESCRIPTION, &sd);
+	CloseServiceHandle(schNewSrv);
+	CloseServiceHandle(sch);
+
+	printf("Install Service Success!");
+	return TRUE;
+}
