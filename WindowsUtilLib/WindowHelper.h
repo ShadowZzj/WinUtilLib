@@ -9,10 +9,10 @@ namespace zzj {
 		}
 		Window() {};
 		void Bind(HWND _window);
-		BOOL MoveWindowPT(int x, int y, int cx, int cy);
+		BOOL MoveWindowPT(int x, int y, int cx, int cy,bool isPt=false);
 		BOOL CenterWindow();
-		static BOOL MoveWindowPT(HWND window, int x, int y, int cx, int cy);
-		static BOOL MoveWindowPT(HWND father,int controlId, int x, int y, int cx, int cy);
+		static BOOL MoveWindowPT(HWND window, int x, int y, int cx, int cy,bool isPt=false);
+		static BOOL MoveWindowPT(HWND father,int controlId, int x, int y, int cx, int cy,bool isPt=false);
 	private:
 		bool IsWindowValid();
 		HWND window=NULL;

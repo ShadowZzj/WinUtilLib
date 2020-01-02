@@ -98,4 +98,10 @@ namespace str {
 	//Statistical method to judge whether it is unicode text.
 	bool IsTextUnicode(const void* buf, size_t cb, int* res);
 	std::string UTF8ToString(const std::string& str);
+	template<class T>
+	void PrintBufferHex(T* buf, size_t len,T splitChar,std::ostream &out) {
+		for (int i = 0; i < len; i++)
+			out << std::hex << buf[i] << splitChar;
+
+	}
 }

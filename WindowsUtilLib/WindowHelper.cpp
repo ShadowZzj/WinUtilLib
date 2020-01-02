@@ -4,9 +4,9 @@ void zzj::Window::Bind(HWND _window)
 	window = _window;
 	Device::Bind(Device::GetHDC(_window));
 }
-BOOL zzj::Window::MoveWindowPT(int x, int y, int cx, int cy)
+BOOL zzj::Window::MoveWindowPT(int x, int y, int cx, int cy,bool isPt)
 {
-	return MoveWindowPT(window, x, y, cx, cy);
+	return MoveWindowPT(window, x, y, cx, cy,isPt);
 }
 
 BOOL zzj::Window::CenterWindow()
@@ -28,7 +28,7 @@ BOOL zzj::Window::CenterWindow()
 	return true;
 }
 
-BOOL zzj::Window::MoveWindowPT(HWND window, int x, int y, int cx, int cy)
+BOOL zzj::Window::MoveWindowPT(HWND window, int x, int y, int cx, int cy,bool isPt)
 {
 	using namespace zzj;
 	if (!window)
@@ -36,20 +36,22 @@ BOOL zzj::Window::MoveWindowPT(HWND window, int x, int y, int cx, int cy)
 	Device device(Device::GetHDC(window));
 	Device::ComposedXY location;
 	Device::ComposedXY size;
-
-	location = device.PTToPixel({ x,y });
-	size = device.PTToPixel({ cx,cy });
-
-	//location = { x,y };
-	//size = { cx,cy };
+	if (isPt) {
+		location = device.PTToPixel({ x,y });
+		size = device.PTToPixel({ cx,cy });
+	}
+	else {
+		location = { x,y };
+		size = { cx,cy };
+	}
 	::MoveWindow(window, location.x, location.y, size.x, size.y, 1);
 	return true;
 }
 
-BOOL zzj::Window::MoveWindowPT(HWND father,int controlId, int x, int y, int cx, int cy)
+BOOL zzj::Window::MoveWindowPT(HWND father,int controlId, int x, int y, int cx, int cy,bool isPt)
 {
 	HWND window = GetDlgItem(father, controlId);
-	return MoveWindowPT(window, x, y, cx, cy);
+	return MoveWindowPT(window, x, y, cx, cy, isPt);
 }
 
 bool zzj::Window::IsWindowValid()
