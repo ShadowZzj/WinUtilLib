@@ -24,7 +24,7 @@ bool CallJ::AddMethod(std::string name, method_template method)
 
 CallJ::MethodInfo CallJ::GetMethod(int index, bool& success)
 {
-	if (index >= methods.size()) {
+	if ((size_t)index >= methods.size()) {
 		success = false;
 		return CallJ::MethodInfo();
 	}
