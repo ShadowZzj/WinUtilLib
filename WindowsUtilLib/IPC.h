@@ -31,4 +31,49 @@ namespace IPC {
 	private:
 		HANDLE writeHandle = INVALID_HANDLE_VALUE;
 	};
+	class PipeServer {
+	public:
+		PipeServer(std::string name) {
+			this->name = name;
+			std::string pipeName = "\\\\.\\pipe\\";
+			pipeName += name;
+			pipe = CreateNamedPipeA(
+				pipeName.c_str(),             // pipe name
+				PIPE_ACCESS_DUPLEX,       // read/write access
+				PIPE_TYPE_MESSAGE|      // message type pipe
+				PIPE_WAIT,               // blocking mode
+				PIPE_UNLIMITED_INSTANCES, // max. instances 
+				512,                  // output buffer size
+				512,                  // input buffer size
+				0,                        // client time-out
+				NULL);                    // default security attribute
+
+			if (pipe == INVALID_HANDLE_VALUE)
+				CrashMe();
+		}
+		bool Listen() {
+			bool connected = ConnectNamedPipe(pipe, NULL) ?
+				TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+			return connected;
+		}
+		int Write(const char* str,UINT size) {
+			DWORD bytesWrite;
+			bool success = WriteFile(
+				pipe,       
+				str,    
+				size,
+				&bytesWrite, 
+				NULL);    
+			if (success)
+				return bytesWrite;
+			else
+				return -1;
+		}
+		void Close() {
+			CloseHandle(pipe);
+		}
+	private:
+		HANDLE pipe;
+		std::string name;
+	};
 }

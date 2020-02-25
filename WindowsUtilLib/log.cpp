@@ -38,8 +38,15 @@ void SimpleLogger::info(const char* info, ...) {
 
 }
 
-void SimpleLogger::error(const char* info) {
+void SimpleLogger::error(const char* info, ...) {
+	va_list arguments;
+	va_start(arguments, info);
+	char* convertedInfo = str::FmtV(info, arguments);
+	defer{ Allocator::Free(nullptr,convertedInfo); };
+
 	ForwardStr(info, LogType::Error);
+
+	va_end(arguments);
 }
 
 char* SimpleLogger::GetDateInfo() {

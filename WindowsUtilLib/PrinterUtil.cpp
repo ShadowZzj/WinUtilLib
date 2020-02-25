@@ -104,7 +104,12 @@ namespace WinPrintWrapper {
 	}
 
 	bool PrinterJobManager::SetPrinter(std::wstring printerName) {
+		HANDLE printer;
+		bool res = OpenPrinter((LPWSTR)printerName.c_str(), &printer, NULL);
+		if (!res)
+			return false;
 		this->printerName = printerName;
+		ClosePrinter(printer);
 		return true;
 	}
 	bool PrinterJobManager::GetPrinterJobs(JOB_INFO_2** ppJobInfo, int* pcJobs, DWORD* printerStatus) {

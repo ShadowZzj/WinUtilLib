@@ -31,7 +31,7 @@ public:
 		fd.close();
 	}
 	void info(const char* info, ...);
-	void error(const char* info);
+	void error(const char* info, ...);
 
 private:
 	const char* fileName;
