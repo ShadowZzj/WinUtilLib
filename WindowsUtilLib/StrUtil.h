@@ -104,4 +104,5 @@ namespace str {
 			out << std::hex << buf[i] << splitChar;
 
 	}
+	int GB2312ToUnicode(const char* gb2312, char* unicode);
 }

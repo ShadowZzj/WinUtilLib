@@ -1,5 +1,8 @@
 #include "BaseUtil.h"
 #include <comdef.h>
+
+#include <sstream>
+
 namespace str {
 	size_t Len(const wchar_t* str) {
 		if (str == nullptr)
@@ -177,4 +180,19 @@ namespace str {
 		pwBuf = NULL;
 		return retStr;
 	}
+
+
+	int GB2312ToUnicode(const char* gb2312, char* unicode)
+	{
+		UINT nCodePage = 936; //GB2312
+		int len = MultiByteToWideChar(nCodePage, 0, gb2312, -1, NULL, 0);
+		wchar_t* wstr = new wchar_t[len + 1];
+		memset(wstr, 0, len + 1);
+		MultiByteToWideChar(nCodePage, 0, gb2312, -1, wstr, len);
+		len = len * sizeof(wchar_t);
+		memcpy(unicode, wstr, len);
+		if (wstr) delete[] wstr;
+		return len;
+	}
+
 }
