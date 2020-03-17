@@ -1,5 +1,8 @@
 #include "BaseUtil.h"
 #include <comdef.h>
+
+#include <sstream>
+
 namespace str {
 	size_t Len(const wchar_t* str) {
 		if (str == nullptr)
@@ -176,5 +179,178 @@ namespace str {
 		pBuf = NULL;
 		pwBuf = NULL;
 		return retStr;
+	}
+
+
+	int GB2312ToUnicode(const char* gb2312, char* unicode)
+	{
+		UINT nCodePage = 936; //GB2312
+		int len = MultiByteToWideChar(nCodePage, 0, gb2312, -1, NULL, 0);
+		wchar_t* wstr = new wchar_t[len + 1];
+		memset(wstr, 0, len + 1);
+		MultiByteToWideChar(nCodePage, 0, gb2312, -1, wstr, len);
+		len = len * sizeof(wchar_t);
+		memcpy(unicode, wstr, len);
+		if (wstr) delete[] wstr;
+		return len;
+	}
+	bool GUID2String_util(const GUID* pGUID, std::wstring& strGUID)
+	{
+		if (NULL == pGUID)
+			return false;
+
+		strGUID.clear();
+		GUID IfGuid = *pGUID;
+
+		WCHAR cGUID[64] = { 0 };
+		if (0 != StringFromGUID2(IfGuid, cGUID, 63))
+		{
+			strGUID = std::wstring(cGUID);
+			return true;
+		}
+
+		return false;
+	}
+	bool String2GUID_util(GUID* pGUID, const std::wstring& strGUID)
+	{
+		CLSID clsidRet = { 0 };
+		if (NOERROR == CLSIDFromString(strGUID.c_str(), &clsidRet)) {
+			*pGUID = clsidRet;
+			return true;
+		}
+		return false;
+	}
+	bool String2GUID_util(GUID* pGUID, const std::string& strGUID)
+	{
+		std::wstring wstrGUID;
+		std::string strGUID_temp = strGUID;
+		if (!A2W_util(strGUID_temp, wstrGUID))
+			return false;
+
+		return String2GUID_util(pGUID, wstrGUID);
+	}
+	bool GUID2String_util(const GUID* pGUID, std::string& strGUID)
+	{
+		std::wstring wstrGUID;
+		if (GUID2String_util(pGUID, wstrGUID))
+		{
+			std::string strGUID_temp;
+			if (W2A_util(wstrGUID, strGUID_temp))
+			{
+				strGUID = strGUID_temp;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool W2A_util(std::wstring& wStr, std::string& aStr)
+	{
+		bool bRet = false;
+		size_t strCount = wStr.size();
+		if (0 == strCount)
+			return false;
+
+		char szLocal[2] = { 0 };
+		int nCharRet = ::WideCharToMultiByte(CP_UTF8, 0, wStr.c_str(), strCount, szLocal, 0, NULL, NULL);
+		if (0 == nCharRet) {
+			return false;
+		}
+
+		char* aTemp = new char[nCharRet];
+		if (nullptr == aTemp) {
+			return false;
+		}
+		memset(aTemp, 0, nCharRet * sizeof(char));
+
+		int nCharRet1 = ::WideCharToMultiByte(CP_UTF8, 0, wStr.c_str(), strCount, aTemp, nCharRet, NULL, NULL);
+		if (0 != nCharRet1) {
+
+			aStr.assign(aTemp, nCharRet);
+			bRet = true;
+		}
+
+		delete[]aTemp;
+
+		return bRet;
+	}
+
+	bool A2W_util(std::string& aStr, std::wstring& wStr)
+	{
+		bool bRet = false;
+		size_t strCount = aStr.size();
+		if (0 == strCount)
+			return false;
+
+		WCHAR szLocal[2] = { 0 };
+		int nCharRet = ::MultiByteToWideChar(CP_UTF8, 0, aStr.data(), strCount, szLocal, 0);
+		if (0 == nCharRet) {
+			return false;
+		}
+
+		nCharRet = nCharRet + 1;
+		WCHAR* wTemp = new WCHAR[nCharRet];
+		if (nullptr == wTemp) {
+			return false;
+		}
+		memset(wTemp, 0, nCharRet * sizeof(WCHAR));
+
+		int nCharRet1 = ::MultiByteToWideChar(CP_UTF8, 0, aStr.data(), strCount, wTemp, nCharRet - 1);
+		if (0 != nCharRet1) {
+			wStr = wTemp;
+			bRet = true;
+		}
+
+		delete[]wTemp;
+
+		return bRet;
+	}
+
+	bool Unknown2W_util(const char* ustr, size_t ustrsize, std::wstring& wStr)
+	{
+		bool bRet = false;
+		WCHAR szTemp[2] = { 0 };
+
+		//utf8 detect
+		int nCharRet = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ustr, ustrsize, szTemp, 0);
+		if (0 != nCharRet) {
+			nCharRet = nCharRet + 1;
+			WCHAR* wTemp = new WCHAR[nCharRet];
+			if (nullptr == wTemp) {
+				return false;
+			}
+			memset(wTemp, 0, nCharRet * sizeof(WCHAR));
+
+			nCharRet = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ustr, ustrsize, wTemp, nCharRet - 1);
+			if (0 != nCharRet) {
+				wStr = wTemp;
+				bRet = true;
+			}
+
+			delete[]wTemp;
+			return bRet;
+		}
+
+		//gb2312 detect
+		nCharRet = ::MultiByteToWideChar(936, MB_ERR_INVALID_CHARS, ustr, ustrsize, szTemp, 0);
+		if (0 != nCharRet) {
+			nCharRet = nCharRet + 1;
+			WCHAR* wTemp = new WCHAR[nCharRet];
+			if (nullptr == wTemp) {
+				return false;
+			}
+			memset(wTemp, 0, nCharRet * sizeof(WCHAR));
+
+			nCharRet = ::MultiByteToWideChar(936, MB_ERR_INVALID_CHARS, ustr, ustrsize, wTemp, nCharRet - 1);
+			if (0 != nCharRet) {
+				wStr = wTemp;
+				bRet = true;
+			}
+
+			delete[]wTemp;
+			return bRet;
+		}
+
+		return false;
 	}
 }

@@ -134,3 +134,14 @@ void* memdup(const void* data, size_t len) {
 	}
 	return dup;
 }
+LPVOID HeapAlloc_util(SIZE_T nLen) {
+	LPVOID pBuf = ::HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, nLen);
+
+	return pBuf;
+}
+
+void HeapFree_util(LPVOID pBuf) {
+	BOOL ret = ::HeapFree(GetProcessHeap(), 0, pBuf);
+
+	return;
+}

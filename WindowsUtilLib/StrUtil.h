@@ -104,4 +104,13 @@ namespace str {
 			out << std::hex << buf[i] << splitChar;
 
 	}
+	int GB2312ToUnicode(const char* gb2312, char* unicode);
+	bool GUID2String_util(const GUID* pGUID, std::wstring& strGUID);
+	bool String2GUID_util(GUID* pGUID, const std::wstring& strGUID);
+	bool String2GUID_util(GUID* pGUID, const std::string& strGUID);
+	bool GUID2String_util(const GUID* pGUID, std::string& strGUID);
+
+	bool W2A_util(std::wstring& wStr, std::string& aStr);
+	bool A2W_util(std::string& aStr, std::wstring& wStr);
+	bool Unknown2W_util(const char* ustr, size_t ustrsize, std::wstring& wStr);
 }

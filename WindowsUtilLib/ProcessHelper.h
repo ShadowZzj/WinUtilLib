@@ -5,7 +5,75 @@
 #include "zzjErrorEnum.h"
 #include "BaseUtil.h"
 #include "HandleHelper.h"
+#include <TlHelp32.h>
+#include <list>
+
+#define DISALLOW_COPY_AND_ASSIGN(TypeName)	\
+	TypeName(const TypeName&);	\
+	TypeName& operator=(const TypeName&);
+
+
 namespace zzj {
+	struct ProcessEntry
+	{
+		DWORD ProcessId;
+		DWORD ParentProcessId;
+		DWORD ThreadCount;
+		LONG ThreadPriorityBase;
+
+		std::wstring ExeName;
+		std::wstring ExeFullPath;
+	};
+
+	/*
+	TokenElevationTypeDefault
+	built-in admin:elevated
+	guest or account not in admin group : limited token and no linked token
+
+	TokenElevationTypeLimited,TokenElevationTypeFull
+	usually account in admin group
+	has linked token in same user
+
+	see https://stackoverflow.com/questions/50562419/determine-if-user-can-elevate-a-process-with-c
+	*/
+	struct ActiveExplorerInfo
+	{
+		DWORD ProcessId;
+		DWORD SessionId;
+
+		bool IsElevated;
+		bool IsElevated_LinkedToken;
+		TOKEN_ELEVATION_TYPE ElevationType;
+		TOKEN_ELEVATION_TYPE ElevationType_LinkedToken;
+		std::wstring UserSid;
+		std::wstring UserName;
+		std::wstring DomainName;
+	};
+	class ProcessIterator
+	{
+	public:
+
+		typedef std::list<ProcessEntry> ProcessEntries;
+
+		ProcessIterator();
+		virtual ~ProcessIterator();
+
+		bool SnapshotAll(ProcessEntries& entries);
+		bool SnapshotFilterExeName(ProcessEntries& entries, const wchar_t* exename);
+
+		static bool FindEntryByPid(const ProcessEntries& entries, DWORD pid, ProcessEntry** entry);
+
+	private:
+
+		bool GetFirstEntry(ProcessEntries& entries);
+		void InitEntry(PROCESSENTRY32W* pe32);
+		void ConvertPE32ToPE(PROCESSENTRY32W* pe32, ProcessEntry* pe);
+
+		HANDLE snapshot_handle;
+
+
+		DISALLOW_COPY_AND_ASSIGN(ProcessIterator)
+	};
 	class EnvHelper {
 	public:
 		EnvHelper() {
@@ -32,6 +100,8 @@ namespace zzj {
 
 	class Process {
 	public:
+		
+
 		static const int INVALID_VAL = -1;
 		DWORD GetSessionId();
 		DWORD GetProcessId();
@@ -47,6 +117,11 @@ namespace zzj {
 		static HANDLE GetProcessHandle(DWORD processId, DWORD desiredAccess);
 		static DWORD GetProcessId(std::wstring processName);
 		static DWORD GetProcessId(HANDLE processHandle);
+		static bool  IsMutexExist(std::string mutex);
+		static bool GetActiveExplorerInfo(ActiveExplorerInfo* pinfo);
+		//System process create user or admin process
+		static DWORD CreateProcessActive(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show);
+		static bool KillProcess(DWORD pid);
 		Process(){
 			process=::GetCurrentProcess();
 			processId = ::GetCurrentProcessId();
@@ -84,5 +159,6 @@ namespace zzj {
 		ScopeKernelHandle process=INVALID_HANDLE_VALUE;
 		DWORD processId = INVALID_VAL;
 	};
+
 
 }

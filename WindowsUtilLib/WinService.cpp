@@ -149,7 +149,6 @@ bool WinService::InstallService()
 	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!sch)
 	{
-		std::wcout << (L"OpenSCManager Failed");
 		return FALSE;
 	}
 	const char* serviceName = name.c_str();
@@ -159,7 +158,6 @@ bool WinService::InstallService()
 
 	if (!schNewSrv)
 	{
-		std::wcout << (L"CreateService Failed");
 		return FALSE;
 	}
 
@@ -170,7 +168,6 @@ bool WinService::InstallService()
 	CloseServiceHandle(schNewSrv);
 	CloseServiceHandle(sch);
 
-	printf("Install Service Success!");
 	return TRUE;
 }
 
@@ -179,36 +176,31 @@ bool WinService::UninstallService()
 	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!scm)
 	{
-		std::wcout<<(L"OpenSCManager Failed");
 		return FALSE;
 	}
 	const char* serviceName = name.c_str();
 	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
 	if (!scml)
 	{
-		std::wcout << (L"OpenService Failed");
 		return FALSE;
 	}
 	SERVICE_STATUS ss;
 	if (!QueryServiceStatus(scml, &ss))
 	{
-		std::wcout << (L"QueryServiceStatus Failed");
 		return FALSE;
 	}
 	if (ss.dwCurrentState != SERVICE_STOPPED)
 	{
 		if (!ControlService(scml, SERVICE_CONTROL_STOP, &ss) && ss.dwCurrentState != SERVICE_CONTROL_STOP)
 		{
-			std::wcout << (L"ControlService Stop Failed");
 			return FALSE;
 		}
 	}
 	if (!DeleteService(scml))
 	{
-		std::wcout << (L"DeleteService Failed");
 		return FALSE;
 	}
-	printf("Delete Service Success!");
+
 	return TRUE;
 }
 
@@ -218,7 +210,7 @@ bool WinService::InstallKernelService(const char* binaryPath, const char* servic
 	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!sch)
 	{
-		std::wcout << (L"OpenSCManager Failed");
+
 		return FALSE;
 	}
 	SC_HANDLE schNewSrv = CreateServiceA(sch, serviceName, display, SERVICE_ALL_ACCESS, SERVICE_KERNEL_DRIVER, SERVICE_BOOT_START,
@@ -226,7 +218,7 @@ bool WinService::InstallKernelService(const char* binaryPath, const char* servic
 
 	if (!schNewSrv)
 	{
-		std::wcout << (L"CreateService Failed");
+
 		return FALSE;
 	}
 
@@ -237,6 +229,6 @@ bool WinService::InstallKernelService(const char* binaryPath, const char* servic
 	CloseServiceHandle(schNewSrv);
 	CloseServiceHandle(sch);
 
-	printf("Install Service Success!");
+
 	return TRUE;
 }

@@ -69,6 +69,19 @@ namespace IPC {
 			else
 				return -1;
 		}
+		int Read(char* buffer,UINT size) {
+			DWORD bytesRead;
+			bool success = ReadFile(
+				pipe,
+				buffer,
+				size,
+				&bytesRead,
+				NULL);
+			if (success)
+				return bytesRead;
+			else
+				return -1;
+		}
 		void Close() {
 			CloseHandle(pipe);
 		}
