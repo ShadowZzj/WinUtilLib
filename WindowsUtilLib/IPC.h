@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "BaseUtil.h"
 #include "StrUtil.h"
+#include "log.h"
 namespace IPC {
 	class SharedMemory {
 	public:
@@ -33,7 +34,7 @@ namespace IPC {
 	};
 	class PipeServer {
 	public:
-		PipeServer(std::string name) {
+		PipeServer(std::string name,LPSECURITY_ATTRIBUTES pSecu=nullptr) {
 			this->name = name;
 			std::string pipeName = "\\\\.\\pipe\\";
 			pipeName += name;
@@ -47,7 +48,7 @@ namespace IPC {
 				512,                  // output buffer size
 				512,                  // input buffer size
 				0,                        // client time-out
-				NULL);                    // default security attribute
+				pSecu);                    // default security attribute
 
 			if (pipe == INVALID_HANDLE_VALUE)
 				CrashMe();
@@ -96,17 +97,22 @@ namespace IPC {
 			this->name = name;
 			std::string pipeName = "\\\\.\\pipe\\";
 			pipeName += name;
-			pipe= CreateFileA(pipeName.c_str(),
-				GENERIC_WRITE,
-				0,
-				NULL,
-				OPEN_EXISTING,
-				0,
-				NULL);
+			while (1)
+			{
+				pipe = CreateFileA(pipeName.c_str(),
+					GENERIC_WRITE|GENERIC_READ,
+					0,
+					NULL,
+					OPEN_EXISTING,
+					0,
+					NULL);
 
-			if (pipe == INVALID_HANDLE_VALUE) {
-				int error = GetLastError();
-				CrashMe();
+				if (pipe != INVALID_HANDLE_VALUE) {
+					file_logger->info("PipeClient connects success");
+					break;
+				}
+				//file_logger->info("PipeClient connects fails. Try another connect.");
+				Sleep(2000);
 			}
 		}
 		int Write(const char* str, UINT size) {
@@ -134,6 +140,9 @@ namespace IPC {
 				return bytesRead;
 			else
 				return -1;
+		}
+		void Close() {
+			CloseHandle(pipe);
 		}
 	private:
 		HANDLE pipe;

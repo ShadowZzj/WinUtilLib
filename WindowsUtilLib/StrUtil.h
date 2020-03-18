@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <locale.h>
+#include <iostream>
 namespace str {
 	template<class T>
 	class Str;
