@@ -37,6 +37,7 @@ namespace IPC {
 			this->name = name;
 			std::string pipeName = "\\\\.\\pipe\\";
 			pipeName += name;
+			
 			pipe = CreateNamedPipeA(
 				pipeName.c_str(),             // pipe name
 				PIPE_ACCESS_DUPLEX,       // read/write access
@@ -84,6 +85,55 @@ namespace IPC {
 		}
 		void Close() {
 			CloseHandle(pipe);
+		}
+	private:
+		HANDLE pipe;
+		std::string name;
+	};
+	class PipeClient {
+	public:
+		PipeClient(std::string name) {
+			this->name = name;
+			std::string pipeName = "\\\\.\\pipe\\";
+			pipeName += name;
+			pipe= CreateFileA(pipeName.c_str(),
+				GENERIC_WRITE,
+				0,
+				NULL,
+				OPEN_EXISTING,
+				0,
+				NULL);
+
+			if (pipe == INVALID_HANDLE_VALUE) {
+				int error = GetLastError();
+				CrashMe();
+			}
+		}
+		int Write(const char* str, UINT size) {
+			DWORD bytesWrite;
+			bool success = WriteFile(
+				pipe,
+				str,
+				size,
+				&bytesWrite,
+				NULL);
+			if (success)
+				return bytesWrite;
+			else
+				return -1;
+		}
+		int Read(char* buffer, UINT size) {
+			DWORD bytesRead;
+			bool success = ReadFile(
+				pipe,
+				buffer,
+				size,
+				&bytesRead,
+				NULL);
+			if (success)
+				return bytesRead;
+			else
+				return -1;
 		}
 	private:
 		HANDLE pipe;
