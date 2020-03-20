@@ -234,14 +234,14 @@ bool WinService::InstallKernelService(const char* binaryPath, const char* servic
 }
 
 bool WinService::StartService(const char* serviceName) {
-	// 打开服务管理对象
+
 	SC_HANDLE hSC = ::OpenSCManagerA(NULL,
 		NULL, GENERIC_EXECUTE);
 	if (hSC == NULL)
 		return false;
-	// 打开www服务。
+
 	SC_HANDLE hSvc = ::OpenServiceA(hSC, serviceName,
-		SERVICE_START | SERVICE_QUERY_STATUS | SERVICE_STOP);
+		SERVICE_START | SERVICE_QUERY_STATUS);
 	if (hSvc == NULL)
 	{
 		::CloseServiceHandle(hSC);

@@ -685,7 +685,7 @@ DWORD Process::SystemCreateProcess(std::wstring& commandLine, bool bElevated, bo
 	return dwPid;
 }
 
-BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string cmdLine)
+BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string cmdLine,bool wait)
 {
 	STARTUPINFOA stinfo;
 	ZeroMemory((void*)&stinfo, sizeof(STARTUPINFO));
@@ -700,8 +700,15 @@ BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string
 		path = path + " " + cmdLine;
 	if (!CreateProcessA(NULL, (LPSTR)path.c_str(), NULL, NULL, false, 0, NULL, NULL, &stinfo, &ProcessInfo))
 		return false;
-	else
+	else {
+		if(wait)
+			WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+
+		// Close process and thread handles. 
+		CloseHandle(ProcessInfo.hProcess);
+		CloseHandle(ProcessInfo.hThread);
 		return true;
+	}
 }
 
 BOOL zzj::Process::AdminCreateProcess(const char* pszFileName, bool show, const char* param)
