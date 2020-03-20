@@ -119,8 +119,12 @@ namespace zzj {
 		static DWORD GetProcessId(HANDLE processHandle);
 		static bool  IsMutexExist(std::string mutex);
 		static bool GetActiveExplorerInfo(ActiveExplorerInfo* pinfo);
-		//System process create user or admin process
-		static DWORD CreateProcessActive(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show);
+		//System process create user or admin process.
+		static DWORD SystemCreateProcess(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show);
+		//Same level as caller.
+		static BOOL RegularCreateProcess(std::string path, bool show, std::string cmdLine = "");
+		//Require uac if user process.
+		static BOOL AdminCreateProcess(const char* pszFileName, bool show, const char* param);
 		static bool KillProcess(DWORD pid);
 		Process(){
 			process=::GetCurrentProcess();

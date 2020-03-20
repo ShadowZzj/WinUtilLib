@@ -561,7 +561,7 @@ bool AdjustPrivilege(LPCWSTR lpwPrivilegeName, bool bEnable)
 
 	return bRet;
 }
-DWORD Process::CreateProcessActive(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show)
+DWORD Process::SystemCreateProcess(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show)
 {
 	DWORD dwPid = 0;
 	HANDLE hActiveUserProcess = NULL;
@@ -683,6 +683,41 @@ DWORD Process::CreateProcessActive(std::wstring& commandLine, bool bElevated, bo
 		::DestroyEnvironmentBlock(lpEnvironment);
 
 	return dwPid;
+}
+
+BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string cmdLine)
+{
+	STARTUPINFOA stinfo;
+	ZeroMemory((void*)&stinfo, sizeof(STARTUPINFO));
+	PROCESS_INFORMATION   ProcessInfo;
+	stinfo.cb = sizeof(STARTUPINFO);
+	stinfo.dwFlags = STARTF_USESHOWWINDOW;
+	if (!show)
+		stinfo.wShowWindow = SW_HIDE;
+	else
+		stinfo.wShowWindow = SW_NORMAL;
+	if (!cmdLine.empty())
+		path = path + " " + cmdLine;
+	if (!CreateProcessA(NULL, (LPSTR)path.c_str(), NULL, NULL, false, 0, NULL, NULL, &stinfo, &ProcessInfo))
+		return false;
+	else
+		return true;
+}
+
+BOOL zzj::Process::AdminCreateProcess(const char* pszFileName, bool show, const char* param)
+{
+	HINSTANCE hRet;
+	if (!show) {
+		hRet = ::ShellExecuteA(NULL, "runas", pszFileName, param, NULL, SW_HIDE);
+	}
+	else
+		hRet = ::ShellExecuteA(NULL, "runas", pszFileName, param, NULL, SW_SHOW);
+
+	if (32 < (DWORD)hRet)
+	{
+		return TRUE;
+	}
+	return FALSE;
 }
 
 bool Process::KillProcess(DWORD pid)
