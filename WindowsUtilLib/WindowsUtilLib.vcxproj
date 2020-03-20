@@ -34,6 +34,7 @@
     <ClInclude Include="ProcessHelper.h" />
     <ClInclude Include="Reflection.h" />
     <ClInclude Include="ResourceHelper.h" />
+    <ClInclude Include="Semaphore.h" />
     <ClInclude Include="StackWalker.h" />
     <ClInclude Include="StrUtil.h" />
     <ClInclude Include="ThreadHelper.h" />

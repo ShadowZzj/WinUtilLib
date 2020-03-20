@@ -134,6 +134,9 @@
     <ClInclude Include="FontHelper.h">
       <Filter>src\Windows\Win32\GUI\Font</Filter>
     </ClInclude>
+    <ClInclude Include="Semaphore.h">
+      <Filter>src\Windows\Win32\Process</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
