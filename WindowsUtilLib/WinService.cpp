@@ -232,3 +232,101 @@ bool WinService::InstallKernelService(const char* binaryPath, const char* servic
 
 	return TRUE;
 }
+
+bool WinService::StartService(const char* serviceName) {
+	// 打开服务管理对象
+	SC_HANDLE hSC = ::OpenSCManagerA(NULL,
+		NULL, GENERIC_EXECUTE);
+	if (hSC == NULL)
+		return false;
+	// 打开www服务。
+	SC_HANDLE hSvc = ::OpenServiceA(hSC, serviceName,
+		SERVICE_START | SERVICE_QUERY_STATUS | SERVICE_STOP);
+	if (hSvc == NULL)
+	{
+		::CloseServiceHandle(hSC);
+		return false;
+	}
+
+	SERVICE_STATUS status;
+	if (::QueryServiceStatus(hSvc, &status) == FALSE)
+	{
+		::CloseServiceHandle(hSvc);
+		::CloseServiceHandle(hSC);
+		return false;
+	}
+
+	if (status.dwCurrentState == SERVICE_STOPPED)
+	{
+
+		if (::StartService(hSvc, NULL, NULL) == FALSE)
+		{
+			::CloseServiceHandle(hSvc);
+			::CloseServiceHandle(hSC);
+			return false;
+		}
+
+		while (::QueryServiceStatus(hSvc, &status) == TRUE)
+		{
+			::Sleep(status.dwWaitHint);
+			if (status.dwCurrentState == SERVICE_RUNNING)
+			{
+				::CloseServiceHandle(hSvc);
+				::CloseServiceHandle(hSC);
+				return true;
+			}
+		}
+	}
+	::CloseServiceHandle(hSvc);
+	::CloseServiceHandle(hSC);
+	return false;
+}
+bool WinService::StopService(const char* serviceName) {
+
+	SC_HANDLE hSC = ::OpenSCManagerA(NULL,
+		NULL, GENERIC_EXECUTE);
+	if (hSC == NULL)
+		return false;
+
+	SC_HANDLE hSvc = ::OpenServiceA(hSC, serviceName,
+		SERVICE_START | SERVICE_QUERY_STATUS | SERVICE_STOP);
+	if (hSvc == NULL)
+	{
+		::CloseServiceHandle(hSC);
+		return false;
+	}
+
+	SERVICE_STATUS status;
+	if (::QueryServiceStatus(hSvc, &status) == FALSE)
+	{
+		::CloseServiceHandle(hSvc);
+		::CloseServiceHandle(hSC);
+		return false;
+	}
+
+	if (status.dwCurrentState == SERVICE_RUNNING)
+	{
+
+		if (::ControlService(hSvc,
+			SERVICE_CONTROL_STOP, &status) == FALSE)
+		{
+			::CloseServiceHandle(hSvc);
+			::CloseServiceHandle(hSC);
+			return false;
+		}
+
+		while (::QueryServiceStatus(hSvc, &status) == TRUE)
+		{
+			::Sleep(status.dwWaitHint);
+			if (status.dwCurrentState == SERVICE_STOPPED)
+			{
+				::CloseServiceHandle(hSvc);
+				::CloseServiceHandle(hSC);
+				return true;
+			}
+		}
+	}
+	::CloseServiceHandle(hSvc);
+	::CloseServiceHandle(hSC);
+	return false;
+}
