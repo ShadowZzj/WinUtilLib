@@ -115,7 +115,7 @@ namespace zzj {
 		bool BindProcess(DWORD processId, DWORD deriredAccess);
 		static DWORD GetSessionId(DWORD processId);
 		static HANDLE GetProcessHandle(DWORD processId, DWORD desiredAccess);
-		static DWORD GetProcessId(std::wstring processName);
+		static std::vector<DWORD> GetProcessId(std::wstring processName);
 		static DWORD GetProcessId(HANDLE processHandle);
 		static bool  IsMutexExist(std::string mutex);
 		static bool GetActiveExplorerInfo(ActiveExplorerInfo* pinfo);
@@ -126,6 +126,7 @@ namespace zzj {
 		//Require uac if user process.
 		static BOOL AdminCreateProcess(const char* pszFileName, bool show, const char* param);
 		static bool KillProcess(DWORD pid);
+		static bool KillProcess(const char* name);
 		Process(){
 			process=::GetCurrentProcess();
 			processId = ::GetCurrentProcessId();

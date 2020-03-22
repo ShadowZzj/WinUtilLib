@@ -330,3 +330,36 @@ bool WinService::StopService(const char* serviceName) {
 	::CloseServiceHandle(hSC);
 	return false;
 }
+
+bool WinService::UninstallService(const char* serviceName)
+{
+	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (!scm)
+	{
+		return FALSE;
+	}
+
+	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
+	if (!scml)
+	{
+		return FALSE;
+	}
+	SERVICE_STATUS ss;
+	if (!QueryServiceStatus(scml, &ss))
+	{
+		return FALSE;
+	}
+	if (ss.dwCurrentState != SERVICE_STOPPED)
+	{
+		if (!ControlService(scml, SERVICE_CONTROL_STOP, &ss) && ss.dwCurrentState != SERVICE_CONTROL_STOP)
+		{
+			return FALSE;
+		}
+	}
+	if (!DeleteService(scml))
+	{
+		return FALSE;
+	}
+
+	return TRUE;
+}

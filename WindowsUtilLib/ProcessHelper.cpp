@@ -46,20 +46,19 @@ HANDLE zzj::Process::GetProcessHandle(DWORD processId,DWORD desiredAccess)
 
 }
 
-DWORD Process::GetProcessId(std::wstring processName) {
+std::vector<DWORD> Process::GetProcessId(std::wstring processName) {
+	std::vector<DWORD> pids;
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (INVALID_HANDLE_VALUE == hSnapshot) {
-		return NULL;
-	}
+	if (INVALID_HANDLE_VALUE == hSnapshot)
+		return std::vector<DWORD>();
+
 	PROCESSENTRY32 pe = { sizeof(pe) };
 	for (BOOL ret = Process32First(hSnapshot, &pe); ret; ret = Process32Next(hSnapshot, &pe)) {
-		if (str::Equal(pe.szExeFile, processName.c_str())) {
-			CloseHandle(hSnapshot);
-			return pe.th32ProcessID;
-		}
+		if (str::Equal(pe.szExeFile, processName.c_str()))
+			pids.push_back(pe.th32ProcessID);
 	}
 	CloseHandle(hSnapshot);
-	return 0;
+	return pids;
 }
 
 DWORD Process::GetProcessId(HANDLE processHandle)
@@ -740,4 +739,19 @@ bool Process::KillProcess(DWORD pid)
 		::CloseHandle(hProcess);
 	}
 	return bRet;
+}
+
+bool zzj::Process::KillProcess(const char* name)
+{
+	const wchar_t* wcName=str::Str2Wstr(name);
+	std::wstring wName = wcName;
+	Allocator::Free(nullptr, (void*)wcName);
+	
+	std::vector<DWORD> pids = GetProcessId(wName);
+	if (pids.size() == 0)
+		return true;
+
+	for(auto pid:pids)
+		KillProcess(pid);
+	return true;
 }

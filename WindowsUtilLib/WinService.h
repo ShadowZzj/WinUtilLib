@@ -27,6 +27,7 @@ public:
 	static bool InstallKernelService(const char* binaryPath, const char* serviceName, const char* displayName,const char* description);
 	static bool StartService(const char* serviceName);
 	static bool StopService(const char* serviceName);
+	static bool UninstallService(const char* serviceName);
 protected:
 	std::string name;
 	std::string description;
