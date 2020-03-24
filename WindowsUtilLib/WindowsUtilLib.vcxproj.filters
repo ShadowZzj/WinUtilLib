@@ -57,6 +57,9 @@
     <Filter Include="src\Windows\Win32\GUI\Font">
       <UniqueIdentifier>{e5ba7b8f-e487-4d6c-aa07-7fd191a3cf57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\System">
+      <UniqueIdentifier>{710ae8bc-345e-4562-8e69-3075f881668f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -137,6 +140,9 @@
     <ClInclude Include="Semaphore.h">
       <Filter>src\Windows\Win32\Process</Filter>
     </ClInclude>
+    <ClInclude Include="SystemHelper.h">
+      <Filter>src\Windows\Win32\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -207,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="FontHelper.cpp">
       <Filter>src\Windows\Win32\GUI\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemHelper.cpp">
+      <Filter>src\Windows\Win32\System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
