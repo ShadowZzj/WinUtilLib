@@ -710,20 +710,31 @@ BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string
 	}
 }
 
-BOOL zzj::Process::AdminCreateProcess(const char* pszFileName, bool show, const char* param)
+BOOL zzj::Process::AdminCreateProcess(const char* pszFileName, bool show, const char* param, bool wait)
 {
-	HINSTANCE hRet;
-	if (!show) {
-		hRet = ::ShellExecuteA(NULL, "runas", pszFileName, param, NULL, SW_HIDE);
-	}
+	SHELLEXECUTEINFOA ShExecInfo = { 0 };
+	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+	ShExecInfo.hwnd = NULL;
+	ShExecInfo.lpVerb = "runas";
+	ShExecInfo.lpFile = pszFileName;
+	ShExecInfo.lpParameters = param;
+	ShExecInfo.lpDirectory = NULL;
+	if (show)
+		ShExecInfo.nShow = SW_SHOW;
 	else
-		hRet = ::ShellExecuteA(NULL, "runas", pszFileName, param, NULL, SW_SHOW);
-
-	if (32 < (DWORD)hRet)
+		ShExecInfo.nShow = SW_HIDE;
+	ShExecInfo.hInstApp = NULL;
+	ShellExecuteExA(&ShExecInfo);
+	if (32 >= (DWORD)ShExecInfo.hInstApp)
 	{
-		return TRUE;
+		return false;
 	}
-	return FALSE;
+	if(wait)
+		WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+	CloseHandle(ShExecInfo.hProcess);
+
+	return true;
 }
 
 bool Process::KillProcess(DWORD pid)

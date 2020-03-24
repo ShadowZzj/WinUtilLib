@@ -124,7 +124,7 @@ namespace zzj {
 		//Same level as caller.
 		static BOOL RegularCreateProcess(std::string path, bool show, std::string cmdLine = "",bool wait=false);
 		//Require uac if user process.
-		static BOOL AdminCreateProcess(const char* pszFileName, bool show, const char* param);
+		static BOOL AdminCreateProcess(const char* pszFileName, bool show, const char* param,bool wait=false);
 		static bool KillProcess(DWORD pid);
 		static bool KillProcess(const char* name);
 		Process(){
