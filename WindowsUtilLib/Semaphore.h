@@ -27,6 +27,9 @@ namespace zzj
         inline void SetCount(int count) {
             this->count = count;
         }
+        inline int GetCount() {
+            return this->count;
+        }
     private:
         std::mutex mtx;
         std::condition_variable cv;
