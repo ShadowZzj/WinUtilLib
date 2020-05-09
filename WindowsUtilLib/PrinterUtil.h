@@ -62,6 +62,7 @@ namespace WinPrintWrapper {
 		static std::string PrinterCapabilityToStr(UINT32 capability);
 		static std::string PrinterPaperSizeToStr(UINT32 size);
 		static WCHAR* GetDefaultPrinterName();
+		static BOOL SetPrinterDevmode(wchar_t* pPrinterName, DWORD field, DWORD value);
 	};
 	class PrinterJobManager {
 	public:
