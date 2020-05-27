@@ -142,6 +142,7 @@ WinService::WinService(std::string name, std::string description,std::string dis
 
 bool WinService::InstallService()
 {
+
 	char DirBuf[1024] = { 0 };
 	GetCurrentDirectoryA(1024, DirBuf);
 	GetModuleFileNameA(NULL, DirBuf, sizeof(DirBuf));
@@ -149,6 +150,7 @@ bool WinService::InstallService()
 	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!sch)
 	{
+
 		return FALSE;
 	}
 	const char* serviceName = name.c_str();
@@ -158,6 +160,8 @@ bool WinService::InstallService()
 
 	if (!schNewSrv)
 	{
+
+		CloseServiceHandle(sch);
 		return FALSE;
 	}
 
@@ -165,6 +169,9 @@ bool WinService::InstallService()
 	sd.lpDescription = (LPSTR)description.c_str();
 
 	ChangeServiceConfig2A(schNewSrv, SERVICE_CONFIG_DESCRIPTION, &sd);
+
+
+
 	CloseServiceHandle(schNewSrv);
 	CloseServiceHandle(sch);
 
@@ -173,34 +180,72 @@ bool WinService::InstallService()
 
 bool WinService::UninstallService()
 {
+
 	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!scm)
 	{
+		
+
 		return FALSE;
 	}
 	const char* serviceName = name.c_str();
 	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
 	if (!scml)
 	{
+		
+		CloseServiceHandle(scm);
 		return FALSE;
 	}
 	SERVICE_STATUS ss;
 	if (!QueryServiceStatus(scml, &ss))
 	{
+		
+		CloseServiceHandle(scm);
+		CloseServiceHandle(scml);
 		return FALSE;
 	}
 	if (ss.dwCurrentState != SERVICE_STOPPED)
 	{
-		if (!ControlService(scml, SERVICE_CONTROL_STOP, &ss) && ss.dwCurrentState != SERVICE_CONTROL_STOP)
-		{
-			return FALSE;
+		
+		for (;;) {
+			bool ret = ControlService(scml, SERVICE_CONTROL_STOP, &ss);
+			if (!ret) {
+				
+				Sleep(1000);
+			}
+			else
+				break;
 		}
+
+		while (1)
+		{
+			bool ret = QueryServiceStatus(scml, &ss);
+			if (!ret) {
+				
+				Sleep(1000);
+				continue;
+			}
+			if (ss.dwCurrentState != SERVICE_STOPPED) {
+				Sleep(1000);
+				
+			}
+			else
+				break;
+		}
+
+
 	}
 	if (!DeleteService(scml))
 	{
+
+		CloseServiceHandle(scm);
+		CloseServiceHandle(scml);
 		return FALSE;
 	}
 
+
+	CloseServiceHandle(scm);
+	CloseServiceHandle(scml);
 	return TRUE;
 }
 
@@ -333,33 +378,51 @@ bool WinService::StopService(const char* serviceName) {
 
 bool WinService::UninstallService(const char* serviceName)
 {
+
+
 	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!scm)
 	{
+
+
 		return FALSE;
 	}
 
 	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
 	if (!scml)
 	{
+
+		CloseServiceHandle(scm);
 		return FALSE;
 	}
 	SERVICE_STATUS ss;
 	if (!QueryServiceStatus(scml, &ss))
 	{
+		CloseServiceHandle(scml);
+		CloseServiceHandle(scm);
+
 		return FALSE;
 	}
 	if (ss.dwCurrentState != SERVICE_STOPPED)
 	{
 		if (!ControlService(scml, SERVICE_CONTROL_STOP, &ss) && ss.dwCurrentState != SERVICE_CONTROL_STOP)
 		{
+
+			CloseServiceHandle(scml);
+			CloseServiceHandle(scm);
 			return FALSE;
 		}
 	}
 	if (!DeleteService(scml))
 	{
+
+		CloseServiceHandle(scml);
+		CloseServiceHandle(scm);
 		return FALSE;
 	}
 
+
+	CloseServiceHandle(scml);
+	CloseServiceHandle(scm);
 	return TRUE;
 }
