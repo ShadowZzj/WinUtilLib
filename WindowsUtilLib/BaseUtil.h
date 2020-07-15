@@ -81,6 +81,22 @@ private:
 
 };
 
+class CPPAllocator: public Allocator {
+public:
+	void* Alloc(size_t size) override {
+		char* ret = new char[size];
+		memset(ret, 0, size);
+		return (void*)ret;
+	}
+	//cannot implement
+	void* ReAlloc(void* mem, size_t size) override {
+		return nullptr;
+	}
+	void Free(void* mem) override {
+		if (mem)
+			delete mem;
+	}
+};
 class ExitScopeHelp {
 public:
 	template <typename T>

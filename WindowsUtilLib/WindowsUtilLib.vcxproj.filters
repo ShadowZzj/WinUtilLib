@@ -39,9 +39,6 @@
     <Filter Include="test">
       <UniqueIdentifier>{85ded42e-b20a-4b01-888b-318a3aee1e0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Win32\PE">
-      <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Windows\Win32\Print">
       <UniqueIdentifier>{2410eb17-3191-4494-85a6-1e34f1fb5f9f}</UniqueIdentifier>
     </Filter>
@@ -59,6 +56,12 @@
     </Filter>
     <Filter Include="src\Windows\Win32\System">
       <UniqueIdentifier>{710ae8bc-345e-4562-8e69-3075f881668f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\File">
+      <UniqueIdentifier>{c33a8bfe-a8fb-4d4e-bd1f-9a66d9e0b9a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\File\PE">
+      <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,7 +102,7 @@
       <Filter>src\Windows\Win32\Communicate</Filter>
     </ClInclude>
     <ClInclude Include="WinDynCalls.h">
-      <Filter>src\Windows\Win32\PE</Filter>
+      <Filter>src\Windows\Win32\File\PE</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
       <Filter>src\Windows\Debug</Filter>
@@ -123,7 +126,7 @@
       <Filter>src\Windows\Win32\GUI\Paint</Filter>
     </ClInclude>
     <ClInclude Include="PEhelper.h">
-      <Filter>src\Windows\Win32\PE</Filter>
+      <Filter>src\Windows\Win32\File\PE</Filter>
     </ClInclude>
     <ClInclude Include="WindowHelper.h">
       <Filter>src\Windows\Win32\Base</Filter>
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="SystemHelper.h">
       <Filter>src\Windows\Win32\System</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHelper.h">
+      <Filter>src\Windows\Win32\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +179,7 @@
       <Filter>src\Windows\Win32\Communicate</Filter>
     </ClCompile>
     <ClCompile Include="WinDynCalls.cpp">
-      <Filter>src\Windows\Win32\PE</Filter>
+      <Filter>src\Windows\Win32\File\PE</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>src\Windows\Debug</Filter>
@@ -203,7 +209,7 @@
       <Filter>src\Windows\Win32\GUI\Paint</Filter>
     </ClCompile>
     <ClCompile Include="PEhelper.cpp">
-      <Filter>src\Windows\Win32\PE</Filter>
+      <Filter>src\Windows\Win32\File\PE</Filter>
     </ClCompile>
     <ClCompile Include="WindowHelper.cpp">
       <Filter>src\Windows\Win32\Base</Filter>
@@ -216,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="SystemHelper.cpp">
       <Filter>src\Windows\Win32\System</Filter>
+    </ClCompile>
+    <ClCompile Include="FileHelper.cpp">
+      <Filter>src\Windows\Win32\File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

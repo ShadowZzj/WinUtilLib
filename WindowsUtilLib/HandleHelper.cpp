@@ -1,4 +1,5 @@
 #include "HandleHelper.h"
+using namespace zzj;
 
 bool ScopeKernelHandle::SetInherited(bool isInherited){
 	if (handle == INVALID_HANDLE_VALUE)
