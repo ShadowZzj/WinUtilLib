@@ -46,12 +46,18 @@ PEFile::PEFile(std::string _fileName, Allocator* allocator)
 	ThrowExceptionIfFail(error);
 }
 
+zzj::PEFile::~PEFile()
+{
+	UnloadPE();
+}
+
 PEFile::ErrorCode PEFile::LoadPE()
 {
 	ErrorCode error;
 	if (fileName.empty())
 		return ErrorCode::INVALID_FILE_NAME;
 
+	UnloadPE();
 	//dosHeader points to temp buffer.
 	dosHeader = Allocator::Alloc<IMAGE_DOS_HEADER>(allocator,1);
 	if (!dosHeader)
@@ -71,10 +77,6 @@ PEFile::ErrorCode PEFile::LoadPE()
 		allocator->Free(peImage);
 		peImage = nullptr;
 	}
-
-	fileSize = File::GetFileSize(fileName);
-	if (fileSize == -1)
-		return ErrorCode::ZZJ_LIB_ERROR;
 
 	peImage = (char*)allocator->Alloc(AlignData(ntHeader->OptionalHeader.SizeOfImage,ntHeader->OptionalHeader.SectionAlignment));
 	if (!peImage)
@@ -104,7 +106,58 @@ PEFile::ErrorCode PEFile::LoadPE()
 			return ErrorCode::ZZJ_LIB_ERROR;
 	}
 
+	error = ReadDataDirectoryTable(peImage, ntHeader, dataDirectoryTable);
+	ReturnIfFail(error);
+
+	error = ReadImportLibrary(peImage, dataDirectoryTable, importLibrary, numOfImportLibrary);
+	ReturnIfFail(error);
+
+
+	fileSize = File::GetFileSize(fileName);
+	if (fileSize == -1)
+		return ErrorCode::ZZJ_LIB_ERROR;
+
+	IMAGE_SECTION_HEADER* lastSection = &sectionHeader[ntHeader->FileHeader.NumberOfSections-1];
+	extraDataSize = fileSize - (lastSection->PointerToRawData + lastSection->SizeOfRawData);
+
+	if (extraDataSize == 0)
+		return ErrorCode::SUCCESS;
+
+	if (extraData) {
+		allocator->Free(extraData);
+		extraData = nullptr;
+	}
+
+	extraData = (char*)allocator->Alloc(extraDataSize);
+	ret = File::ReadFileAtOffset(fileName, extraData, extraDataSize, lastSection->PointerToRawData + lastSection->SizeOfRawData);
+	if (!ret) {
+		allocator->Free(extraData);
+		extraData = nullptr;
+		return ErrorCode::ZZJ_LIB_ERROR;
+	}
+
 	return ErrorCode::SUCCESS;
+}
+
+PEFile::ErrorCode PEFile::UnloadPE()
+{
+	if (extraData) {
+		allocator->Free(extraData);
+		extraData == nullptr;
+	}
+	if (peImage) {
+		allocator->Free(peImage);
+		peImage = nullptr;
+	}
+
+	return ErrorCode::SUCCESS;
+}
+
+DWORD zzj::PEFile::RVAToVA(char* imageBase, DWORD rva)
+{
+	if (imageBase)
+		return (DWORD)imageBase + rva;
+	return -1;
 }
 
 PEFile::ErrorCode PEFile::IsValidPE(std::string fileName)
@@ -140,6 +193,24 @@ PEFile::ErrorCode zzj::PEFile::ReadNTHeader(std::string fileName, const IMAGE_DO
 	bool ret = File::ReadFileAtOffset(fileName, ntHeader, sizeof(*ntHeader), dosHeader.e_lfanew);
 	if (!ret)
 		return ZZJ_LIB_ERROR;
+
+	return ErrorCode::SUCCESS;
+}
+
+PEFile::ErrorCode zzj::PEFile::ReadDataDirectoryTable(char* imageBase,  IMAGE_NT_HEADERS* ntheader, IMAGE_DATA_DIRECTORY*& dataDirectoryTable)
+{
+	dataDirectoryTable = &ntheader->OptionalHeader.DataDirectory[0];
+	return ErrorCode::SUCCESS;
+}
+
+PEFile::ErrorCode zzj::PEFile::ReadImportLibrary(char* imageBase, IMAGE_DATA_DIRECTORY* dataDirectoryTable, IMAGE_IMPORT_DESCRIPTOR*& importLibrary, DWORD& numOfImportLibrary)
+{
+	
+	importLibrary = (IMAGE_IMPORT_DESCRIPTOR*)RVAToVA(imageBase,dataDirectoryTable[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
+	
+	numOfImportLibrary = 0;
+	while ((&importLibrary[numOfImportLibrary])->Name != 0)
+		numOfImportLibrary++;
 
 	return ErrorCode::SUCCESS;
 }

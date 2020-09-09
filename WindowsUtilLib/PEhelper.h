@@ -21,6 +21,8 @@ private:
 	HMODULE module;
 
 };
+
+
 namespace zzj
 {
 class PEFile{
@@ -43,23 +45,35 @@ public:
 	};
 	
 	explicit PEFile(std::string fileName,Allocator* allocator);
+	~PEFile();
 	ErrorCode LoadPE();
-
+	ErrorCode UnloadPE();
+	static DWORD RVAToVA(char* imageBase,DWORD rva);
 	static ErrorCode IsValidPE(std::string _fileName);
 	static bool IsOperationSucceed(ErrorCode error);
 	static ErrorCode ReadDosHeader(std::string fileName, IMAGE_DOS_HEADER* dosHeader);
 	static ErrorCode ReadNTHeader(std::string fileName, const IMAGE_DOS_HEADER& dosHeader, IMAGE_NT_HEADERS* ntHeader);
+	static ErrorCode ReadDataDirectoryTable(char* imageBase, IMAGE_NT_HEADERS* ntheader, IMAGE_DATA_DIRECTORY*& dataDirectoryTable);
+	static ErrorCode ReadImportLibrary(char* imageBase,IMAGE_DATA_DIRECTORY* dataDirectoryTable, IMAGE_IMPORT_DESCRIPTOR*& importLibrary, DWORD& numOfImportLibrary);
 	static DWORD AlignData(DWORD data, DWORD alignment);
 
 	std::string fileName;
 	DWORD fileSize;
+
+
 	IMAGE_DOS_HEADER* dosHeader;
 	IMAGE_NT_HEADERS* ntHeader;
+	IMAGE_DATA_DIRECTORY* dataDirectoryTable;
 	IMAGE_SECTION_HEADER* sectionHeader;
-	
-	Allocator* allocator;
+
+	IMAGE_IMPORT_DESCRIPTOR* importLibrary;
+	DWORD numOfImportLibrary=0;
+
+	DWORD extraDataSize;
+	char* extraData = nullptr;
+
 private:
-	static ErrorCode Read;
+	Allocator* allocator;
 	char* peImage=nullptr;
 	
 };
