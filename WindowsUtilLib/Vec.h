@@ -7,6 +7,7 @@
 //	cap: capacity
 #include "CRTdbgHeader.h"
 #include <stdio.h>
+#include "StrUtil.h"
 template <class T>
 class Vec {
 public:

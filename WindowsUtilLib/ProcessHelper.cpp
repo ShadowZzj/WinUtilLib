@@ -1,12 +1,13 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include "Baseutil.h"
-#include "ProcessHelper.h"
 #include <vector>
 #include <sddl.h>
 #include <UserEnv.h>
 #include <strsafe.h>
+#include "Baseutil.h"
+#include "ProcessHelper.h"
+#include "StrUtil.h"
 using namespace zzj;
 #pragma comment(lib,"Userenv.lib")
 DWORD Process::GetSessionId() {

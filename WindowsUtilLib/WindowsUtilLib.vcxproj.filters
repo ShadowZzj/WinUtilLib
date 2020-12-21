@@ -98,9 +98,6 @@
     <ClInclude Include="IPC.h">
       <Filter>src\Windows\Win32\Communicate</Filter>
     </ClInclude>
-    <ClInclude Include="call_json.h">
-      <Filter>src\Windows\Win32\Communicate</Filter>
-    </ClInclude>
     <ClInclude Include="WinDynCalls.h">
       <Filter>src\Windows\Win32\File\PE</Filter>
     </ClInclude>
@@ -149,6 +146,9 @@
     <ClInclude Include="FileHelper.h">
       <Filter>src\Windows\Win32\File</Filter>
     </ClInclude>
+    <ClInclude Include="call_json.h">
+      <Filter>src\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -173,9 +173,6 @@
       <Filter>src\Windows\Debug</Filter>
     </ClCompile>
     <ClCompile Include="IPC.cpp">
-      <Filter>src\Windows\Win32\Communicate</Filter>
-    </ClCompile>
-    <ClCompile Include="call_json.cpp">
       <Filter>src\Windows\Win32\Communicate</Filter>
     </ClCompile>
     <ClCompile Include="WinDynCalls.cpp">
@@ -225,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="FileHelper.cpp">
       <Filter>src\Windows\Win32\File</Filter>
+    </ClCompile>
+    <ClCompile Include="call_json.cpp">
+      <Filter>src\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

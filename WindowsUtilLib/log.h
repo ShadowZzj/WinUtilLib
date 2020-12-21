@@ -6,9 +6,10 @@ extern std::shared_ptr<spdlog::logger> file_logger;
 
 void FileLoggerInit(const char* fileName);
 #else
-#include "BaseUtil.h"
 #include <fstream>
 #include <ctime>
+#include "BaseUtil.h"
+#include "StrUtil.h"
 class SimpleLogger;
 extern std::shared_ptr<SimpleLogger> file_logger;
 void FileLoggerInit(const char* fileName);

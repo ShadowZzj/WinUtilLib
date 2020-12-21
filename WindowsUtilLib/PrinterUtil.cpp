@@ -1,5 +1,6 @@
 #include "PrinterUtil.h"
-
+#include "StrUtil.h"
+#include "Vec.h"
 namespace WinPrintWrapper {
 	std::wstring PdfParam::ToSumatraCmdStr() const
 	{

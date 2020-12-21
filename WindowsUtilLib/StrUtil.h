@@ -2,6 +2,10 @@
 #include <string>
 #include <locale.h>
 #include <iostream>
+
+#ifdef _WIN32
+#include <guiddef.h>
+#endif
 namespace str {
 	template<class T>
 	class Str;
@@ -97,6 +101,7 @@ namespace str {
 		}
 	}
 	//Statistical method to judge whether it is unicode text.
+#ifdef _WIN32
 	bool IsTextUnicode(const void* buf, size_t cb, int* res);
 	std::string UTF8ToString(const std::string& str);
 	template<class T>
@@ -114,4 +119,5 @@ namespace str {
 	bool W2A_util(std::wstring& wStr, std::string& aStr);
 	bool A2W_util(std::string& aStr, std::wstring& wStr);
 	bool Unknown2W_util(const char* ustr, size_t ustrsize, std::wstring& wStr);
+#endif
 }

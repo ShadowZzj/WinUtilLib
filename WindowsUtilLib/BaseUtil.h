@@ -145,9 +145,3 @@ void* memdup(const void* data, size_t len);
 
 LPVOID HeapAlloc_util(SIZE_T nLen);
 void HeapFree_util(LPVOID pBuf);
-
-
-#include "StrUtil.h"
-#include "Vec.h"
-#include "ParseCommondLine.h"
-#include "log.h"

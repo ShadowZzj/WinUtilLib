@@ -1,5 +1,6 @@
 #include "CRTdbgHeader.h"
 #include "BaseUtil.h"
+#include "StrUtil.h"
 void* Allocator::Alloc(Allocator* allocator, size_t size){
 	if (!allocator) {
 		void* res = malloc(size);

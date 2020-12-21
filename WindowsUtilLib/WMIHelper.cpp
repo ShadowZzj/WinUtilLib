@@ -1,6 +1,7 @@
 #include <iostream>
 #include "WMIHelper.h"
 #include "BaseUtil.h"
+#include "StrUtil.h"
 #pragma comment(lib,"wbemuuid.lib")
 namespace WMIHelper {
 	using namespace std;

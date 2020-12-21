@@ -1,4 +1,6 @@
 #include "log.h"
+#include "StrUtil.h"
+#include "Vec.h"
 //Any cpp include log.h and one needs to call FileLoggerInit.
 #ifdef SPDLOG
 std::shared_ptr<spdlog::logger> file_logger;

@@ -1,7 +1,15 @@
-#include "BaseUtil.h"
 #include <comdef.h>
-
 #include <sstream>
+#include <codecvt>
+#include "BaseUtil.h"
+#include "StrUtil.h"
+#pragma warning (disable: 4996)
+
+//std::string 中文: gb2312
+//"中文":gb2312
+//u8"中文":utf-8
+//L"中文":utf-16/UNICODE
+//std::wstring 中文:utf-16
 
 namespace str {
 	size_t Len(const wchar_t* str) {
@@ -60,38 +68,107 @@ namespace str {
 		}
 		return ret;
 	}
+	//utf-16 to utf-8.
 	char* Wstr2Str(const wchar_t* wstr){
 		if (IsEmpty(wstr))
 			return nullptr;
-		const WCHAR* wc = wstr;
-		_bstr_t b(wc);
-		const char* c = b;
-		char* ret = str::Dup(c);
+		std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conversion;
+		std::string mbs = conversion.to_bytes((char16_t*)wstr);
+		char* ret = str::Dup(mbs.c_str());
 		return ret;
 	}
+
+	//utf-16 to utf-8.
 	std::string Wstr2Str(std::wstring wstr)
 	{
-
 		const wchar_t* tmp = wstr.c_str();
 		char* str = Wstr2Str(tmp);
 		defer{ Allocator::Free(nullptr,str); };
 		std::string ret(str);
 		return ret;
 	}
-	std::wstring Str2Wstr(std::string str) {
-		const char* tmp = str.c_str();
-		wchar_t* wstr = Str2Wstr(tmp);
-		defer{ Allocator::Free(nullptr,wstr); };
-		std::wstring ret(wstr);
-		return ret;
+
+	//utf-8 to utf-16
+	std::wstring Str2Wstr(std::string utf8)
+	{
+		std::vector<unsigned long> unicode;
+		size_t i = 0;
+		while (i < utf8.size())
+		{
+			unsigned long uni;
+			size_t todo;
+			bool error = false;
+			unsigned char ch = utf8[i++];
+			if (ch <= 0x7F)
+			{
+				uni = ch;
+				todo = 0;
+			}
+			else if (ch <= 0xBF)
+			{
+				throw std::logic_error("not a UTF-8 string");
+			}
+			else if (ch <= 0xDF)
+			{
+				uni = ch & 0x1F;
+				todo = 1;
+			}
+			else if (ch <= 0xEF)
+			{
+				uni = ch & 0x0F;
+				todo = 2;
+			}
+			else if (ch <= 0xF7)
+			{
+				uni = ch & 0x07;
+				todo = 3;
+			}
+			else
+			{
+				throw std::logic_error("not a UTF-8 string");
+			}
+			for (size_t j = 0; j < todo; ++j)
+			{
+				if (i == utf8.size())
+					throw std::logic_error("not a UTF-8 string");
+				unsigned char ch = utf8[i++];
+				if (ch < 0x80 || ch > 0xBF)
+					throw std::logic_error("not a UTF-8 string");
+				uni <<= 6;
+				uni += ch & 0x3F;
+			}
+			if (uni >= 0xD800 && uni <= 0xDFFF)
+				throw std::logic_error("not a UTF-8 string");
+			if (uni > 0x10FFFF)
+				throw std::logic_error("not a UTF-8 string");
+			unicode.push_back(uni);
+		}
+		std::wstring utf16;
+		for (size_t i = 0; i < unicode.size(); ++i)
+		{
+			unsigned long uni = unicode[i];
+			if (uni <= 0xFFFF)
+			{
+				utf16 += (wchar_t)uni;
+			}
+			else
+			{
+				uni -= 0x10000;
+				utf16 += (wchar_t)((uni >> 10) + 0xD800);
+				utf16 += (wchar_t)((uni & 0x3FF) + 0xDC00);
+			}
+		}
+		return utf16;
 	}
+
+	//utf-8 to utf-16
 	wchar_t* Str2Wstr(const char* str){
 		if (IsEmpty(str))
 			return nullptr;
-		const CHAR* wc = str;
-		_bstr_t b(wc);
-		const WCHAR* c = b;
-		WCHAR* ret = str::Dup(c);
+
+		std::string tmpS = str;
+		std::wstring tmpW = Str2Wstr(tmpS);
+		wchar_t* ret = str::Dup(tmpW.c_str());
 		return ret;
 	}
 	char* FmtV(const char* fmt, va_list args) {
@@ -126,6 +203,7 @@ namespace str {
 	bool IsEmpty(const wchar_t* s){
 		return !s || *s == 0;
 	}
+#ifdef _WIN32
 	bool IsTextUnicode(const void* buf, size_t cb, int* res) {
 		return ::IsTextUnicode(buf, cb, res);
 	}
@@ -140,6 +218,7 @@ namespace str {
 	}
 	std::string StringToUTF8(const std::string& str)
 	{
+		//gb2312 to utf-16, utf-16 to utf-8
 		int nwLen = ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
 
 		wchar_t* pwBuf = new wchar_t[nwLen + 1];
@@ -180,8 +259,6 @@ namespace str {
 		pwBuf = NULL;
 		return retStr;
 	}
-
-
 	int GB2312ToUnicode(const char* gb2312, char* unicode)
 	{
 		UINT nCodePage = 936; //GB2312
@@ -243,7 +320,6 @@ namespace str {
 		}
 		return false;
 	}
-
 	bool W2A_util(std::wstring& wStr, std::string& aStr)
 	{
 		bool bRet = false;
@@ -274,7 +350,6 @@ namespace str {
 
 		return bRet;
 	}
-
 	bool A2W_util(std::string& aStr, std::wstring& wStr)
 	{
 		bool bRet = false;
@@ -305,7 +380,6 @@ namespace str {
 
 		return bRet;
 	}
-
 	bool Unknown2W_util(const char* ustr, size_t ustrsize, std::wstring& wStr)
 	{
 		bool bRet = false;
@@ -353,4 +427,5 @@ namespace str {
 
 		return false;
 	}
+#endif
 }

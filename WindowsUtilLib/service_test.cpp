@@ -3,8 +3,11 @@
 #include <fcntl.h>
 #include <io.h>
 #include "BaseUtil.h"
+#include "ParseCommondLine.h"
 #include "WinService.h"
 #include "log.h"
+#include "StrUtil.h"
+#include "Vec.h"
 class MyService :public WinService {
 public:
 	using WinService::WinService;

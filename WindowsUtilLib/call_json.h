@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <utility>
+#include <string>
 /*
 in param
 {
@@ -52,5 +53,3 @@ private:
 	bool isIndexParamValid(nlohmann::json::iterator &indexIterator, nlohmann::json::iterator &paramIterator, json& inj);
 
 };
-char* GetStrValueByKey(nlohmann::json::iterator& jparam, std::string key);
-wchar_t* GetWstrValueByKey(nlohmann::json::iterator& jparam, std::string key);

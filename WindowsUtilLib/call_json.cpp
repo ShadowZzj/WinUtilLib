@@ -1,9 +1,5 @@
-
-#include <Windows.h>
 #include "call_json.h"
-#include "BaseUtil.h"
-#include "log.h"
-using json = nlohmann::json;
+#include "StrUtil.h"
 
 bool CallJ::AddMethod(method_template method)
 {
@@ -67,11 +63,11 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		{
 			inj = json::parse(std::move(inadapter));
 			std::string all = inj.dump();
-			file_logger->info("Accpect IPC: %s", all.c_str());
+			
 		}
 		catch (...)
 		{
-			file_logger->error("Parse json fails in ExecCall");
+			
 			return false;
 		}
 
@@ -87,7 +83,7 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		CallJ::MethodInfo mt = GetMethod(iMethodIndex, success);
 		if (!success)
 			return false;
-		file_logger->info("Method index:%d", iMethodIndex);
+		
 
 		std::string outStr;
 		outStr.clear();
@@ -95,14 +91,14 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 		json iter= methodParam_iter->get<json>();
 		std::string paramString = iter.dump();
 		const char* params = paramString.c_str();
-		file_logger->info("MethodParameters: %s",params);
+		
 
 		std::tuple<int, std::string> stat;
 		try {
 			stat = mt.second(methodParam_iter, outStr);
 		}
 		catch (std::exception except) {
-			file_logger->error("Method unhandled exception");
+			
 			std::get<0>(stat) = UnHandledException;
 			std::get<1>(stat) =except.what();
 		}
@@ -117,7 +113,7 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 			SetRetJson(std::get<0>(stat), tmp, ret, std::get<1>(stat));
 		}
 		catch (...) {
-			file_logger->error("Parse outStr json fails");
+			
 			return false;
 		}
 
@@ -128,17 +124,17 @@ bool CallJ::ExecCall(char* injson, int injsonlen, char** outjson, int* outjsonle
 
 		*outjson = temp;
 		*outjsonlen = ret.size();
-		file_logger->info("Return json: %s", temp);
+		
 		return true;
 	}
 	catch (const nlohmann::detail::exception & nde)
 	{
-		file_logger->error("nlohmann::json exception");
+		
 		return false;
 	}
 	catch (const std::exception & stde)
 	{
-		file_logger->error("Undandled exception in Execall");
+		
 		return false;
 	}
 
@@ -169,24 +165,3 @@ bool CallJ::isIndexParamValid(nlohmann::json::iterator& indexIterator, nlohmann:
 	return true;
 }
 
-char* GetStrValueByKey(nlohmann::json::iterator& jparam, std::string key) {
-	auto iter = jparam->find(key);
-	if (iter != jparam->end())
-		if (iter->is_string()) {
-			std::string str = iter->get<std::string>();
-			char* ret = str::Dup(str.c_str());
-			return ret;
-		}
-	return nullptr;
-}
-wchar_t* GetWstrValueByKey(nlohmann::json::iterator& jparam, std::string key) {
-	auto iter = jparam->find(key);
-	if (iter != jparam->end())
-		if (iter->is_string()) {
-
-			std::string str = iter->get<std::string>();
-			wchar_t* ret = str::Str2Wstr(str.c_str());
-			return ret;
-		}
-	return nullptr;
-}
