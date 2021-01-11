@@ -1,5 +1,6 @@
 #include "FileHelper.h"
 #include "HandleHelper.h"
+#include <tchar.h>
 
 using namespace zzj;
 
@@ -58,3 +59,4 @@ DWORD zzj::File::GetFileSize(std::string fileName)
 
 	return ::GetFileSize(fileHandle, NULL);
 }
+

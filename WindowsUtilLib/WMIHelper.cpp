@@ -3,7 +3,7 @@
 #include "BaseUtil.h"
 #include "StrUtil.h"
 #pragma comment(lib,"wbemuuid.lib")
-namespace WMIHelper {
+namespace zzj {
 	using namespace std;
 	WMIWrapper* WMIWrapper::wmiWrapper = NULL;
 

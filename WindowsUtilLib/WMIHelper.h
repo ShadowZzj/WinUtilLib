@@ -4,7 +4,7 @@
 #include "COMHelper.h"
 #include <vector>
 class Test;
-namespace WMIHelper {
+namespace zzj {
 	//Not support multi-thread, caller must synchronize.
 	class WMIWrapper {
 	public:

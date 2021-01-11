@@ -767,3 +767,18 @@ bool zzj::Process::KillProcess(const char* name)
 		KillProcess(pid);
 	return true;
 }
+
+std::wstring zzj::Process::GetModulePath(std::wstring moduleName)
+{
+    WCHAR szFilePath[MAX_PATH + 1] = {0};
+    HMODULE mHandle;
+    if (moduleName.empty())
+        mHandle = NULL;
+    else
+        mHandle = GetModuleHandleW(moduleName.c_str());
+
+    GetModuleFileNameW(mHandle, szFilePath, MAX_PATH);
+    (wcsrchr(szFilePath, L'\\'))[1] = 0; // 删除文件名，只获得路径字串
+    return szFilePath;
+
+}
