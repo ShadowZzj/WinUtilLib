@@ -24,9 +24,6 @@
     <Filter Include="src\Windows\Win32">
       <UniqueIdentifier>{4f921fb0-957d-4318-9f97-e10e44cedb42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Win32\Communicate">
-      <UniqueIdentifier>{b5fa9add-5f10-4d78-8d6b-cb262dc9f739}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Windows\Win32\Process">
       <UniqueIdentifier>{7059bc64-161b-457b-9528-ab8b939772dc}</UniqueIdentifier>
     </Filter>
@@ -63,6 +60,15 @@
     <Filter Include="src\Windows\Win32\File\PE">
       <UniqueIdentifier>{bc662149-69d6-433b-b54a-e8871ff315de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\Network">
+      <UniqueIdentifier>{4569da91-af0b-4b88-8823-165d83ee8ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\Process\Communicate">
+      <UniqueIdentifier>{b5fa9add-5f10-4d78-8d6b-cb262dc9f739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Windows\Win32\HardWare">
+      <UniqueIdentifier>{c89c392c-e081-459e-b2f4-e067b895e9e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -96,7 +102,7 @@
       <Filter>src\Windows\Debug</Filter>
     </ClInclude>
     <ClInclude Include="IPC.h">
-      <Filter>src\Windows\Win32\Communicate</Filter>
+      <Filter>src\Windows\Win32\Process\Communicate</Filter>
     </ClInclude>
     <ClInclude Include="WinDynCalls.h">
       <Filter>src\Windows\Win32\File\PE</Filter>
@@ -149,6 +155,12 @@
     <ClInclude Include="call_json.h">
       <Filter>src\Base</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkAdapter.h">
+      <Filter>src\Windows\Win32\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="HardWare.h">
+      <Filter>src\Windows\Win32\HardWare</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -173,7 +185,7 @@
       <Filter>src\Windows\Debug</Filter>
     </ClCompile>
     <ClCompile Include="IPC.cpp">
-      <Filter>src\Windows\Win32\Communicate</Filter>
+      <Filter>src\Windows\Win32\Process\Communicate</Filter>
     </ClCompile>
     <ClCompile Include="WinDynCalls.cpp">
       <Filter>src\Windows\Win32\File\PE</Filter>
@@ -225,6 +237,12 @@
     </ClCompile>
     <ClCompile Include="call_json.cpp">
       <Filter>src\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkAdapter.cpp">
+      <Filter>src\Windows\Win32\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="HardWare.cpp">
+      <Filter>src\Windows\Win32\HardWare</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

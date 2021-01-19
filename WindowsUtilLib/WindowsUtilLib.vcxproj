@@ -26,9 +26,11 @@
     <ClInclude Include="FileHelper.h" />
     <ClInclude Include="FontHelper.h" />
     <ClInclude Include="HandleHelper.h" />
+    <ClInclude Include="HardWare.h" />
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="NetworkAdapter.h" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PEhelper.h" />
     <ClInclude Include="PrinterUtil.h" />
@@ -55,8 +57,10 @@
     <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="FontHelper.cpp" />
     <ClCompile Include="HandleHelper.cpp" />
+    <ClCompile Include="HardWare.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="log.cpp" />
+    <ClCompile Include="NetworkAdapter.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PEhelper.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />
