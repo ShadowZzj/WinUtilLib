@@ -60,3 +60,13 @@ DWORD zzj::File::GetFileSize(std::string fileName)
 	return ::GetFileSize(fileHandle, NULL);
 }
 
+bool zzj::File::IsFileExist(std::string fileName)
+{
+    if (FILE *file = fopen(fileName.c_str(), "r"))
+    {
+        fclose(file);
+        return true;
+    }
+    else
+        return false;
+}

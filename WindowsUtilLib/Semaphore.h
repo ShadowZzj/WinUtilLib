@@ -1,39 +1,32 @@
 #pragma once
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
 namespace zzj
 {
-    class Semaphore {
-    public:
-        Semaphore(int count_ = 0)
-            : count(count_) {}
+class Semaphore
+{
+  public:
+    explicit Semaphore(int count = 0) : count_(count)
+    {
+    }
 
-        inline void Notify()
-        {
-            std::unique_lock<std::mutex> lock(mtx);
-            count++;
-            cv.notify_one();
-        }
+    void Signal()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        ++count_;
+        cv_.notify_one();
+    }
 
-        inline void Wait()
-        {
-            std::unique_lock<std::mutex> lock(mtx);
+    void Wait()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        cv_.wait(lock, [=] { return count_ > 0; });
+        --count_;
+    }
 
-            while (count == 0) {
-                cv.wait(lock);
-            }
-            count--;
-        }
-        inline void SetCount(int count) {
-            this->count = count;
-        }
-        inline int GetCount() {
-            return this->count;
-        }
-    private:
-        std::mutex mtx;
-        std::condition_variable cv;
-        int count;
-    };
-}
-
+  private:
+    std::mutex mutex_;
+    std::condition_variable cv_;
+    int count_;
+};
+} // namespace zzj
