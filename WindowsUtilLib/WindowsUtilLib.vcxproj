@@ -169,7 +169,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -183,6 +183,9 @@
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).lib" ..\..\util </Command>
     </PostBuildEvent>
+    <Lib>
+      <TreatLibWarningAsErrors>false</TreatLibWarningAsErrors>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

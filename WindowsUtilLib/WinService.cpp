@@ -278,7 +278,7 @@ bool WinService::InstallKernelService(const char* binaryPath, const char* servic
 	return TRUE;
 }
 
-bool WinService::StartService(const char* serviceName) {
+bool WinService::MyStartService(const char* serviceName) {
 
 	SC_HANDLE hSC = ::OpenSCManagerA(NULL,
 		NULL, GENERIC_EXECUTE);
@@ -425,4 +425,85 @@ bool WinService::UninstallService(const char* serviceName)
 	CloseServiceHandle(scml);
 	CloseServiceHandle(scm);
 	return TRUE;
+}
+
+int WinService::IsServiceInstalled(const char *serviceName,bool& installed)
+{
+    int result    = 0;
+    int errCode;
+    SC_HANDLE scml = NULL;
+    SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    if (!scm)
+    {
+        errCode = GetLastError();
+        result = -1;
+        goto exit;
+    }
+
+    scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
+    if (!scml)
+    {
+        if (GetLastError() == ERROR_SERVICE_NOT_FOUND)
+        {
+            result  = 0;
+            installed = false;
+        }
+        result = -2;
+        goto exit;
+    }
+   
+	installed = true;
+    result  = 0;
+exit:
+    if (scm)
+        CloseServiceHandle(scm);
+    if (scml)
+        CloseServiceHandle(scml);
+    return result;
+}
+
+int WinService::IsServiceRunning(const char *serviceName, bool &running)
+{
+    int result = 0;
+    int errCode;
+    SC_HANDLE scml = NULL;
+    SC_HANDLE scm  = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    SERVICE_STATUS ss;
+    if (!scm)
+    {
+        errCode = GetLastError();
+        result  = -1;
+        goto exit;
+    }
+
+    scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
+    if (!scml)
+    {
+        result = -2;
+        goto exit;
+    }
+
+    if (!QueryServiceStatus(scml, &ss))
+    {
+        result = -3;
+        goto exit;
+    }
+
+	if (ss.dwCurrentState == SERVICE_RUNNING)
+    {
+        running = true;
+		result = 0;
+		goto exit;
+    }
+
+	running = false;
+	result = 0;
+	goto exit;
+
+exit:
+    if (scm)
+        CloseServiceHandle(scm);
+    if (scml)
+        CloseServiceHandle(scml);
+    return result;
 }

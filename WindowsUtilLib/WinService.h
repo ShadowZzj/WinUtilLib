@@ -25,10 +25,14 @@ public:
 	virtual void OnPreShutDown() = 0;
 
 	static bool InstallKernelService(const char* binaryPath, const char* serviceName, const char* displayName,const char* description);
-	static bool StartService(const char* serviceName);
+	static bool MyStartService(const char* serviceName);
 	static bool StopService(const char* serviceName);
 	static bool UninstallService(const char* serviceName);
-protected:
+
+	static int IsServiceInstalled(const char *serviceName, bool &installed);
+    static int IsServiceRunning(const char *serviceName, bool &running);
+
+  protected:
 	std::string name;
 	std::string description;
 	std::string displayName;
