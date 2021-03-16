@@ -7,5 +7,6 @@ namespace zzj {
 		static bool ReadFileAtOffset(std::string fileName, void* buffer, unsigned long numToRead, unsigned long fileOffset);
 		static DWORD GetFileSize(std::string fileName);
         static bool IsFileExist(std::string fileName);
+        static int RemoveDirectoryRecursive(std::string path);
 	};
 }
