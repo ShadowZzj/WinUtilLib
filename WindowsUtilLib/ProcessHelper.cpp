@@ -685,7 +685,8 @@ DWORD Process::SystemCreateProcess(std::wstring& commandLine, bool bElevated, bo
 	return dwPid;
 }
 
-BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string cmdLine,bool wait)
+BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string cmdLine, bool wait,
+                                        DWORD *errCode)
 {
 	STARTUPINFOA stinfo;
 	ZeroMemory((void*)&stinfo, sizeof(STARTUPINFO));
@@ -703,6 +704,9 @@ BOOL zzj::Process::RegularCreateProcess(std::string path, bool show, std::string
 	else {
 		if(wait)
 			WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+
+		if (errCode)
+            GetExitCodeProcess(ProcessInfo.hProcess, errCode);
 
 		// Close process and thread handles. 
 		CloseHandle(ProcessInfo.hProcess);

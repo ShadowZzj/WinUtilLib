@@ -122,7 +122,7 @@ namespace zzj {
 		//System process create user or admin process.
 		static DWORD SystemCreateProcess(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show);
 		//Same level as caller.
-		static BOOL RegularCreateProcess(std::string path, bool show, std::string cmdLine = "",bool wait=false);
+		static BOOL RegularCreateProcess(std::string path, bool show, std::string cmdLine = "",bool wait=false,DWORD* errCode=nullptr);
 		//Require uac if user process.
 		static BOOL AdminCreateProcess(const char* pszFileName, bool show, const char* param,bool wait=false);
 		static bool KillProcess(DWORD pid);
