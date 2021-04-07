@@ -4,6 +4,7 @@
 #include <Winsock2.h>
 using namespace zzj;
 using namespace std;
+#pragma comment(lib, "ws2_32")
 int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool isRealAdapter)
 {
     zzj::WMIWrapper netInfo;

@@ -125,6 +125,7 @@ namespace zzj {
 		static BOOL RegularCreateProcess(std::string path, bool show, std::string cmdLine = "",bool wait=false,DWORD* errCode=nullptr);
 		//Require uac if user process.
 		static BOOL AdminCreateProcess(const char* pszFileName, bool show, const char* param,bool wait=false);
+        static BOOL IsProcessAdmin();
 		static bool KillProcess(DWORD pid);
         static bool KillProcess(const char *name);
         static std::wstring GetModulePath(std::wstring moduleName = L"");

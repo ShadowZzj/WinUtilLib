@@ -443,12 +443,13 @@ int WinService::IsServiceInstalled(const char *serviceName,bool& installed)
     scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
     if (!scml)
     {
-        if (GetLastError() == ERROR_SERVICE_NOT_FOUND)
+        if (GetLastError() == ERROR_SERVICE_DOES_NOT_EXIST)
         {
             result  = 0;
             installed = false;
         }
-        result = -2;
+        else
+			result = -2;
         goto exit;
     }
    

@@ -742,6 +742,32 @@ BOOL zzj::Process::AdminCreateProcess(const char* pszFileName, bool show, const 
 	return true;
 }
 
+BOOL zzj::Process::IsProcessAdmin()
+{
+
+    BOOL bElevated = FALSE;
+    HANDLE hToken  = NULL;
+
+    // Get current process token
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
+        return FALSE;
+
+    TOKEN_ELEVATION tokenEle;
+    DWORD dwRetLen = 0;
+
+    // Retrieve token elevation information
+    if (GetTokenInformation(hToken, TokenElevation, &tokenEle, sizeof(tokenEle), &dwRetLen))
+    {
+        if (dwRetLen == sizeof(tokenEle))
+        {
+            bElevated = tokenEle.TokenIsElevated;
+        }
+    }
+
+    CloseHandle(hToken);
+    return bElevated;
+}
+
 bool Process::KillProcess(DWORD pid)
 {
 	bool bRet = false;
