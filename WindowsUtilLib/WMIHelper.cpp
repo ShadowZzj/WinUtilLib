@@ -106,9 +106,23 @@ HRESULT WMIWrapper::WMIGetNextObject()
     return S_OK;
 }
 
+HRESULT WMIWrapper::WMIReleaseThisObject()
+{
+    if (pclsObj)
+        pclsObj->Release();
+    pclsObj = nullptr;
+    return S_OK;
+}
+
 HRESULT WMIWrapper::WMIGetProperty(const wchar_t *property, VARIANT &var)
 {
     return pclsObj->Get(property, 0, &var, 0, 0);
+}
+
+HRESULT WMIWrapper::WMIReleaseProperty(VARIANT &var)
+{
+    VariantClear(&var);
+    return S_OK;
 }
 
 HRESULT WMIWrapper::WMIEnumUnInitialize()

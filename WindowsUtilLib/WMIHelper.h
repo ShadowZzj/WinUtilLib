@@ -16,7 +16,9 @@ class WMIWrapper
     HRESULT WMIConnectServer(const wchar_t *serverName);
     HRESULT WMIExecQuery(const char *sentenceType, const char *sentence);
     HRESULT WMIGetNextObject();
+    HRESULT WMIReleaseThisObject();
     HRESULT WMIGetProperty(const wchar_t *property, VARIANT &var);
+    HRESULT WMIReleaseProperty(VARIANT &var);
 
 
     WMIWrapper();

@@ -32,37 +32,44 @@ std::vector<std::wstring> HardDrive::GetHardDriveSerialNumber()
     HRESULT hRes;
     VARIANT var;
     std::vector<std::wstring> ret;
+    int result = 0;
 
     hRes = hdHandler.WMIConnectServer(L"root\\cimv2");
     if (S_OK != hRes)
     {
         ret.clear();
-        goto exit;
+        return ret;
     }
 
     hRes = hdHandler.WMIExecQuery("WQL", "SELECT SerialNumber FROM Win32_PhysicalMedia");
     if (S_OK != hRes)
     {
         ret.clear();
-        goto exit;
+        return ret;
     }
 
     while (S_OK == hdHandler.WMIGetNextObject())
     {
+        std::wstring tmp;
         hRes = hdHandler.WMIGetProperty(L"SerialNumber", var);
         if (S_OK != hRes)
         {
             ret.clear();
+            result = -1;
             goto exit;
         }
 
-        std::wstring tmp;
         tmp = (NULL == var.bstrVal) ? L"" : var.bstrVal; 
+
+        hdHandler.WMIReleaseProperty(var);
         ret.push_back(tmp);
+
+    exit:
+        hdHandler.WMIReleaseThisObject();
+        if (0 != result)
+            break;
     }
 
-exit:
-    VariantClear(&var);
     return ret;
 }
 
@@ -72,19 +79,20 @@ std::wstring Bios::GetBiosSerialNumber()
     HRESULT hRes;
     VARIANT var;
     std::wstring ret;
+    int result = 0;
 
     hRes = hdHandler.WMIConnectServer(L"root\\cimv2");
     if (S_OK != hRes)
     {
         ret.clear();
-        goto exit;
+        return ret;
     }
 
     hRes = hdHandler.WMIExecQuery("WQL", "SELECT * FROM Win32_Bios");
     if (S_OK != hRes)
     {
         ret.clear();
-        goto exit;
+        return ret;
     }
 
     while (S_OK == hdHandler.WMIGetNextObject())
@@ -93,15 +101,17 @@ std::wstring Bios::GetBiosSerialNumber()
         if (S_OK != hRes)
         {
             ret.clear();
+            result = -1;
             goto exit;
         }
-
-
         ret = (NULL == var.bstrVal) ? L"" : var.bstrVal;
-        
+
+        hdHandler.WMIReleaseProperty(var);
+    exit:
+        hdHandler.WMIReleaseThisObject();
+        if (0 != result)
+            break;
     }
 
-exit:
-    VariantClear(&var);
     return ret;
 }
