@@ -118,6 +118,7 @@ namespace zzj {
 		static std::vector<DWORD> GetProcessId(std::wstring processName);
 		static DWORD GetProcessId(HANDLE processHandle);
 		static bool  IsMutexExist(std::string mutex);
+        static std::string GetProcessUserName();
 		static bool GetActiveExplorerInfo(ActiveExplorerInfo* pinfo);
 		//System process create user or admin process.
 		static DWORD SystemCreateProcess(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show);

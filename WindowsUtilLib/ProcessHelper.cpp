@@ -41,6 +41,27 @@ bool  Process::IsMutexExist(std::string mutex) {
 	return false;
 }
 
+std::string zzj::Process::GetProcessUserName()
+{
+    char *buf = nullptr;
+    DWORD bufSize = 0;
+    std::string ret = "";
+    if (!GetUserNameA(buf, &bufSize) && GetLastError() == ERROR_INSUFFICIENT_BUFFER)
+    {
+        buf = (char*)malloc(bufSize);
+        if (!GetUserNameA(buf, &bufSize))
+            free(buf);
+        else
+        {
+            ret = buf;
+            free(buf);
+        }
+    }
+
+    return ret;
+}
+
+
 HANDLE zzj::Process::GetProcessHandle(DWORD processId,DWORD desiredAccess)
 { 
 	return OpenProcess(desiredAccess, FALSE, processId);
