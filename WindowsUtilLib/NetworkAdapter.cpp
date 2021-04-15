@@ -19,14 +19,14 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
     if (S_OK != hRes)
     {
         result = -1;
-        goto exit;
+        return result;
     }
 
     netInfo.WMIExecQuery("WQL", "SELECT * FROM MSFT_NetAdapter");
     if (S_OK != hRes)
     {
         result = -2;
-        goto exit;
+        return result;
     }
 
     while (S_OK == netInfo.WMIGetNextObject())
@@ -38,8 +38,9 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
             goto exit;
         }
         isVirtual = var.boolVal;              // VARIANT_BOOL: FALSE:0 TRUE:-1
+        netInfo.WMIReleaseProperty(var);
         if (-1 == isVirtual && isRealAdapter) // Continue if the adapter is virtual
-            continue;
+            goto exit;
 
         hRes = netInfo.WMIGetProperty(L"InterfaceDescription", var);
         if (S_OK != hRes)
@@ -48,6 +49,7 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
             goto exit;
         }
         adapter.description = var.bstrVal;
+        netInfo.WMIReleaseProperty(var);
 
         hRes = netInfo.WMIGetProperty(L"PermanentAddress", var);
         if (S_OK != hRes)
@@ -56,6 +58,7 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
             goto exit;
         }
         adapter.macAddr = var.bstrVal;
+        netInfo.WMIReleaseProperty(var);
 
         hRes = netInfo.WMIGetProperty(L"Name", var);
         if (S_OK != hRes)
@@ -64,11 +67,17 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
             goto exit;
         }
         adapter.name = var.bstrVal;
+        netInfo.WMIReleaseProperty(var);
+
         adapters.push_back(adapter);
+        
+    exit:
+        netInfo.WMIReleaseThisObject();
+        if (0 != result)
+            break;
     }
 
-exit:
-    VariantClear(&var);
+
     return result;
 }
 
@@ -81,7 +90,7 @@ int zzj::NetworkAdapter::GetOutIpAddress(std::string &ipAddr)
     unsigned long addr;
     WORD wVersionRequested = MAKEWORD(2, 1);
     char *source_address;
-    int Handle;
+    int sockHandle = 0;
     int AddrLen;
 
     result = WSAStartup(wVersionRequested, &wsaData);
@@ -96,15 +105,15 @@ int zzj::NetworkAdapter::GetOutIpAddress(std::string &ipAddr)
     ((struct sockaddr_in *)&Addr)->sin_addr.s_addr = addr;
     ((struct sockaddr_in *)&Addr)->sin_family      = AF_INET;
     ((struct sockaddr_in *)&Addr)->sin_port        = htons(9); // 9 is discard port
-    Handle                                     = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    sockHandle                                     = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     AddrLen                                    = sizeof(Addr);
-    result                                            = connect(Handle, (sockaddr *)&Addr, AddrLen);
+    result                                            = connect(sockHandle, (sockaddr *)&Addr, AddrLen);
     if (0!=result)
     {
         result = -2;
         goto exit;
     }
-    result                                           = getsockname(Handle, (sockaddr *)&Addr, &AddrLen);
+    result                                           = getsockname(sockHandle, (sockaddr *)&Addr, &AddrLen);
     if (0 != result)
     {
         result = -3;
@@ -113,6 +122,8 @@ int zzj::NetworkAdapter::GetOutIpAddress(std::string &ipAddr)
     source_address                           = inet_ntoa(((struct sockaddr_in *)&Addr)->sin_addr);
     ipAddr = source_address;
 exit:
+    if (sockHandle)
+    closesocket(sockHandle);
     WSACleanup();
     return result;
 }
