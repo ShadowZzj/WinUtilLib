@@ -13,6 +13,10 @@ namespace zzj {
 		static DWORD GetCurrentThreadId();
 		static DWORD GetThreadID(HANDLE handle);
 		static DWORD GetOwnerProcessId(HANDLE threadHandle);
+        static HANDLE CreateOwnerMutex(const char *mutexName);
+        static int CloseMutex(HANDLE hMutex);
+        static HANDLE WaitForMutex(const char *mutexName);
+        static int RealeaseMutex(HANDLE hMutex);
 	private:
 
 	};

@@ -1,6 +1,7 @@
 #include "WinService.h"
 #include <functional>
 #include "BaseUtil.h"
+
 WinService* winService = nullptr;
 
 void __stdcall WinService::ServiceMain(DWORD dwNumServicesArgs, LPSTR* lpServiceArgVectors) {
@@ -143,39 +144,41 @@ WinService::WinService(std::string name, std::string description,std::string dis
 bool WinService::InstallService()
 {
 
-	char DirBuf[1024] = { 0 };
-	GetCurrentDirectoryA(1024, DirBuf);
-	GetModuleFileNameA(NULL, DirBuf, sizeof(DirBuf));
+	char DirBuf[1024]       = {0};
+    bool ret                = FALSE;
+    SC_HANDLE sch           = NULL;
+    SC_HANDLE schNewSrv     = NULL;
+    const char *serviceName = name.c_str();
+    const char *display     = displayName.c_str();
 
-	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
-	if (!sch)
-	{
+    GetModuleFileNameA(NULL, DirBuf, sizeof(DirBuf));
+    sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    if (!sch)
+    {
+        ret = FALSE;
+        goto exit;
+    }
+    schNewSrv = CreateServiceA(sch, serviceName, display, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
+                               SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, DirBuf, NULL, NULL, NULL, NULL, NULL);
 
-		return FALSE;
-	}
-	const char* serviceName = name.c_str();
-	const char* display = displayName.c_str();
-	SC_HANDLE schNewSrv = CreateServiceA(sch, serviceName, display, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
-		SERVICE_ERROR_NORMAL, DirBuf, NULL, NULL, NULL, NULL, NULL);
+    if (!schNewSrv)
+    {
+        ret = FALSE;
+        goto exit;
+    }
 
-	if (!schNewSrv)
-	{
+    SERVICE_DESCRIPTIONA sd;
+    sd.lpDescription = (LPSTR)description.c_str();
 
-		CloseServiceHandle(sch);
-		return FALSE;
-	}
+    ChangeServiceConfig2A(schNewSrv, SERVICE_CONFIG_DESCRIPTION, &sd);
+    ret = TRUE;
 
-	SERVICE_DESCRIPTIONA sd;
-	sd.lpDescription = (LPSTR)description.c_str();
+exit:
 
-	ChangeServiceConfig2A(schNewSrv, SERVICE_CONFIG_DESCRIPTION, &sd);
+    CloseServiceHandle(schNewSrv);
+    CloseServiceHandle(sch);
 
-
-
-	CloseServiceHandle(schNewSrv);
-	CloseServiceHandle(sch);
-
-	return TRUE;
+    return ret;
 }
 
 bool WinService::UninstallService()
@@ -183,58 +186,20 @@ bool WinService::UninstallService()
 
 	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!scm)
-	{
-		
-
 		return FALSE;
-	}
 	const char* serviceName = name.c_str();
 	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
 	if (!scml)
 	{
-		
 		CloseServiceHandle(scm);
 		return FALSE;
 	}
-	SERVICE_STATUS ss;
-	if (!QueryServiceStatus(scml, &ss))
-	{
-		
-		CloseServiceHandle(scm);
-		CloseServiceHandle(scml);
-		return FALSE;
-	}
-	if (ss.dwCurrentState != SERVICE_STOPPED)
-	{
-		
-		for (;;) {
-			bool ret = ControlService(scml, SERVICE_CONTROL_STOP, &ss);
-			if (!ret) {
-				
-				Sleep(1000);
-			}
-			else
-				break;
-		}
-
-		while (1)
-		{
-			bool ret = QueryServiceStatus(scml, &ss);
-			if (!ret) {
-				
-				Sleep(1000);
-				continue;
-			}
-			if (ss.dwCurrentState != SERVICE_STOPPED) {
-				Sleep(1000);
-				
-			}
-			else
-				break;
-		}
-
-
-	}
+    if (!StopService(serviceName))
+    {
+        CloseServiceHandle(scm);
+        CloseServiceHandle(scml);
+        return FALSE;
+    }
 	if (!DeleteService(scml))
 	{
 
@@ -311,17 +276,26 @@ bool WinService::MyStartService(const char* serviceName) {
 			return false;
 		}
 
+		int waitCount = 0;
 		while (::QueryServiceStatus(hSvc, &status) == TRUE)
 		{
-			::Sleep(status.dwWaitHint);
+			::Sleep(1000);
 			if (status.dwCurrentState == SERVICE_RUNNING)
 			{
 				::CloseServiceHandle(hSvc);
 				::CloseServiceHandle(hSC);
 				return true;
 			}
+            waitCount++;
+            if (waitCount >= 5)
+            {
+                ::CloseServiceHandle(hSvc);
+                ::CloseServiceHandle(hSC);
+                return false;
+            }
 		}
 	}
+
 	::CloseServiceHandle(hSvc);
 	::CloseServiceHandle(hSC);
 	return false;
@@ -360,20 +334,28 @@ bool WinService::StopService(const char* serviceName) {
 			return false;
 		}
 
+		int waitCount = 0;
 		while (::QueryServiceStatus(hSvc, &status) == TRUE)
 		{
-			::Sleep(status.dwWaitHint);
+			::Sleep(1000);
 			if (status.dwCurrentState == SERVICE_STOPPED)
 			{
 				::CloseServiceHandle(hSvc);
 				::CloseServiceHandle(hSC);
 				return true;
 			}
+            waitCount++;
+            if (waitCount >= 5)
+            {
+                ::CloseServiceHandle(hSvc);
+                ::CloseServiceHandle(hSC);
+                return false;
+            }
 		}
 	}
 	::CloseServiceHandle(hSvc);
 	::CloseServiceHandle(hSC);
-	return false;
+	return true;
 }
 
 bool WinService::UninstallService(const char* serviceName)
@@ -382,11 +364,7 @@ bool WinService::UninstallService(const char* serviceName)
 
 	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (!scm)
-	{
-
-
 		return FALSE;
-	}
 
 	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
 	if (!scml)
@@ -395,24 +373,13 @@ bool WinService::UninstallService(const char* serviceName)
 		CloseServiceHandle(scm);
 		return FALSE;
 	}
-	SERVICE_STATUS ss;
-	if (!QueryServiceStatus(scml, &ss))
-	{
-		CloseServiceHandle(scml);
-		CloseServiceHandle(scm);
 
-		return FALSE;
-	}
-	if (ss.dwCurrentState != SERVICE_STOPPED)
-	{
-		if (!ControlService(scml, SERVICE_CONTROL_STOP, &ss) && ss.dwCurrentState != SERVICE_CONTROL_STOP)
-		{
-
-			CloseServiceHandle(scml);
-			CloseServiceHandle(scm);
-			return FALSE;
-		}
-	}
+    if (!StopService(serviceName))
+    {
+        CloseServiceHandle(scml);
+        CloseServiceHandle(scm);
+        return FALSE;
+    }
 	if (!DeleteService(scml))
 	{
 
@@ -468,8 +435,10 @@ int WinService::IsServiceRunning(const char *serviceName, bool &running)
     int result = 0;
     int errCode;
     SC_HANDLE scml = NULL;
-    SC_HANDLE scm  = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    SC_HANDLE scm  = NULL;
     SERVICE_STATUS ss;
+
+	scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if (!scm)
     {
         errCode = GetLastError();

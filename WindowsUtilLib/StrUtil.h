@@ -82,6 +82,7 @@ namespace str {
 			return src;
 	}
 	char* BackSlashDup(const char* str);
+    bool IsStringUtf8(const char *str);
 	char* Wstr2Str(const wchar_t* wstr);
 	std::string Wstr2Str(std::wstring wstr);
 	wchar_t* Str2Wstr(const char* str);
