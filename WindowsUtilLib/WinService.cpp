@@ -161,7 +161,7 @@ bool WinService::InstallService()
 
     if (!schNewSrv)
     {
-        ret = FALSE;
+        ret = false;
         goto exit;
     }
 
@@ -172,9 +172,10 @@ bool WinService::InstallService()
     ret = TRUE;
 
 exit:
-
-    CloseServiceHandle(schNewSrv);
-    CloseServiceHandle(sch);
+    if (schNewSrv)
+		CloseServiceHandle(schNewSrv);
+    if (sch)
+		CloseServiceHandle(sch);
 
     return ret;
 }
@@ -268,7 +269,7 @@ bool WinService::MyStartService(const char* serviceName) {
 
 	::CloseServiceHandle(hSvc);
 	::CloseServiceHandle(hSC);
-	return false;
+	return true;
 }
 bool WinService::StopService(const char* serviceName) {
 
