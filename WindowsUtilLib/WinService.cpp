@@ -96,8 +96,6 @@ BOOL WinService::ReportSvcStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DW
 	return ::SetServiceStatus(statusHandle, &svcStatus);
 }
 
-
-
 void WinService::Start()
 {
 	winService = this;
@@ -183,35 +181,7 @@ exit:
 
 bool WinService::UninstallService()
 {
-
-	SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
-	if (!scm)
-		return FALSE;
-	const char* serviceName = name.c_str();
-	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
-	if (!scml)
-	{
-		CloseServiceHandle(scm);
-		return FALSE;
-	}
-    if (!StopService(serviceName))
-    {
-        CloseServiceHandle(scm);
-        CloseServiceHandle(scml);
-        return FALSE;
-    }
-	if (!DeleteService(scml))
-	{
-
-		CloseServiceHandle(scm);
-		CloseServiceHandle(scml);
-		return FALSE;
-	}
-
-
-	CloseServiceHandle(scm);
-	CloseServiceHandle(scml);
-	return TRUE;
+	return UninstallService(name.c_str());
 }
 
 bool WinService::InstallKernelService(const char* binaryPath, const char* serviceName, const char* display,const char* description)
@@ -369,7 +339,6 @@ bool WinService::UninstallService(const char* serviceName)
 	SC_HANDLE scml = OpenServiceA(scm, serviceName, SC_MANAGER_ALL_ACCESS);
 	if (!scml)
 	{
-
 		CloseServiceHandle(scm);
 		return FALSE;
 	}
@@ -380,6 +349,7 @@ bool WinService::UninstallService(const char* serviceName)
         CloseServiceHandle(scm);
         return FALSE;
     }
+
 	if (!DeleteService(scml))
 	{
 
