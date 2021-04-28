@@ -80,7 +80,7 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
 
     return result;
 }
-
+#pragma warning(disable : 4996)
 int zzj::NetworkAdapter::GetOutIpAddress(std::string &ipAddr)
 {
     WSADATA wsaData;

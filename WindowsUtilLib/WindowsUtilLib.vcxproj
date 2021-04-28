@@ -191,6 +191,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).lib" ..\..\util\x86 </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -269,6 +272,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MDD|Win32'">
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)MDd.lib" ..\..\util\x86 </Command>
+    </PostBuildEvent>
     <ClCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
