@@ -161,3 +161,56 @@ int zzj::File::RemoveDirectoryRecursive(std::string path)
         return -5;
     }
 }
+
+std::string zzj::File::GetExecutablePath()
+{
+    char current_proc_path[MAX_PATH] = {0};
+    ::GetModuleFileNameA(NULL, current_proc_path, MAX_PATH);
+
+    std::string exePath;
+    exePath.append(current_proc_path);
+    int separator_pos = exePath.rfind('\\');
+
+    if (std::string::npos == separator_pos)
+    {
+        exePath = "";
+    }
+    else
+    {
+        exePath = exePath.substr(0, separator_pos);
+    }
+    return exePath;
+}
+
+std::string zzj::File::GetDllPath(void *dllAnyFunctionAddress)
+{
+    char path[MAX_PATH];
+    HMODULE hm      = NULL;
+    std::string ret = "";
+    int separator_pos;
+
+    if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                           (LPCSTR)dllAnyFunctionAddress, &hm) == 0)
+    {
+        ret = "";
+        goto exit;
+    }
+    if (GetModuleFileNameA(hm, path, sizeof(path)) == 0)
+    {
+        ret = "";
+        goto exit;
+    }
+
+    ret.append(path);
+    separator_pos = ret.rfind('\\');
+    if (std::string::npos == separator_pos)
+    {
+        ret = "";
+    }
+    else
+    {
+        ret = ret.substr(0, separator_pos);
+    }
+exit:
+    return ret;
+}

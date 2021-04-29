@@ -8,5 +8,7 @@ namespace zzj {
 		static DWORD GetFileSize(std::string fileName);
         static bool IsFileExist(std::string fileName);
         static int RemoveDirectoryRecursive(std::string path);
+        static std::string GetExecutablePath();
+        static std::string GetDllPath(void *dllAnyFunctionAddress);
 	};
 }
