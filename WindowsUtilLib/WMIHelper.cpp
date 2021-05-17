@@ -150,6 +150,7 @@ HRESULT WMIWrapper::Initialize()
         comWrapper->CreateComInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID **)&pLoc);
     if (FAILED(hres))
     {
+        std::cout << "CreateComInstance error, crash program";
         CrashMe();
     }
     isIWbemLocatorReleaseNeeded = true;

@@ -41,13 +41,18 @@ namespace COMHelper {
 
 		// Initialize COM.
 		hres = CoInitializeEx(0, COINIT_MULTITHREADED);
-		if (FAILED(hres)) {
+        if (hres == RPC_E_CHANGED_MODE)
+			isCoUninitializeNeeded = false;
+        else if (FAILED(hres))
+        {
+            isCoUninitializeNeeded = false;
 			cout << "Failed to initialize COM library. "
 				<< "Error code = 0x"
 				<< hex << hres << endl;
-			return 1;              // Program has failed.
+			return hres;              // Program has failed.
 		}
-		isCoUninitializeNeeded = true;
+		else
+			isCoUninitializeNeeded = true;
 
 		// Initialize 
 		hres = CoInitializeSecurity(
@@ -61,8 +66,8 @@ namespace COMHelper {
 			EOAC_NONE,        // Additional capabilities
 			NULL              // Reserved
 		);
-
-		if (FAILED(hres)) {
+        if (FAILED(hres) && hres != RPC_E_TOO_LATE)
+        {
 			cout << "Failed to initialize security. "
 				<< "Error code = 0x"
 				<< hex << hres << endl;
