@@ -10,9 +10,9 @@
 #include <time.h>
 #include <windows.h>
 #include <DbgHelp.h>
-#include <string>
+#include <string> 
 #pragma comment(lib, "DbgHelp.lib")
-
+#pragma warning(disable : 4996)
 static std::string GetExecutablePath()
 {
     char current_proc_path[MAX_PATH] = {0};
