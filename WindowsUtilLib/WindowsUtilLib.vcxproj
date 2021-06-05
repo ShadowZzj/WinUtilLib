@@ -212,7 +212,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).lib" ..\..\util </Command>
+      <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).lib" ..\..\util\x64\Debug </Command>
     </PostBuildEvent>
     <Lib>
       <TreatLibWarningAsErrors>false</TreatLibWarningAsErrors>

@@ -49,7 +49,9 @@ int zzj::Thread::CloseMutex(HANDLE hMutex)
 
 HANDLE zzj::Thread::WaitForMutex(const char *mutexName)
 {
-    HANDLE hMutex = CreateMutexA(NULL, false, mutexName);
+    std::string globalMutexName = "Global\\";
+    globalMutexName += mutexName;
+    HANDLE hMutex = CreateMutexA(NULL, false, globalMutexName.c_str());
     DWORD reason = WaitForSingleObject(hMutex,INFINITE);
     if (WAIT_OBJECT_0 == reason)
     {

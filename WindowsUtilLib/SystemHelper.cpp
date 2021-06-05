@@ -1,4 +1,6 @@
 #include "SystemHelper.h"
+#include <wtsapi32.h>
+#pragma comment(lib, "Wtsapi32.lib")
 
 int zzj::SystemInfo::GetWindowsVersion()
 {
@@ -16,4 +18,33 @@ int zzj::SystemInfo::GetWindowsVersion()
     else if (dwMajor == 10 && dwMinor == 0)
         return 10;
     else return -1;
+}
+
+std::string zzj::SystemInfo::GetActiveConsoleUserName()
+{
+    std::string csUsrName    = "";
+    std::string csDomainName = "";
+    LPSTR szUserName        = NULL;
+    LPSTR szDomainName      = NULL;
+    DWORD dwLen              = 0;
+    DWORD dwSessionId;
+
+    dwSessionId = WTSGetActiveConsoleSessionId();
+
+    BOOL bStatus =
+        WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, dwSessionId, WTSDomainName, &szDomainName, &dwLen);
+    csDomainName = szDomainName;
+
+    if (bStatus)
+    {
+        bStatus = WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, dwSessionId, WTSUserName, &szUserName, &dwLen);
+        if (bStatus)
+        {
+            csUsrName = szUserName;
+
+            WTSFreeMemory(szUserName);
+        }
+        WTSFreeMemory(szDomainName);
+    }
+    return csUsrName;
 }

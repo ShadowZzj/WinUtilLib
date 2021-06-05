@@ -7,6 +7,7 @@ namespace zzj
 	{
 	public:
 		static int GetWindowsVersion();
+		static std::string GetActiveConsoleUserName();
 	private:
 
 	};
