@@ -31,12 +31,15 @@ std::string zzj::SystemInfo::GetActiveConsoleUserName()
 
     dwSessionId = WTSGetActiveConsoleSessionId();
 
+    if (0xffffffff == dwSessionId || 0 == dwSessionId)
+        return "";
+
     BOOL bStatus =
         WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, dwSessionId, WTSDomainName, &szDomainName, &dwLen);
-    csDomainName = szDomainName;
 
     if (bStatus)
     {
+        csDomainName = szDomainName;
         bStatus = WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, dwSessionId, WTSUserName, &szUserName, &dwLen);
         if (bStatus)
         {
