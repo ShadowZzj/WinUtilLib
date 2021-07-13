@@ -185,7 +185,45 @@ bool WinService::UninstallService()
 	return UninstallService(name.c_str());
 }
 
-bool WinService::InstallKernelService(const char* binaryPath, const char* serviceName, const char* display,const char* description)
+int WinService::InstallService(const char *serviceName, const char *displayName, const char *description,
+                               const char *binPath)
+{
+    int ret                = 0;
+    SC_HANDLE sch           = NULL;
+    SC_HANDLE schNewSrv     = NULL;
+
+    sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    if (!sch)
+    {
+        ret = -1;
+        goto exit;
+    }
+    schNewSrv = CreateServiceA(sch, serviceName, displayName, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
+                               SERVICE_AUTO_START, SERVICE_ERROR_NORMAL, binPath, NULL, NULL, NULL, NULL, NULL);
+
+    if (!schNewSrv)
+    {
+        ret = -2;
+        goto exit;
+    }
+
+    SERVICE_DESCRIPTIONA sd;
+    sd.lpDescription = (LPSTR)description;
+
+    ChangeServiceConfig2A(schNewSrv, SERVICE_CONFIG_DESCRIPTION, &sd);
+    ret = 0;
+
+exit:
+    if (schNewSrv)
+        CloseServiceHandle(schNewSrv);
+    if (sch)
+        CloseServiceHandle(sch);
+
+    return ret;
+}
+
+bool WinService::InstallKernelService(const char *binaryPath, const char *serviceName, const char *display,
+                                      const char *description)
 {
 
 	SC_HANDLE sch = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
