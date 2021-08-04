@@ -1,11 +1,12 @@
 #include "SystemHelper.h"
 #include <wtsapi32.h>
+#include <sddl.h>
 #pragma comment(lib, "Wtsapi32.lib")
 
 int zzj::SystemInfo::GetWindowsVersion()
 {
     std::string vname;
-    typedef void(__stdcall* NTPROC)(DWORD*, DWORD*, DWORD*);
+    typedef void(__stdcall * NTPROC)(DWORD *, DWORD *, DWORD *);
     HINSTANCE hinst = LoadLibraryA("ntdll.dll");
     DWORD dwMajor, dwMinor, dwBuildNumber;
     NTPROC proc = (NTPROC)GetProcAddress(hinst, "RtlGetNtVersionNumbers");
@@ -17,15 +18,16 @@ int zzj::SystemInfo::GetWindowsVersion()
         return 8;
     else if (dwMajor == 10 && dwMinor == 0)
         return 10;
-    else return -1;
+    else
+        return -1;
 }
 
 std::string zzj::SystemInfo::GetActiveConsoleUserName()
 {
     std::string csUsrName    = "";
     std::string csDomainName = "";
-    LPSTR szUserName        = NULL;
-    LPSTR szDomainName      = NULL;
+    LPSTR szUserName         = NULL;
+    LPSTR szDomainName       = NULL;
     DWORD dwLen              = 0;
     DWORD dwSessionId;
 
@@ -50,4 +52,12 @@ std::string zzj::SystemInfo::GetActiveConsoleUserName()
         WTSFreeMemory(szDomainName);
     }
     return csUsrName;
+}
+
+std::string zzj::SystemInfo::GetActiveConsoleSessionId()
+{
+    DWORD sessionId = WTSGetActiveConsoleSessionId();
+    if (-1 == sessionId)
+        return "";
+    return std::to_string(sessionId);
 }
