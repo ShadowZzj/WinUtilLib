@@ -174,7 +174,16 @@ bool WinService::UninstallService()
 
 int WinService::CheckSafeStop(int sleepSeconds)
 {
-    DWORD res = WaitForSingleObject(eventStop, sleepSeconds * 1000);
+    DWORD res;
+    if (NULL == eventStop)
+    {
+        Sleep(sleepSeconds * 1000);
+        res = WAIT_TIMEOUT;
+    }
+    else
+    {
+        res = WaitForSingleObject(eventStop, sleepSeconds * 1000);
+    }
     if (WAIT_TIMEOUT == res)
         return 0;
     else if (WAIT_OBJECT_0 == res)

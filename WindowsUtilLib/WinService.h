@@ -39,7 +39,7 @@ public:
 private:
 	DWORD serviceType= SERVICE_WIN32_OWN_PROCESS;
 	SERVICE_STATUS_HANDLE statusHandle;
-	HANDLE eventStop;
+	HANDLE eventStop = NULL;
 	SERVICE_TABLE_ENTRYA entry[2];
 	void InternalOnStop();
 	void InternalOnShutdown();
@@ -49,29 +49,3 @@ private:
 	static void WINAPI ServiceMain(DWORD   dwNumServicesArgs, LPSTR* lpServiceArgVectors);
 	static void WINAPI ServiceHandler(DWORD dwControl);
 };
-/*eg.
-class MyService :public WinService {
-public:
-	using WinService::WinService;
-
-	virtual BOOL OnInit() {
-		file_logger->info("init");
-		return true;
-	}
-	virtual void Run() {
-		while (1) {
-			file_logger->info("Run");
-			Sleep(5000);
-		}
-	}
-	virtual void OnStop() {
-		file_logger->info("stop");
-	}
-	virtual void OnShutdown() {
-		file_logger->info("shutdown");
-	}
-	virtual void OnPreShutDown() {
-		file_logger->info("preshutdown");
-	}
-};
-*/
