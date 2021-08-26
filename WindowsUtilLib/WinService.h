@@ -22,7 +22,7 @@ public:
 	virtual void OnStop() = 0;
 	virtual void OnShutdown() = 0;
 	virtual void OnPreShutDown() = 0;
-
+    int CheckSafeStop(int sleepSeconds);
 	static int InstallService(const char* serviceName,const char* displayName,const char* description, const char* binPath);
 	static bool InstallKernelService(const char* binaryPath, const char* serviceName, const char* displayName,const char* description);
 	static bool MyStartService(const char* serviceName);
@@ -40,14 +40,12 @@ private:
 	DWORD serviceType= SERVICE_WIN32_OWN_PROCESS;
 	SERVICE_STATUS_HANDLE statusHandle;
 	HANDLE eventStop;
-	HANDLE registerWaitObj;
 	SERVICE_TABLE_ENTRYA entry[2];
 	void InternalOnStop();
 	void InternalOnShutdown();
 	void InternalOnPreShutdown();
 	BOOL ReportSvcStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DWORD dwSvcExitCode, DWORD dwCheckPoint, DWORD dwWaitHint);
 
-	static VOID NTAPI SvcStopCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);	
 	static void WINAPI ServiceMain(DWORD   dwNumServicesArgs, LPSTR* lpServiceArgVectors);
 	static void WINAPI ServiceHandler(DWORD dwControl);
 };

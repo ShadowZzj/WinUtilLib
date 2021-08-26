@@ -18,8 +18,10 @@ public:
 	}
 	virtual void Run() {
 		while (1) {
+            int res = CheckSafeStop(5);
+            if (1 == res)
+                break;
 			file_logger->info("Run");
-			Sleep(5000);
 		}
 	}
 	virtual void OnStop() {

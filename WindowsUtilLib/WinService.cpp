@@ -17,9 +17,6 @@ void __stdcall WinService::ServiceMain(DWORD dwNumServicesArgs, LPSTR* lpService
 
 	winService->eventStop = CreateEvent(NULL, FALSE, FALSE, NULL);
 
-	if (!::RegisterWaitForSingleObject(&winService->registerWaitObj, winService->eventStop, (WAITORTIMERCALLBACK)SvcStopCallback, NULL, INFINITE, WT_EXECUTEONLYONCE | WT_EXECUTELONGFUNCTION)) {
-		return;
-	}
 	if (!winService->OnInit()) {
 		winService->ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
 		return;
@@ -27,6 +24,7 @@ void __stdcall WinService::ServiceMain(DWORD dwNumServicesArgs, LPSTR* lpService
 
 	winService->ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0, 0, 0);
 	winService->Run();
+    winService->ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
 
 	return;
 }
@@ -52,16 +50,6 @@ void __stdcall WinService::ServiceHandler(DWORD dwControl) {
 }
 
 
-
-VOID WinService::SvcStopCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired)
-{
-	if (NULL != winService->registerWaitObj)
-		::UnregisterWait(winService->registerWaitObj);
-	if (NULL != winService->eventStop)
-		::CloseHandle(winService->eventStop);
-
-	winService->ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0, 0, 0);
-}
 
 BOOL WinService::ReportSvcStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DWORD dwSvcExitCode, DWORD dwCheckPoint, DWORD dwWaitHint)
 {
@@ -136,7 +124,6 @@ WinService::WinService(std::string name, std::string description,std::string dis
 	this->description = description;
 	this->displayName = displayName;
 	eventStop = NULL;
-	registerWaitObj = NULL;
 }
 
 bool WinService::InstallService()
@@ -183,6 +170,17 @@ exit:
 bool WinService::UninstallService()
 {
 	return UninstallService(name.c_str());
+}
+
+int WinService::CheckSafeStop(int sleepSeconds)
+{
+    DWORD res = WaitForSingleObject(eventStop, sleepSeconds * 1000);
+    if (WAIT_TIMEOUT == res)
+        return 0;
+    else if (WAIT_OBJECT_0 == res)
+        return 1;
+    else
+        return -1;
 }
 
 int WinService::InstallService(const char *serviceName, const char *displayName, const char *description,
