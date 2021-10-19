@@ -17,6 +17,9 @@ namespace zzj {
         static int CloseMutex(HANDLE hMutex);
         static HANDLE WaitForMutex(const char *mutexName);
         static int RealeaseMutex(HANDLE hMutex);
+
+		static HANDLE ImpersonateCurrentUser();
+        static bool RevertToCurrentUser(HANDLE token);
 	private:
 
 	};

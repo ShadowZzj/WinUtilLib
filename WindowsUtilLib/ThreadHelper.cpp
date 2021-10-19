@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <wtsapi32.h>
 #include "ThreadHelper.h"
 #include "ProcessHelper.h"
 using namespace zzj;
@@ -67,6 +68,36 @@ int zzj::Thread::RealeaseMutex(HANDLE hMutex)
 {
     ReleaseMutex(hMutex);
     return 0;
+}
+
+HANDLE zzj::Thread::ImpersonateCurrentUser()
+{
+    DWORD dwSessionID   = WTSGetActiveConsoleSessionId();
+    HANDLE hToken;
+
+    if (WTSQueryUserToken(dwSessionID, &hToken) == FALSE)
+    {
+        return NULL;
+    }
+    if (ImpersonateLoggedOnUser(hToken) == FALSE)
+    {
+        return NULL;
+    }
+
+    return hToken;
+}
+
+bool zzj::Thread::RevertToCurrentUser(HANDLE token)
+{
+    if (CloseHandle(token) == FALSE)
+    {
+        return false;
+    }
+    if (RevertToSelf() == FALSE)
+    {
+        return false;
+    }
+    return true;
 }
 
 
