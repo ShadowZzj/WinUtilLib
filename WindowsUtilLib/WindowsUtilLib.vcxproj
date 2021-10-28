@@ -31,6 +31,7 @@
     <ClInclude Include="call_json.h" />
     <ClInclude Include="COMHelper.h" />
     <ClInclude Include="CRTdbgHeader.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="FileHelper.h" />
     <ClInclude Include="FontHelper.h" />
     <ClInclude Include="HandleHelper.h" />
@@ -62,6 +63,7 @@
     <ClCompile Include="BaseUtil.cpp" />
     <ClCompile Include="call_json.cpp" />
     <ClCompile Include="COMHelper.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="FontHelper.cpp" />
     <ClCompile Include="HandleHelper.cpp" />

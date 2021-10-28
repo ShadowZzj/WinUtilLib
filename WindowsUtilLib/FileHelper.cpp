@@ -7,7 +7,7 @@
 #include <algorithm>
 using namespace zzj;
 
-bool File::ReadFileAtOffset(std::string fileName, void* buffer, unsigned long numToRead, unsigned long fileOffset)
+bool FileHelper::ReadFileAtOffset(std::string fileName, void *buffer, unsigned long numToRead, unsigned long fileOffset)
 {
 
 	if (fileName.empty()||!buffer||fileOffset<0)
@@ -44,26 +44,8 @@ bool File::ReadFileAtOffset(std::string fileName, void* buffer, unsigned long nu
 	return true;
 }
 
-DWORD zzj::File::GetFileSize(std::string fileName)
-{
-	if (fileName.empty())
-		return -1;
-
-	ScopeKernelHandle fileHandle = CreateFileA(fileName.c_str(),
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL
-	);
-	if (fileHandle == INVALID_HANDLE_VALUE)
-		return -1;
-
-	return ::GetFileSize(fileHandle, NULL);
-}
 #pragma warning(disable : 4996)
-bool zzj::File::IsFileExist(std::string fileName)
+bool zzj::FileHelper::IsFileExist(std::string fileName)
 {
     if (FILE *file = fopen(fileName.c_str(), "r"))
     {
@@ -74,7 +56,7 @@ bool zzj::File::IsFileExist(std::string fileName)
         return false;
 }
 
-int zzj::File::RemoveDirectoryRecursive(std::string path)
+int zzj::FileHelper::RemoveDirectoryRecursive(std::string path)
 {
     std::string str(path);
     if (!str.empty())
@@ -162,7 +144,7 @@ int zzj::File::RemoveDirectoryRecursive(std::string path)
     }
 }
 
-std::string zzj::File::GetExecutablePath()
+std::string zzj::FileHelper::GetExecutablePath()
 {
     char current_proc_path[MAX_PATH] = {0};
     ::GetModuleFileNameA(NULL, current_proc_path, MAX_PATH);
@@ -182,7 +164,7 @@ std::string zzj::File::GetExecutablePath()
     return exePath;
 }
 
-std::string zzj::File::GetDllPath(void *dllAnyFunctionAddress)
+std::string zzj::FileHelper::GetDllPath(void *dllAnyFunctionAddress)
 {
     char path[MAX_PATH];
     HMODULE hm      = NULL;
@@ -213,4 +195,9 @@ std::string zzj::File::GetDllPath(void *dllAnyFunctionAddress)
     }
 exit:
     return ret;
+}
+
+std::unique_ptr<zzj::File> zzj::FileHelper::GetFileInstance(const std::string &imagePath)
+{
+    auto fileInfpPtr = std::make_unique<zzj::File>(imagePath);
 }

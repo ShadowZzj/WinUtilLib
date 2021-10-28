@@ -30,9 +30,6 @@
     <Filter Include="src\Windows\Win32\Base">
       <UniqueIdentifier>{26717dc0-043f-49d3-97d8-551df44df545}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Windows\Win32\Service">
-      <UniqueIdentifier>{6babc9ee-a0c9-4d26-b826-8a25c775b4cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="test">
       <UniqueIdentifier>{85ded42e-b20a-4b01-888b-318a3aee1e0d}</UniqueIdentifier>
     </Filter>
@@ -68,6 +65,9 @@
     </Filter>
     <Filter Include="src\Windows\Win32\HardWare">
       <UniqueIdentifier>{c89c392c-e081-459e-b2f4-e067b895e9e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\Service">
+      <UniqueIdentifier>{6babc9ee-a0c9-4d26-b826-8a25c775b4cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +120,7 @@
       <Filter>src\Windows\Win32\Base</Filter>
     </ClInclude>
     <ClInclude Include="WinService.h">
-      <Filter>src\Windows\Win32\Service</Filter>
+      <Filter>test\Service</Filter>
     </ClInclude>
     <ClInclude Include="Reflection.h">
       <Filter>src\Base</Filter>
@@ -160,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="HardWare.h">
       <Filter>src\Windows\Win32\HardWare</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>src\Windows\Win32\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,7 +206,7 @@
       <Filter>src\Windows\Win32\Base</Filter>
     </ClCompile>
     <ClCompile Include="WinService.cpp">
-      <Filter>src\Windows\Win32\Service</Filter>
+      <Filter>test\Service</Filter>
     </ClCompile>
     <ClCompile Include="Reflection.cpp">
       <Filter>src\Base</Filter>
@@ -243,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="HardWare.cpp">
       <Filter>src\Windows\Win32\HardWare</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>src\Windows\Win32\File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

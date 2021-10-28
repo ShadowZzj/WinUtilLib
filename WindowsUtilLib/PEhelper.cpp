@@ -82,7 +82,7 @@ PEFile::ErrorCode PEFile::LoadPE()
 	if (!peImage)
 		return ErrorCode::ZZJ_LIB_ERROR;
 
-	bool ret = File::ReadFileAtOffset(fileName, peImage, ntHeader->OptionalHeader.SizeOfHeaders, FILE_BEGIN);
+	bool ret = FileHelper::ReadFileAtOffset(fileName, peImage, ntHeader->OptionalHeader.SizeOfHeaders, FILE_BEGIN);
 	if (!ret)
 		return ErrorCode::ZZJ_LIB_ERROR;
 
@@ -101,7 +101,8 @@ PEFile::ErrorCode PEFile::LoadPE()
 		index++
 		)
 	{
-		ret = File::ReadFileAtOffset(fileName,&peImage[sectionHeader[index].VirtualAddress], sectionHeader[index].SizeOfRawData,sectionHeader[index].PointerToRawData);
+        ret = FileHelper::ReadFileAtOffset(fileName, &peImage[sectionHeader[index].VirtualAddress],
+                                           sectionHeader[index].SizeOfRawData, sectionHeader[index].PointerToRawData);
 		if (!ret)
 			return ErrorCode::ZZJ_LIB_ERROR;
 	}
@@ -113,7 +114,7 @@ PEFile::ErrorCode PEFile::LoadPE()
 	ReturnIfFail(error);
 
 
-	fileSize = File::GetFileSize(fileName);
+	fileSize = FileHelper::GetFileInstance(fileName)->GetFileInfo()->GetFileSize();
 	if (fileSize == -1)
 		return ErrorCode::ZZJ_LIB_ERROR;
 
@@ -129,7 +130,8 @@ PEFile::ErrorCode PEFile::LoadPE()
 	}
 
 	extraData = (char*)allocator->Alloc(extraDataSize);
-	ret = File::ReadFileAtOffset(fileName, extraData, extraDataSize, lastSection->PointerToRawData + lastSection->SizeOfRawData);
+    ret       = FileHelper::ReadFileAtOffset(fileName, extraData, extraDataSize,
+                                       lastSection->PointerToRawData + lastSection->SizeOfRawData);
 	if (!ret) {
 		allocator->Free(extraData);
 		extraData = nullptr;
@@ -179,7 +181,7 @@ PEFile::ErrorCode PEFile::ReadDosHeader(std::string fileName, IMAGE_DOS_HEADER* 
 	if (!dosHeader)
 		return ErrorCode::INVALID_PARAMETER;
 
-	bool ret = File::ReadFileAtOffset(fileName, dosHeader, sizeof(*dosHeader), FILE_BEGIN);
+	bool ret = FileHelper::ReadFileAtOffset(fileName, dosHeader, sizeof(*dosHeader), FILE_BEGIN);
 	if (!ret)
 		return ZZJ_LIB_ERROR;
 
@@ -190,7 +192,7 @@ PEFile::ErrorCode zzj::PEFile::ReadNTHeader(std::string fileName, const IMAGE_DO
 {
 	if (!ntHeader)
 		return ErrorCode::INVALID_PARAMETER;
-	bool ret = File::ReadFileAtOffset(fileName, ntHeader, sizeof(*ntHeader), dosHeader.e_lfanew);
+    bool ret = FileHelper::ReadFileAtOffset(fileName, ntHeader, sizeof(*ntHeader), dosHeader.e_lfanew);
 	if (!ret)
 		return ZZJ_LIB_ERROR;
 
