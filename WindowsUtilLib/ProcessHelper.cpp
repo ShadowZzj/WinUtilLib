@@ -110,7 +110,13 @@ DWORD Process::GetProcessDirectory(size_t len, wchar_t* buf) {
 	}
 }
 
-bool Process::SetProcessDirectory(const char* dir) {
+bool zzj::Process::SetProcessPriority(DWORD priority)
+{
+    return SetPriorityClass(process, priority);
+}
+
+bool Process::SetProcessDirectory(const char *dir)
+{
 	if (!IsValid())
 		return SetCurrentDirectoryA(dir);
 	else {

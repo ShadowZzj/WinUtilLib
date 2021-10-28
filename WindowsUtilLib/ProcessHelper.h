@@ -109,6 +109,7 @@ namespace zzj {
 		DWORD GetProcessDirectory(size_t len, char* buf);
 		DWORD GetProcessDirectory(size_t len, wchar_t* buf);
 
+		bool SetProcessPriority(DWORD priority);
 		bool SetProcessDirectory(const char* dir);
 		bool SetProcessDirectory(const wchar_t* dir);
 		bool BindProcess(HANDLE handle);

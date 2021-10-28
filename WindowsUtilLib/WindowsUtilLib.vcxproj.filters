@@ -69,6 +69,9 @@
     <Filter Include="test\Service">
       <UniqueIdentifier>{6babc9ee-a0c9-4d26-b826-8a25c775b4cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Windows\Win32\Device">
+      <UniqueIdentifier>{c9b9f095-f530-4376-a584-58545437f813}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseUtil.h">
@@ -164,6 +167,12 @@
     <ClInclude Include="File.h">
       <Filter>src\Windows\Win32\File</Filter>
     </ClInclude>
+    <ClInclude Include="Device\interception.h">
+      <Filter>src\Windows\Win32\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\DeviceHelper.h">
+      <Filter>src\Windows\Win32\Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="COMHelper.cpp">
@@ -249,6 +258,12 @@
     </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>src\Windows\Win32\File</Filter>
+    </ClCompile>
+    <ClCompile Include="Device\interception.c">
+      <Filter>src\Windows\Win32\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Device\DeviceHelper.cpp">
+      <Filter>src\Windows\Win32\Device</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

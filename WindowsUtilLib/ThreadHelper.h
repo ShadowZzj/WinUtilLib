@@ -17,7 +17,7 @@ namespace zzj {
         static int CloseMutex(HANDLE hMutex);
         static HANDLE WaitForMutex(const char *mutexName);
         static int RealeaseMutex(HANDLE hMutex);
-
+        static bool SetThreadPriority(HANDLE threadHandle,DWORD priority);
 		static HANDLE ImpersonateCurrentUser();
         static bool RevertToCurrentUser(HANDLE token);
 	private:

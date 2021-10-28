@@ -70,6 +70,11 @@ int zzj::Thread::RealeaseMutex(HANDLE hMutex)
     return 0;
 }
 
+bool zzj::Thread::SetThreadPriority(HANDLE threadHandle, DWORD priority)
+{
+    return ::SetThreadPriority(threadHandle, priority);
+}
+
 HANDLE zzj::Thread::ImpersonateCurrentUser()
 {
     DWORD dwSessionID   = WTSGetActiveConsoleSessionId();
