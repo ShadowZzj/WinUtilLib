@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string>
 #include "BaseUtil.h"
+#include "File.h"
 
 class PEInfo {
 public:
@@ -17,7 +18,8 @@ public:
 	static HMODULE GetEXEModuleHandle();
 	//if the code is in dll, you can use this function to get dll module.
 	static HMODULE GetCurrentModuleHandle();
-private:
+
+  private:
 	HMODULE module;
 
 };
@@ -25,7 +27,8 @@ private:
 
 namespace zzj
 {
-class PEFile{
+
+class PEFile : public File{
 #define ThrowExceptionIfFail(error) \
 	if(!IsOperationSucceed(error))\
 		throw error;
@@ -33,6 +36,30 @@ class PEFile{
 	if(!IsOperationSucceed(error))\
 		return error;
 public:
+    class FileProperty
+    {
+
+      public:
+        FileProperty(const std::string &imageName);
+        ~FileProperty();
+
+      public:
+        std::string GetFileDescription();
+        std::string GetFileVersion();
+        std::string GetInternalName();
+        std::string GetCompanyName();
+        std::string GetLegalCopyright();
+        std::string GetOriginalFilename();
+        std::string GetProductName();
+        std::string GetProductVersion();
+
+      private:
+        bool _queryValue(const std::string &valueName, const std::string &moduleName, std::string &RetStr);
+
+      private:
+        std::string m_imageName;
+    };
+
 	enum ErrorCode
 	{
 		SUCCESS=1,
@@ -56,7 +83,7 @@ public:
 	static ErrorCode ReadDataDirectoryTable(char* imageBase, IMAGE_NT_HEADERS* ntheader, IMAGE_DATA_DIRECTORY*& dataDirectoryTable);
 	static ErrorCode ReadImportLibrary(char* imageBase,IMAGE_DATA_DIRECTORY* dataDirectoryTable, IMAGE_IMPORT_DESCRIPTOR*& importLibrary, DWORD& numOfImportLibrary);
 	static DWORD AlignData(DWORD data, DWORD alignment);
-
+    FileProperty GetFileProperty();
 	std::string fileName;
 	DWORD fileSize;
 

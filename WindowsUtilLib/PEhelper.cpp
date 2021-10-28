@@ -3,6 +3,172 @@
 #include "FileHelper.h"
 using namespace zzj;
 
+
+bool zzj::PEFile::FileProperty::_queryValue(const std::string &valueName, const std::string &moduleName, std::string &RetStr)
+{
+    bool bSuccess         = false;
+    BYTE *m_lpVersionData = nullptr;
+    DWORD m_dwLangCharset = 0;
+    CHAR *tmpstr          = nullptr;
+    do
+    {
+        if (valueName.empty() || moduleName.empty())
+        {
+            break;
+        }
+
+        DWORD dwHandle;
+        DWORD dwDataSize = ::GetFileVersionInfoSizeA((LPCSTR)moduleName.c_str(), &dwHandle);
+        if (dwDataSize == 0)
+        {
+            break;
+        }
+
+        m_lpVersionData = new (std::nothrow) BYTE[dwDataSize];
+        if (nullptr == m_lpVersionData)
+        {
+            break;
+        }
+
+        if (!::GetFileVersionInfoA((LPCSTR)moduleName.c_str(), dwHandle, dwDataSize, (void *)m_lpVersionData))
+        {
+            break;
+        }
+
+        UINT nQuerySize;
+        DWORD *pTransTable;
+        if (!::VerQueryValueA(m_lpVersionData, "\\VarFileInfo\\Translation", (void **)&pTransTable, &nQuerySize))
+        {
+            break;
+        }
+
+        m_dwLangCharset = MAKELONG(HIWORD(pTransTable[0]), LOWORD(pTransTable[0]));
+        if (nullptr == m_lpVersionData)
+        {
+            break;
+        }
+
+        tmpstr = new (std::nothrow) CHAR[128];
+        if (nullptr == tmpstr)
+        {
+            break;
+        }
+
+        sprintf_s(tmpstr, 128, "\\StringFileInfo\\%08lx\\%s", m_dwLangCharset, valueName.c_str());
+        LPVOID lpData;
+        if (!::VerQueryValueA((void *)m_lpVersionData, tmpstr, &lpData, &nQuerySize))
+        {
+            break;
+        }
+        RetStr   = (char *)lpData;
+        bSuccess = true;
+    } while (false);
+
+    if (m_lpVersionData)
+    {
+        delete[] m_lpVersionData;
+        m_lpVersionData = nullptr;
+    }
+    if (tmpstr)
+    {
+        delete[] tmpstr;
+        tmpstr = nullptr;
+    }
+    return bSuccess;
+}
+
+zzj::PEFile::FileProperty::FileProperty(const std::string &imageName) : m_imageName(imageName)
+{
+}
+
+zzj::PEFile::FileProperty::~FileProperty()
+{
+}
+
+//获取文件描述
+std::string zzj::PEFile::FileProperty::GetFileDescription()
+{
+    std::string tempStr;
+    if (_queryValue("FileDescription", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取文件版本
+std::string zzj::PEFile::FileProperty::GetFileVersion()
+{
+    std::string tempStr;
+    if (_queryValue("FileVersion", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取内部名称
+std::string zzj::PEFile::FileProperty::GetInternalName()
+{
+    std::string tempStr;
+    if (_queryValue("InternalName", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取公司名称
+std::string zzj::PEFile::FileProperty::GetCompanyName()
+{
+    std::string tempStr;
+    if (_queryValue("CompanyName", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取版权
+std::string zzj::PEFile::FileProperty::GetLegalCopyright()
+{
+    std::string tempStr;
+    if (_queryValue("LegalCopyright", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取原始文件名
+std::string zzj::PEFile::FileProperty::GetOriginalFilename()
+{
+    std::string tempStr;
+    if (_queryValue("OriginalFilename", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取产品名称
+std::string zzj::PEFile::FileProperty::GetProductName()
+{
+    std::string tempStr;
+    if (_queryValue("ProductName", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+//获取产品版本
+std::string zzj::PEFile::FileProperty::GetProductVersion()
+{
+    std::string tempStr;
+    if (_queryValue("ProductVersion", m_imageName, tempStr))
+        return tempStr;
+    else
+        return "";
+}
+
+zzj::PEFile::FileProperty PEFile::GetFileProperty()
+{
+    return zzj::PEFile::FileProperty::FileProperty(fileName);
+}
 bool PEInfo::LoadModule(HMODULE Module)
 {
 	return false;
@@ -34,7 +200,7 @@ HMODULE PEInfo::GetCurrentModuleHandle()
 	return ret;
 }
 
-PEFile::PEFile(std::string _fileName, Allocator* allocator)
+PEFile::PEFile(std::string _fileName, Allocator *allocator) : File(fileName)
 {
 	fileName = _fileName;
 	if (!allocator)
@@ -114,7 +280,7 @@ PEFile::ErrorCode PEFile::LoadPE()
 	ReturnIfFail(error);
 
 
-	fileSize = FileHelper::GetFileInstance(fileName)->GetFileInfo()->GetFileSize();
+	fileSize = FileHelper::GetFileInstance(fileName).GetFileInfo().GetFileSize();
 	if (fileSize == -1)
 		return ErrorCode::ZZJ_LIB_ERROR;
 

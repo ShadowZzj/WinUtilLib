@@ -197,7 +197,7 @@ exit:
     return ret;
 }
 
-std::unique_ptr<zzj::File> zzj::FileHelper::GetFileInstance(const std::string &imagePath)
+zzj::File zzj::FileHelper::GetFileInstance(const std::string &imagePath)
 {
-    return std::make_unique<zzj::File>(imagePath);
+    return zzj::File(imagePath);
 }
