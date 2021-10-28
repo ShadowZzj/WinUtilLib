@@ -199,5 +199,5 @@ exit:
 
 std::unique_ptr<zzj::File> zzj::FileHelper::GetFileInstance(const std::string &imagePath)
 {
-    auto fileInfpPtr = std::make_unique<zzj::File>(imagePath);
+    return std::make_unique<zzj::File>(imagePath);
 }
