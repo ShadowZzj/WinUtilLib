@@ -10,6 +10,7 @@
 #include "StrUtil.h"
 using namespace zzj;
 #pragma comment(lib,"Userenv.lib")
+#pragma comment(lib, "Wtsapi32.lib")
 DWORD Process::GetSessionId() {
 	DWORD processId = GetProcessId();
 	DWORD sessionId = GetSessionId(processId);

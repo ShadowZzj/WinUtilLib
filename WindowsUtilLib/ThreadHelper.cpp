@@ -3,6 +3,7 @@
 #include "ThreadHelper.h"
 #include "ProcessHelper.h"
 using namespace zzj;
+#pragma comment(lib, "Wtsapi32.lib")
 
 void Thread::SetCurrentLastError(DWORD err)
 {

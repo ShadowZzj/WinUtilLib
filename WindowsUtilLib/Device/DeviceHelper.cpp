@@ -30,6 +30,7 @@ bool zzj::InputInterceptor::Load()
             return false;
         }
         m_IsLoad = true;
+        return true;
     }
     return false;
 }
@@ -116,6 +117,8 @@ void zzj::InputInterceptor::RunLoop()
     while (1)
     {
         device = interception_wait_with_timeout(m_context, 1000);
+        //device = interception_wait(m_context);
+
         //timeout
         if (0 == device)
         {

@@ -110,7 +110,7 @@ enum KeyScanCode : unsigned short
     NumpadPlus               = 78,
     NumpadMinus              = 74,
 };
-std::tuple<KeyScanCode, bool> CharacterToKeysEnum(char c)
+inline std::tuple<KeyScanCode, bool> CharacterToKeysEnum(char c)
 {
     switch (c)
     {
@@ -315,7 +315,7 @@ class InputInterceptor
     int clickPressDelay = 1;  // ms
     int scrollDelay     = 15; // ms
 
-    InputInterceptor *CreateInstance()
+    static InputInterceptor *CreateInstance()
     {
         static InputInterceptor *instance = new InputInterceptor();
         return instance;
