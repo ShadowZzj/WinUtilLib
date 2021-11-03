@@ -13,6 +13,7 @@ namespace zzj {
         static int RemoveDirectoryRecursive(std::string path);
         static std::string GetExecutablePath();
         static std::string GetDllPath(void *dllAnyFunctionAddress);
+        static std::string GetProgramDataPath(std::string appDir);
         static zzj::File GetFileInstance(const std::string &imagePath);
 	};
 }

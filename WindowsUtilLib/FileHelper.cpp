@@ -5,6 +5,10 @@
 #include <sys/stat.h>
 #include <string>
 #include <algorithm>
+#include <Shlobj.h>
+#include <wtsapi32.h>
+#include <io.h>
+#include <direct.h> 
 using namespace zzj;
 
 bool FileHelper::ReadFileAtOffset(std::string fileName, void *buffer, unsigned long numToRead, unsigned long fileOffset)
@@ -194,6 +198,46 @@ std::string zzj::FileHelper::GetDllPath(void *dllAnyFunctionAddress)
         ret = ret.substr(0, separator_pos);
     }
 exit:
+    return ret;
+}
+
+std::string zzj::FileHelper::GetProgramDataPath(std::string appDir)
+{
+    std::string ret;
+    HRESULT hResult      = S_OK;
+    int iRet             = 0;
+    DWORD dwNameLen      = MAX_PATH;
+    char sPath[MAX_PATH] = {0};
+    hResult              = SHGetFolderPathA(NULL, CSIDL_COMMON_APPDATA, NULL, 0, sPath);
+    if (S_OK != hResult)
+    {
+        OutputDebugStringW(L"»ñÈ¡Ä¿Â¼Ê§°Ü");
+        return "";
+    }
+    strcat_s(sPath, "\\");
+    strcat_s(sPath, appDir.c_str());
+
+    iRet = _access(sPath, 0);
+    if (iRet == -1)
+    {
+        _mkdir(sPath);
+    }
+
+    iRet = _access(sPath, 0);
+    if (iRet == -1)
+    {
+        SECURITY_ATTRIBUTES SecAttr;
+        SECURITY_DESCRIPTOR SecDesc;
+
+        SecAttr.nLength              = sizeof(SecAttr);
+        SecAttr.bInheritHandle       = FALSE;
+        SecAttr.lpSecurityDescriptor = &SecDesc;
+
+        InitializeSecurityDescriptor(&SecDesc, SECURITY_DESCRIPTOR_REVISION);
+        SetSecurityDescriptorDacl(&SecDesc, TRUE, 0, FALSE);
+        CreateFileA(sPath, 0, 0, &SecAttr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, 0);
+    }
+    ret = sPath;
     return ret;
 }
 
