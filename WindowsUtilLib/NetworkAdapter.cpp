@@ -37,10 +37,9 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
     while (S_OK == netInfo.WMIGetNextObject())
     {
         hRes = netInfo.WMIGetProperty(L"Virtual", var);
-        if (S_OK != hRes)
+        if (S_OK != hRes || V_VT(&var) != VT_BOOL)
         {
-            result = -3;
-            goto exit;
+            continue;
         }
         isVirtual = var.boolVal;              // VARIANT_BOOL: FALSE:0 TRUE:-1
         netInfo.WMIReleaseProperty(var);
@@ -48,28 +47,25 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
             goto exit;
 
         hRes = netInfo.WMIGetProperty(L"InterfaceDescription", var);
-        if (S_OK != hRes)
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR )
         {
-            result = -3;
-            goto exit;
+            continue;
         }
         adapter.description = var.bstrVal;
         netInfo.WMIReleaseProperty(var);
 
         hRes = netInfo.WMIGetProperty(L"PermanentAddress", var);
-        if (S_OK != hRes)
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR)
         {
-            result = -3;
-            goto exit;
+            continue;
         }
         adapter.macAddr = var.bstrVal;
         netInfo.WMIReleaseProperty(var);
 
         hRes = netInfo.WMIGetProperty(L"Name", var);
-        if (S_OK != hRes)
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR)
         {
-            result = -2;
-            goto exit;
+            continue;
         }
         adapter.name = var.bstrVal;
         netInfo.WMIReleaseProperty(var);
