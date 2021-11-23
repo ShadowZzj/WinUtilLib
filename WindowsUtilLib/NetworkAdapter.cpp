@@ -5,12 +5,28 @@
 #include <ws2tcpip.h>
 #include <IPTypes.h>
 #include <iphlpapi.h>
+#include "SystemHelper.h"
+
 using namespace zzj;
 using namespace std;
 #pragma comment(lib, "ws2_32")
 #pragma comment(lib, "IPHLPAPI.lib")
+#pragma warning(disable : 4996)
 
 int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool isRealAdapter)
+{
+    if (zzj::SystemInfo::GetWindowsVersion() == 7)
+    {
+        return GetNetworkAdaptersByWin7(adapters, isRealAdapter);
+    }
+    else
+    {
+        return GetNetworkAdaptersByWin10(adapters, isRealAdapter);
+    }
+
+}
+
+int zzj::NetworkAdapter::GetNetworkAdaptersByWin10(std::vector<NetworkAdapter> &adapters, bool isRealAdapter)
 {
     zzj::WMIWrapper netInfo;
     HRESULT hRes;
@@ -41,15 +57,15 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
         {
             continue;
         }
-        isVirtual = var.boolVal;              // VARIANT_BOOL: FALSE:0 TRUE:-1
+        isVirtual = var.boolVal; // VARIANT_BOOL: FALSE:0 TRUE:-1
         netInfo.WMIReleaseProperty(var);
         if (-1 == isVirtual && isRealAdapter) // Continue if the adapter is virtual
             goto exit;
 
         hRes = netInfo.WMIGetProperty(L"InterfaceDescription", var);
-        if (S_OK != hRes || V_VT(&var) != VT_BSTR )
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR)
         {
-            continue;
+            goto exit;
         }
         adapter.description = var.bstrVal;
         netInfo.WMIReleaseProperty(var);
@@ -57,7 +73,7 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
         hRes = netInfo.WMIGetProperty(L"PermanentAddress", var);
         if (S_OK != hRes || V_VT(&var) != VT_BSTR)
         {
-            continue;
+            goto exit;
         }
         adapter.macAddr = var.bstrVal;
         netInfo.WMIReleaseProperty(var);
@@ -65,23 +81,93 @@ int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool is
         hRes = netInfo.WMIGetProperty(L"Name", var);
         if (S_OK != hRes || V_VT(&var) != VT_BSTR)
         {
-            continue;
+            goto exit;
         }
         adapter.name = var.bstrVal;
         netInfo.WMIReleaseProperty(var);
 
         adapters.push_back(adapter);
-        
+
     exit:
         netInfo.WMIReleaseThisObject();
         if (0 != result)
             break;
     }
 
+    return result;
+}
+
+int zzj::NetworkAdapter::GetNetworkAdaptersByWin7(std::vector<NetworkAdapter> &adapters, bool isRealAdapter)
+{
+    zzj::WMIWrapper netInfo;
+    HRESULT hRes;
+    VARIANT var;
+    int result = 0;
+    wstring tmp;
+    NetworkAdapter adapter;
+    VARIANT_BOOL isVirtual;
+
+    hRes = netInfo.WMIConnectServer(L"ROOT\\CIMV2");
+    if (S_OK != hRes)
+    {
+        result = -1;
+        return result;
+    }
+
+    netInfo.WMIExecQuery("WQL", "SELECT * FROM Win32_NetworkAdapter");
+    if (S_OK != hRes)
+    {
+        result = -2;
+        return result;
+    }
+
+    while (S_OK == netInfo.WMIGetNextObject())
+    {
+        hRes = netInfo.WMIGetProperty(L"PhysicalAdapter", var);
+        if (S_OK != hRes || V_VT(&var) != VT_BOOL)
+        {
+            goto exit;
+        }
+        isVirtual = var.boolVal; // VARIANT_BOOL: FALSE:0 TRUE:-1
+        netInfo.WMIReleaseProperty(var);
+        if (-1 == isVirtual && isRealAdapter) // Continue if the adapter is virtual
+            goto exit;
+
+        hRes = netInfo.WMIGetProperty(L"Description", var);
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR)
+        {
+            goto exit;
+        }
+        adapter.description = var.bstrVal;
+        netInfo.WMIReleaseProperty(var);
+
+        hRes = netInfo.WMIGetProperty(L"MACAddress", var);
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR)
+        {
+            goto exit;
+        }
+        adapter.macAddr = var.bstrVal;
+        netInfo.WMIReleaseProperty(var);
+
+        hRes = netInfo.WMIGetProperty(L"Name", var);
+        if (S_OK != hRes || V_VT(&var) != VT_BSTR)
+        {
+            goto exit;
+        }
+        adapter.name = var.bstrVal;
+        netInfo.WMIReleaseProperty(var);
+
+        adapters.push_back(adapter);
+
+    exit:
+        netInfo.WMIReleaseThisObject();
+        if (0 != result)
+            break;
+    }
 
     return result;
 }
-#pragma warning(disable : 4996)
+
 int zzj::NetworkAdapter::GetOutIpAddress(std::string &ipAddr)
 {
     WSADATA wsaData;
