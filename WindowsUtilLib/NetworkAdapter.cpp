@@ -107,6 +107,10 @@ int zzj::NetworkAdapter::GetNetworkAdaptersByWin7(std::vector<NetworkAdapter> &a
     NetworkAdapter adapter;
     VARIANT_BOOL isVirtual;
 
+    std::string wql =
+        isRealAdapter ? "SELECT * FROM Win32_NetworkAdapter WHERE(PhysicalAdapter = true) AND(MACAddress IS NOT NULL)":
+                        "SELECT * FROM Win32_NetworkAdapter WHERE MACAddress IS NOT NULL";
+
     hRes = netInfo.WMIConnectServer(L"ROOT\\CIMV2");
     if (S_OK != hRes)
     {
@@ -114,7 +118,7 @@ int zzj::NetworkAdapter::GetNetworkAdaptersByWin7(std::vector<NetworkAdapter> &a
         return result;
     }
 
-    netInfo.WMIExecQuery("WQL", "SELECT * FROM Win32_NetworkAdapter");
+    netInfo.WMIExecQuery("WQL", wql.c_str());
     if (S_OK != hRes)
     {
         result = -2;
@@ -123,16 +127,6 @@ int zzj::NetworkAdapter::GetNetworkAdaptersByWin7(std::vector<NetworkAdapter> &a
 
     while (S_OK == netInfo.WMIGetNextObject())
     {
-        hRes = netInfo.WMIGetProperty(L"PhysicalAdapter", var);
-        if (S_OK != hRes || V_VT(&var) != VT_BOOL)
-        {
-            goto exit;
-        }
-        isVirtual = var.boolVal; // VARIANT_BOOL: FALSE:0 TRUE:-1
-        netInfo.WMIReleaseProperty(var);
-        if (-1 == isVirtual && isRealAdapter) // Continue if the adapter is virtual
-            goto exit;
-
         hRes = netInfo.WMIGetProperty(L"Description", var);
         if (S_OK != hRes || V_VT(&var) != VT_BSTR)
         {
