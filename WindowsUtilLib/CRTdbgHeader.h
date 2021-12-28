@@ -11,6 +11,8 @@
 #include <windows.h>
 #include <DbgHelp.h>
 #include <string> 
+#include "FileHelper.h"
+
 #pragma comment(lib, "DbgHelp.lib")
 #pragma warning(disable : 4996)
 static std::string GetExecutablePath()
@@ -48,10 +50,10 @@ inline LONG WINAPI WriteDumpHandler(struct _EXCEPTION_POINTERS *pExceptionInfo)
 
     std::string fileName = current_proc_path;
     // 设置core文件生成目录和文件名
-    sprintf(params, "%4d.%02d.%02d_%02d.%02d.%02d.dmp", pTime->tm_year + 1900, pTime->tm_mon + 1, pTime->tm_mday,
-            pTime->tm_hour, pTime->tm_min, pTime->tm_sec);
-    fileName += "_";
-    fileName += params;
+
+    fileName += ".dmp";
+    if (zzj::FileHelper::IsFileExist(fileName))
+        remove(fileName.c_str());
     HANDLE hFile =
         ::CreateFileA(fileName.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile != INVALID_HANDLE_VALUE)
