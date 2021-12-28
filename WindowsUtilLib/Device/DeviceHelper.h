@@ -328,12 +328,12 @@ class InputInterceptor
     bool SendKey(KeyScanCode scanCode);
     bool SendKeys(const std::vector<KeyScanCode> &scanCodes);
     bool SendText(std::string text);
-    void SetMouseHandler(KeyboardEventHandler handler)
+    void SetKeyBoardHandler(KeyboardEventHandler handler)
     {
         m_KeyboardHandler = handler;
     }
 
-    void SetKeyBoardHandler(MouseEventHandler handler)
+    void SetMouseHandler(MouseEventHandler handler)
     {
         m_MouseHandler = handler;
     }
