@@ -15,14 +15,9 @@ using namespace std;
 
 int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool isRealAdapter)
 {
-    if (zzj::SystemInfo::GetWindowsVersion() == 7)
-    {
         return GetNetworkAdaptersByWin7(adapters, isRealAdapter);
-    }
-    else
-    {
-        return GetNetworkAdaptersByWin10(adapters, isRealAdapter);
-    }
+        //Win10 permanentaddress sometimes is wrong
+        //return GetNetworkAdaptersByWin10(adapters, isRealAdapter);
 
 }
 
