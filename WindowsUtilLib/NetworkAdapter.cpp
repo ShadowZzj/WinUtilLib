@@ -15,7 +15,11 @@ using namespace std;
 
 int NetworkAdapter::GetNetworkAdapters(vector<NetworkAdapter> &adapters, bool isRealAdapter)
 {
-        return GetNetworkAdaptersByWin7(adapters, isRealAdapter);
+        int res = GetNetworkAdaptersByWin7(adapters, isRealAdapter);
+    if (0 != res || adapters.size() == 0)
+        return GetNetworkAdaptersByWin10(adapters, isRealAdapter);
+    else
+        return res;
         //Win10 permanentaddress sometimes is wrong
         //return GetNetworkAdaptersByWin10(adapters, isRealAdapter);
 
