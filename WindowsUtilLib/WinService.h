@@ -26,7 +26,7 @@ public:
 	static int InstallService(const char* serviceName,const char* displayName,const char* description, const char* binPath);
 	static bool InstallKernelService(const char* binaryPath, const char* serviceName, const char* displayName,const char* description);
 	static bool MyStartService(const char* serviceName);
-	static bool StopService(const char* serviceName);
+	static bool StopService(const char* serviceName,uint16_t waitSecond = 5);
 	static bool UninstallService(const char* serviceName);
 	
 	static int IsServiceInstalled(const char *serviceName, bool &installed);

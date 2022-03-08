@@ -316,7 +316,8 @@ bool WinService::MyStartService(const char* serviceName) {
 	::CloseServiceHandle(hSC);
 	return true;
 }
-bool WinService::StopService(const char* serviceName) {
+bool WinService::StopService(const char *serviceName, uint16_t waitSecond)
+{
 
 	SC_HANDLE hSC = ::OpenSCManagerA(NULL,
 		NULL, GENERIC_EXECUTE);
@@ -361,7 +362,7 @@ bool WinService::StopService(const char* serviceName) {
 				return true;
 			}
             waitCount++;
-            if (waitCount >= 5)
+            if (waitCount >= waitSecond)
             {
                 ::CloseServiceHandle(hSvc);
                 ::CloseServiceHandle(hSC);
