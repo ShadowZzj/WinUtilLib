@@ -71,70 +71,56 @@ namespace str {
     bool IsStringUtf8(const char *str)
     {
         if (!str)
-            return false;
-        unsigned int nBytes = 0; // UFT8可用1-6个字节编码,ASCII用一个字节
-        unsigned char chr   = *str;
-        bool bAllAscii      = true;
-        for (unsigned int i = 0; str[i] != '\0'; ++i)
+            return true;
+
+        const unsigned char *bytes = (const unsigned char *)str;
+        unsigned int cp;
+        int num;
+
+        while (*bytes != 0x00)
         {
-            chr = *(str + i);
-            //判断是否ASCII编码,如果不是,说明有可能是UTF8,ASCII用7位编码,最高位标记为0,0xxxxxxx
-            if (nBytes == 0 && (chr & 0x80) != 0)
+            if ((*bytes & 0x80) == 0x00)
             {
-                bAllAscii = false;
+                // U+0000 to U+007F
+                cp  = (*bytes & 0x7F);
+                num = 1;
             }
-            if (nBytes == 0)
+            else if ((*bytes & 0xE0) == 0xC0)
             {
-                //如果不是ASCII码,应该是多字节符,计算字节数
-                if (chr >= 0x80)
-                {
-                    if (chr >= 0xFC && chr <= 0xFD)
-                    {
-                        nBytes = 6;
-                    }
-                    else if (chr >= 0xF8)
-                    {
-                        nBytes = 5;
-                    }
-                    else if (chr >= 0xF0)
-                    {
-                        nBytes = 4;
-                    }
-                    else if (chr >= 0xE0)
-                    {
-                        nBytes = 3;
-                    }
-                    else if (chr >= 0xC0)
-                    {
-                        nBytes = 2;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    nBytes--;
-                }
+                // U+0080 to U+07FF
+                cp  = (*bytes & 0x1F);
+                num = 2;
+            }
+            else if ((*bytes & 0xF0) == 0xE0)
+            {
+                // U+0800 to U+FFFF
+                cp  = (*bytes & 0x0F);
+                num = 3;
+            }
+            else if ((*bytes & 0xF8) == 0xF0)
+            {
+                // U+10000 to U+10FFFF
+                cp  = (*bytes & 0x07);
+                num = 4;
             }
             else
+                return false;
+
+            bytes += 1;
+            for (int i = 1; i < num; ++i)
             {
-                //多字节符的非首字节,应为 10xxxxxx
-                if ((chr & 0xC0) != 0x80)
-                {
+                if ((*bytes & 0xC0) != 0x80)
                     return false;
-                }
-                //减到为零为止
-                nBytes--;
+                cp = (cp << 6) | (*bytes & 0x3F);
+                bytes += 1;
             }
+
+            if ((cp > 0x10FFFF) || ((cp >= 0xD800) && (cp <= 0xDFFF)) || ((cp <= 0x007F) && (num != 1)) ||
+                ((cp >= 0x0080) && (cp <= 0x07FF) && (num != 2)) || ((cp >= 0x0800) && (cp <= 0xFFFF) && (num != 3)) ||
+                ((cp >= 0x10000) && (cp <= 0x1FFFFF) && (num != 4)))
+                return false;
         }
-        //违返UTF8编码规则
-        if (nBytes != 0)
-        {
-            return false;
-        }
-        if (bAllAscii)
-        { //如果全部都是ASCII, 也是UTF8
-            return true;
-        }
+
         return true;
     }
 
