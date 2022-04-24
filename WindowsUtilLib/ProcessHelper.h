@@ -120,6 +120,10 @@ namespace zzj {
 		static DWORD GetProcessId(HANDLE processHandle);
 		static bool  IsMutexExist(std::string mutex);
         static std::string GetProcessUserName();
+
+		//If in a user process, this function only can get current process user's explorer info
+		//eg. The caller process is admin, then you login to a user named zhuzhengjia and you spawn
+		//a process elevated to admin. The function will return false.
 		static bool GetActiveExplorerInfo(ActiveExplorerInfo* pinfo);
 		//System process create user or admin process.
 		static DWORD SystemCreateProcess(std::wstring& commandLine, bool bElevated, bool bWait, DWORD dwWaitTime, bool show);
