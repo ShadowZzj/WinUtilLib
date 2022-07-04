@@ -41,7 +41,6 @@
     <ClInclude Include="IPC.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="NetworkAdapter.h" />
     <ClInclude Include="ParseCommondLine.h" />
     <ClInclude Include="PEhelper.h" />
     <ClInclude Include="PrinterUtil.h" />
@@ -74,7 +73,6 @@
     <ClCompile Include="HardWare.cpp" />
     <ClCompile Include="IPC.cpp" />
     <ClCompile Include="log.cpp" />
-    <ClCompile Include="NetworkAdapter.cpp" />
     <ClCompile Include="ParseCommondLine.cpp" />
     <ClCompile Include="PEhelper.cpp" />
     <ClCompile Include="PrinterUtil.cpp" />

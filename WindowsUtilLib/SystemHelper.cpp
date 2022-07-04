@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include "SystemHelper.h"
 #include <wtsapi32.h>
 #include <sddl.h>
