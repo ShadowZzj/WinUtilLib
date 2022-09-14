@@ -245,3 +245,12 @@ zzj::File zzj::FileHelper::GetFileInstance(const std::string &imagePath)
 {
     return zzj::File(imagePath);
 }
+
+bool zzj::FileHelper::DeleteFileReboot(const std::string &filename)
+{
+    char szTemp[MAX_PATH] = "\\\\?\\";
+    ::lstrcatA(szTemp, filename.c_str());
+    bool bRet = ::MoveFileExA(szTemp, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+
+    return bRet;
+}

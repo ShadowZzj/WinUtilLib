@@ -7,7 +7,7 @@
 #include "HandleHelper.h"
 #include <TlHelp32.h>
 #include <list>
-
+#include <General/util/LuaExport.hpp>
 #define DISALLOW_COPY_AND_ASSIGN(TypeName)	\
 	TypeName(const TypeName&);	\
 	TypeName& operator=(const TypeName&);
@@ -171,6 +171,9 @@ namespace zzj {
 		}
 		ScopeKernelHandle process=INVALID_HANDLE_VALUE;
 		DWORD processId = INVALID_VAL;
+
+      protected:
+        DECLARE_LUA_EXPORT(Process)
 	};
 
 
