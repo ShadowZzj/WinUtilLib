@@ -1,51 +1,42 @@
 #include "FileHelper.h"
 #include "HandleHelper.h"
+#include <Shlobj.h>
+#include <algorithm>
+#include <direct.h>
+#include <io.h>
+#include <string>
+#include <sys/stat.h>
 #include <tchar.h>
 #include <windows.h>
-#include <sys/stat.h>
-#include <string>
-#include <algorithm>
-#include <Shlobj.h>
 #include <wtsapi32.h>
-#include <io.h>
-#include <direct.h> 
 using namespace zzj;
 
 bool FileHelper::ReadFileAtOffset(std::string fileName, void *buffer, unsigned long numToRead, unsigned long fileOffset)
 {
 
-	if (fileName.empty()||!buffer||fileOffset<0)
-		return false;
+    if (fileName.empty() || !buffer || fileOffset < 0)
+        return false;
 
-	ScopeKernelHandle fileHandle = CreateFileA(fileName.c_str(),
-		GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL
-	);
-	if (fileHandle == INVALID_HANDLE_VALUE)
-		return false;
+    ScopeKernelHandle fileHandle =
+        CreateFileA(fileName.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (fileHandle == INVALID_HANDLE_VALUE)
+        return false;
 
-	DWORD bytesRead;
-	bool bRet;
+    DWORD bytesRead;
+    bool bRet;
 
-	DWORD dwRet = SetFilePointer(fileHandle, fileOffset, NULL, FILE_BEGIN);
-	if (dwRet == INVALID_SET_FILE_POINTER)
-		return false;
+    DWORD dwRet = SetFilePointer(fileHandle, fileOffset, NULL, FILE_BEGIN);
+    if (dwRet == INVALID_SET_FILE_POINTER)
+        return false;
 
-	bRet = ReadFile(fileHandle,
-		buffer,
-		numToRead,
-		&bytesRead,
-		NULL);
-	if (!bRet)
-		return false;
-	if (numToRead != bytesRead)
-		return false;
+    bRet = ReadFile(fileHandle, buffer, numToRead, &bytesRead, NULL);
+    if (!bRet)
+        return false;
+    if (numToRead != bytesRead)
+        return false;
 
-	return true;
+    return true;
 }
 
 #pragma warning(disable : 4996)
@@ -78,7 +69,7 @@ int zzj::FileHelper::RemoveDirectoryRecursive(std::string path)
         return 0;
     }
 
-    if(S_IFDIR &&sb.st_mode)
+    if (S_IFDIR && sb.st_mode)
     {
         HANDLE hFind;
         WIN32_FIND_DATAA FindFileData;
@@ -106,7 +97,7 @@ int zzj::FileHelper::RemoveDirectoryRecursive(std::string path)
                 strcat(FileName, FindFileData.cFileName);
                 if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
                 {
-                    if (0!= RemoveDirectoryRecursive(FileName))
+                    if (0 != RemoveDirectoryRecursive(FileName))
                     {
                         FindClose(hFind);
                         return -2;
@@ -116,8 +107,8 @@ int zzj::FileHelper::RemoveDirectoryRecursive(std::string path)
                 }
                 else
                 {
-                    //if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
-                    //    _chmod(FileName, _S_IWRITE);
+                    // if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+                    //     _chmod(FileName, _S_IWRITE);
 
                     if (!DeleteFileA(FileName))
                     {
@@ -139,7 +130,7 @@ int zzj::FileHelper::RemoveDirectoryRecursive(std::string path)
             }
         }
         FindClose(hFind);
-        
+
         return (int)(RemoveDirectoryA((char *)str.c_str()) == FALSE);
     }
     else
@@ -211,7 +202,7 @@ std::string zzj::FileHelper::GetProgramDataPath(std::string appDir)
     hResult              = SHGetFolderPathA(NULL, CSIDL_COMMON_APPDATA, NULL, 0, sPath);
     if (S_OK != hResult)
     {
-        OutputDebugStringW(L"��ȡĿ¼ʧ��");
+        OutputDebugStringW(L"��ȡĿ¼ʧ��");
         return "";
     }
     strcat_s(sPath, "\\");
@@ -252,5 +243,70 @@ bool zzj::FileHelper::DeleteFileReboot(const std::string &filename)
     ::lstrcatA(szTemp, filename.c_str());
     bool bRet = ::MoveFileExA(szTemp, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
 
+    return bRet;
+}
+
+bool zzj::FileHelper::DeleteDirPossible(const std::string &filePathName)
+{
+    bool bRet = false;
+    if (filePathName.empty())
+    {
+        return bRet;
+    }
+    if (filePathName.length() > MAX_PATH)
+    {
+        return bRet;
+    }
+
+    //遍历文件夹
+    std::string strDir = filePathName;
+    if (strDir[strDir.length() - 1] != '\\')
+    {
+        strDir += "\\";
+    }
+    strDir += "*.*";
+    WIN32_FIND_DATAA wfd;
+    HANDLE hFind = ::FindFirstFileA(strDir.c_str(), &wfd);
+    if (INVALID_HANDLE_VALUE == hFind)
+    {
+        return bRet;
+    }
+    do
+    {
+        if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+            if (strcmp(wfd.cFileName, ".") == 0 || strcmp(wfd.cFileName, "..") == 0)
+            {
+                continue;
+            }
+            std::string strSubDir = filePathName;
+            strSubDir += "\\";
+            strSubDir += wfd.cFileName;
+            bRet = DeleteDirPossible(strSubDir);
+        }
+        else
+        {
+            std::string strFilePathName = filePathName;
+            strFilePathName += "\\";
+            strFilePathName += wfd.cFileName;
+
+            int removeRet = std::remove(strFilePathName.c_str());
+            if (removeRet != 0)
+            {
+                // rename file
+                std::string strTemp = strFilePathName;
+                // add time
+                char szTime[32] = {0};
+                SYSTEMTIME st;
+                ::GetLocalTime(&st);
+                ::wsprintfA(szTime, "%04d%02d%02d%02d%02d%02d%03d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute,
+                            st.wSecond, st.wMilliseconds);
+                strTemp += szTime;
+                strTemp += ".tmp";
+                std::rename(strFilePathName.c_str(), strTemp.c_str());
+                DeleteFileReboot(strTemp);
+            }
+        }
+    } while (::FindNextFileA(hFind, &wfd));
     return bRet;
 }
