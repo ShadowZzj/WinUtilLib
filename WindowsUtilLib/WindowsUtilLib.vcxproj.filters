@@ -158,9 +158,6 @@
     <ClInclude Include="call_json.h">
       <Filter>src\Base</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkAdapter.h">
-      <Filter>src\Windows\Win32\Network</Filter>
-    </ClInclude>
     <ClInclude Include="HardWare.h">
       <Filter>src\Windows\Win32\HardWare</Filter>
     </ClInclude>
@@ -249,9 +246,6 @@
     </ClCompile>
     <ClCompile Include="call_json.cpp">
       <Filter>src\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkAdapter.cpp">
-      <Filter>src\Windows\Win32\Network</Filter>
     </ClCompile>
     <ClCompile Include="HardWare.cpp">
       <Filter>src\Windows\Win32\HardWare</Filter>
