@@ -106,4 +106,26 @@ bool zzj::Thread::RevertToCurrentUser(HANDLE token)
     return true;
 }
 
+DWORD zzj::Thread::GetProcessIdByThreadId(DWORD threadId)
+{
+    DWORD processId = 0;
+    HANDLE hThread = OpenThread(THREAD_QUERY_INFORMATION, FALSE, threadId);
+    if (hThread != NULL)
+    {
+        GetOwnerProcessId(hThread);
+        CloseHandle(hThread);
+    }
+    return processId;
+}
+
+DWORD zzj::Thread::GetProcessIdByThreadHandle(HANDLE threadHandle)
+{
+    DWORD processId = 0;
+    if (threadHandle != NULL)
+    {
+        GetOwnerProcessId(threadHandle);
+    }
+    return processId;
+}
+
 
